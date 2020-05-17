@@ -1,8 +1,8 @@
-import React from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View, Text } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { getItem, removeItem } from '../services/localStorage';
-import { ButtonPrimary, GenderSelect, InputText } from '../components';
+import React from "react";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text } from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { getItem, removeItem } from "../services/localStorage";
+import { ButtonPrimary, GenderSelect, InputText } from "../components";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -10,11 +10,11 @@ export interface ScreenProps {
 
 const EmptyScreen: React.FC<ScreenProps> = ({ navigation }) => {
   const eraseRole = async () => {
-    await removeItem('@role');
+    await removeItem("@role");
   };
 
   const eraseTech = async () => {
-    await removeItem('@tech');
+    await removeItem("@tech");
   };
 
   const retrieveData = () => {
@@ -23,12 +23,12 @@ const EmptyScreen: React.FC<ScreenProps> = ({ navigation }) => {
   };
 
   const retrieveRole = async () => {
-    const savedRole = await getItem('@role');
+    const savedRole = await getItem("@role");
     if (savedRole) console.warn(savedRole);
   };
 
   const retrieveTech = async () => {
-    const savedTech = await getItem('@tech');
+    const savedTech = await getItem("@tech");
     if (savedTech) console.warn(savedTech);
   };
 
@@ -52,13 +52,13 @@ const EmptyScreen: React.FC<ScreenProps> = ({ navigation }) => {
         <ButtonPrimary
           title="Ir a próxima tela"
           onPress={() => {
-            return navigation.navigate('ChooseActivity');
+            return navigation.navigate("ChooseActivity");
           }} // remover modificação futuramente, apenas para testes
         />
         <ButtonPrimary
           title="Carousel"
           onPress={() => {
-            return navigation.navigate('CarouselScreen');
+            return navigation.navigate("CarouselScreen");
           }} // remover modificação futuramente, apenas para testes
         />
       </View>
@@ -68,8 +68,8 @@ const EmptyScreen: React.FC<ScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   body: {
-    alignItems: 'center',
-    minHeight: Dimensions.get('window').height,
+    alignItems: "center",
+    minHeight: Dimensions.get("window").height,
   },
 });
 

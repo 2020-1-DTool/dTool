@@ -1,8 +1,8 @@
-import React, { ReactElement, useRef, useState } from 'react';
-import { RNCamera } from 'react-native-camera';
-import { Dimensions, View, Text, StyleSheet } from 'react-native';
-import colors from '../utils/colors';
-import sizes from '../utils/sizes';
+import React, { ReactElement, useRef, useState } from "react";
+import { RNCamera } from "react-native-camera";
+import { Dimensions, View, Text, StyleSheet } from "react-native";
+import colors from "../utils/colors";
+import sizes from "../utils/sizes";
 
 export interface ContainerProps {
   children?: ReactElement;
@@ -24,10 +24,10 @@ const BarcodeCamera: React.FC<ContainerProps> = ({ children, onChange }) => {
       <RNCamera
         ref={refCamera}
         androidCameraPermissionOptions={{
-          title: 'Permissão para usar a câmera',
-          message: 'Precisamos de permissão para escanear os códigos',
-          buttonPositive: 'OK',
-          buttonNegative: 'CANCELAR',
+          title: "Permissão para usar a câmera",
+          message: "Precisamos de permissão para escanear os códigos",
+          buttonPositive: "OK",
+          buttonNegative: "CANCELAR",
         }}
         autoFocus="on"
         autoFocusPointOfInterest={{ x: 0.5, y: 0.5 }}
@@ -37,10 +37,11 @@ const BarcodeCamera: React.FC<ContainerProps> = ({ children, onChange }) => {
           handleBarcodeDetected(barcodes)
         }
         style={{
-          height: Dimensions.get('window').height,
-          width: Dimensions.get('window').width,
+          height: Dimensions.get("window").height,
+          width: Dimensions.get("window").width,
         }}
-        type="back">
+        type="back"
+      >
         <>
           <View style={styles.scanMessageView}>
             <Text style={styles.scanMessage}>
@@ -64,15 +65,15 @@ const BarcodeCamera: React.FC<ContainerProps> = ({ children, onChange }) => {
 
 const styles = StyleSheet.create({
   scanBox: {
-    alignSelf: 'center',
+    alignSelf: "center",
     borderRadius: 5,
-    borderStyle: 'dashed',
+    borderStyle: "dashed",
     borderWidth: 3,
     height: 100,
-    marginTop: '-10%',
-    width: '80%',
+    marginTop: "-10%",
+    width: "80%",
   },
-  scanBoxContainer: { flex: 1, justifyContent: 'center' },
+  scanBoxContainer: { flex: 1, justifyContent: "center" },
   scanBoxDefault: {
     borderColor: colors.basic.background,
   },
@@ -80,17 +81,17 @@ const styles = StyleSheet.create({
     borderColor: colors.theme.primary,
   },
   scanMessage: {
-    alignItems: 'center',
+    alignItems: "center",
     color: colors.text.navigation,
     fontSize: sizes.headline.h6,
-    textAlign: 'center',
+    textAlign: "center",
   },
   scanMessageView: {
-    alignItems: 'center',
+    alignItems: "center",
     backgroundColor: colors.basic.textBackground,
     flex: 1,
     opacity: 0.5,
-    position: 'absolute',
+    position: "absolute",
   },
 });
 

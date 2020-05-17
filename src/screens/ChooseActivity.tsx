@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Alert,
   Dimensions,
@@ -6,13 +6,13 @@ import {
   StyleSheet,
   View,
   ScrollView,
-} from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { BasicList, ButtonPrimary, PatientHeader } from '../components';
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { BasicList, ButtonPrimary, PatientHeader } from "../components";
 
-import colors from '../utils/colors';
-import * as localStorage from '../services/localStorage';
-import { Activity, Patient } from '../services/types';
+import colors from "../utils/colors";
+import * as localStorage from "../services/localStorage";
+import { Activity, Patient } from "../services/types";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -39,7 +39,8 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
     <SafeAreaView>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollView}>
+        style={styles.scrollView}
+      >
         <View style={styles.header}>
           <PatientHeader
             patientInitials={patient?.name}
@@ -55,13 +56,13 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
           <ButtonPrimary
             title="Carousel"
             onPress={() => {
-              return navigation.navigate('CarouselScreen');
+              return navigation.navigate("CarouselScreen");
             }} // TODO: remover modificação futuramente, apenas para testes
           />
           <ButtonPrimary
             title="Início"
             onPress={() => {
-              return navigation.navigate('Home');
+              return navigation.navigate("Home");
             }} // TODO: remover modificação futuramente, apenas para testes
           />
         </View>
@@ -72,8 +73,8 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   body: {
-    alignItems: 'center',
-    minHeight: Dimensions.get('window').height,
+    alignItems: "center",
+    minHeight: Dimensions.get("window").height,
   },
   header: {
     marginBottom: 20,

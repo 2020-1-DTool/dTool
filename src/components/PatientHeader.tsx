@@ -1,7 +1,7 @@
-import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
-import colors from '../utils/colors';
-import sizes from '../utils/sizes';
+import React from "react";
+import { Text, StyleSheet, View } from "react-native";
+import colors from "../utils/colors";
+import sizes from "../utils/sizes";
 
 export interface Props {
   patientID?: string;
@@ -18,15 +18,15 @@ const PatientHeader: React.FC<Props> = ({
     <View style={styles.patientHeaderView}>
       <View style={styles.avatar}>
         <Text numberOfLines={2} style={styles.textAvatar}>
-          {patientInitials || '?'}
+          {patientInitials || "?"}
         </Text>
       </View>
       <View style={styles.headerVertical}>
         <Text style={styles.text}>
-          {patientID || 'Prontuário não informado'}
+          {patientID || "Prontuário não informado"}
         </Text>
         <Text style={styles.textSecondary}>
-          {patientSex || 'Sexo não informado'}
+          {patientSex || "Sexo não informado"}
         </Text>
       </View>
     </View>
@@ -35,24 +35,24 @@ const PatientHeader: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   avatar: {
-    alignItems: 'center',
+    alignItems: "center",
     backgroundColor: colors.theme.primary,
     borderRadius: 40,
     height: 80,
-    justifyContent: 'center',
+    justifyContent: "center",
     width: 80,
   },
   headerVertical: {
-    flexDirection: 'column',
-    flexWrap: 'wrap',
+    flexDirection: "column",
+    flexWrap: "wrap",
     paddingLeft: 10,
   },
   patientHeaderView: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    paddingHorizontal: '5%',
-    width: '100%',
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    paddingHorizontal: "5%",
+    width: "100%",
   },
   text: {
     color: colors.text.primary,

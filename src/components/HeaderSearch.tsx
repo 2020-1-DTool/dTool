@@ -1,6 +1,6 @@
-import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
-import colors from '../utils/colors';
+import React from "react";
+import { Text, StyleSheet, View } from "react-native";
+import colors from "../utils/colors";
 
 export interface Props {
   style?: object;
@@ -17,12 +17,12 @@ const HeaderSearch: React.FC<Props> = ({ title, style }) => {
 
 const styles = StyleSheet.create({
   container: {
-    alignContent: 'stretch',
+    alignContent: "stretch",
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   text: {
-    alignSelf: 'stretch',
+    alignSelf: "stretch",
     color: colors.text.navigation,
     right: 10,
   },

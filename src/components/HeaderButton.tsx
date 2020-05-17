@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
   ViewStyle,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import colors from '../utils/colors';
-import sizes from '../utils/sizes';
+} from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+import colors from "../utils/colors";
+import sizes from "../utils/sizes";
 
 export interface Props extends TouchableOpacityProps {
   iconName: string;
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     marginRight: 22,
   },
   icon: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     color: colors.text.navigation,
     fontSize: sizes.headline.h1,
   },

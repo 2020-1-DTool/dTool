@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -6,11 +6,11 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 
-import { Card } from 'react-native-elements';
-import colors from '../utils/colors';
-import sizes from '../utils/sizes';
+import { Card } from "react-native-elements";
+import colors from "../utils/colors";
+import sizes from "../utils/sizes";
 
 export type itemType = {
   id: number;
@@ -49,21 +49,22 @@ const CardRow: React.FC<ScreenProps> = ({ data }) => {
                       ? styles.borderGreen
                       : styles.borderWhite,
                   ]}
-                  onPress={() => setBorder(item.title, key)}>
+                  onPress={() => setBorder(item.title, key)}
+                >
                   <View style={styles.cardTitle}>
                     <Text style={styles.boldText}>{item.title}</Text>
                   </View>
                   <View style={styles.cardInfo}>
                     <Image
                       style={styles.imagePadding}
-                      source={require('../assets/profile-carousel.png')}
+                      source={require("../assets/profile-carousel.png")}
                     />
                     <Text style={styles.normalText}>{item.patient}</Text>
                   </View>
                   <View style={styles.cardInfo}>
                     <Image
                       style={styles.imagePadding}
-                      source={require('../assets/clock-carousel.png')}
+                      source={require("../assets/clock-carousel.png")}
                     />
                     <Text style={styles.normalText}>{item.time}</Text>
                   </View>
@@ -81,8 +82,8 @@ let styles = StyleSheet.create({
   boldText: {
     color: colors.text.primary,
     fontSize: sizes.buttonText.note,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   borderGreen: {
     borderColor: colors.theme.primary,
@@ -93,10 +94,10 @@ let styles = StyleSheet.create({
     borderWidth: 2.5,
   },
   cardInfo: {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
     marginBottom: 5,
   },
   cardStyle: {
@@ -107,8 +108,8 @@ let styles = StyleSheet.create({
     padding: 10,
   },
   cardTitle: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     minHeight: 50,
   },
   imagePadding: {
@@ -116,14 +117,14 @@ let styles = StyleSheet.create({
   },
   normalText: {
     color: colors.text.primary,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   viewGeral: {
     backgroundColor: colors.basic.white,
     borderRadius: 10,
-    display: 'flex',
+    display: "flex",
     height: 146,
-    justifyContent: 'center',
+    justifyContent: "center",
     margin: 5,
     padding: 15,
     width: 150,

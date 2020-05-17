@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   SafeAreaView,
@@ -8,12 +8,12 @@ import {
   View,
   Image,
   TouchableOpacity,
-} from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-import * as localStorage from '../services/localStorage';
-import colors from '../utils/colors';
-import { ButtonPrimary, ButtonSecundary } from '../components';
+import * as localStorage from "../services/localStorage";
+import colors from "../utils/colors";
+import { ButtonPrimary, ButtonSecundary } from "../components";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -21,13 +21,13 @@ export interface ScreenProps {
 }
 
 const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
-  const [hospitalName, setHospitalName] = useState('Hospital não nomeado');
-  const [permission, setPermission] = useState('');
+  const [hospitalName, setHospitalName] = useState("Hospital não nomeado");
+  const [permission, setPermission] = useState("");
 
   useEffect(() => {
     (async () => {
       const { institution } = await localStorage.getData();
-      setHospitalName(institution?.name ?? 'Hospital não nomeado');
+      setHospitalName(institution?.name ?? "Hospital não nomeado");
 
       const auth = await localStorage.getAuth();
       setPermission(auth.permission);
@@ -36,16 +36,16 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 
   const handleBack = () => {
     localStorage.clear();
-    navigation.reset({ index: 0, routes: [{ name: 'HospitalCode' }] });
+    navigation.reset({ index: 0, routes: [{ name: "HospitalCode" }] });
   };
 
   const mainButtonAction = async () => {
-    if (permission === 'time-tracking') {
+    if (permission === "time-tracking") {
       const { role } = await localStorage.getPreferences();
       if (role) {
-        navigation.navigate('SelectPatient');
+        navigation.navigate("SelectPatient");
       } else {
-        navigation.navigate('ChooseRole');
+        navigation.navigate("ChooseRole");
       }
     } else {
       // TODO: ir para tela apropriada de acordo com permissão (listagem de tecnologias ou de hospitais)
@@ -57,18 +57,19 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
     <SafeAreaView>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={styles.main}>
+        style={styles.main}
+      >
         <View style={styles.main}>
           <View style={styles.image}>
             <Image
               style={styles.image}
-              source={require('../assets/logo-SVG.png')}
+              source={require("../assets/logo-SVG.png")}
             />
           </View>
           <View style={styles.imageTime}>
             <Image
               style={styles.imageTime}
-              source={require('../assets/time-SVG.png')}
+              source={require("../assets/time-SVG.png")}
             />
           </View>
           <View style={styles.textHospital}>
@@ -89,7 +90,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
             <ButtonSecundary
               style={styles.variableButton}
               title="Consultar Relatórios"
-              onPress={() => 'nothingyet'}
+              onPress={() => "nothingyet"}
             />
           </View>
           <View>
@@ -105,23 +106,23 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   image: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     backgroundColor: colors.theme.primary,
-    justifyContent: 'center',
+    justifyContent: "center",
     marginBottom: 20,
     paddingLeft: 20,
   },
   imageTime: {
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+    alignItems: "flex-end",
+    justifyContent: "center",
     marginBottom: 15,
     marginTop: -35,
     paddingRight: 15,
-    position: 'relative',
+    position: "relative",
   },
   iniciateButton: {
-    alignContent: 'center',
-    justifyContent: 'center',
+    alignContent: "center",
+    justifyContent: "center",
     paddingBottom: 10,
     paddingLeft: 40,
     paddingRight: 40,
@@ -129,40 +130,40 @@ const styles = StyleSheet.create({
   },
   main: {
     backgroundColor: colors.basic.background,
-    flexDirection: 'column',
+    flexDirection: "column",
     flex: 6,
-    minHeight: Dimensions.get('window').height,
-    minWidth: Dimensions.get('window').width,
+    minHeight: Dimensions.get("window").height,
+    minWidth: Dimensions.get("window").width,
   },
   outButton: {
-    alignContent: 'center',
-    alignItems: 'center',
+    alignContent: "center",
+    alignItems: "center",
     color: colors.theme.primary,
     fontSize: 16,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingBottom: 20,
   },
   text: {
-    alignContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignContent: "flex-start",
+    alignItems: "flex-start",
     color: colors.text.secondary,
     fontSize: 15,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingLeft: 20,
   },
   textHospital: {
-    alignContent: 'center',
-    alignItems: 'flex-start',
+    alignContent: "center",
+    alignItems: "flex-start",
     color: colors.text.primary,
     fontSize: 20,
-    fontWeight: 'bold',
-    justifyContent: 'center',
+    fontWeight: "bold",
+    justifyContent: "center",
     paddingBottom: 1,
     paddingLeft: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   variableButton: {
-    alignContent: 'center',
+    alignContent: "center",
     paddingBottom: 60,
     paddingLeft: 40,
     paddingRight: 40,

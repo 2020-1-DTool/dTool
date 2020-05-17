@@ -1,7 +1,7 @@
-import { Dimensions } from 'react-native';
+import { Dimensions } from "react-native";
 
 const fontSizer = (base: number) => {
-  const screenWidth = Dimensions.get('screen').width;
+  const screenWidth = Dimensions.get("screen").width;
 
   if (screenWidth > 500) {
     return base + 10;

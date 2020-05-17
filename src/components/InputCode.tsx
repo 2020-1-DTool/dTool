@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Textfield, TextfieldProps } from 'react-native-material-kit';
-import colors from '../utils/colors';
+import React from "react";
+import { StyleSheet } from "react-native";
+import { Textfield, TextfieldProps } from "react-native-material-kit";
+import colors from "../utils/colors";
 
 export type Props = TextfieldProps;
 
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   base: {
     fontSize: 30,
     minWidth: 50,
-    textAlign: 'center',
+    textAlign: "center",
     width: 50,
   },
   input: {

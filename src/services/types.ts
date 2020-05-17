@@ -4,9 +4,9 @@
 
 /** Tipos de código de acesso. */
 export type Permission =
-  | 'time-tracking'
-  | 'administration-hospital'
-  | 'administration-app';
+  | "time-tracking"
+  | "administration-hospital"
+  | "administration-app";
 
 export interface Activity {
   id: number;

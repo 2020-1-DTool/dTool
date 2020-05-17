@@ -1,7 +1,7 @@
-import React from 'react';
-import { Text, TextProps, StyleSheet } from 'react-native';
-import colors from '../utils/colors';
-import sizes from '../utils/sizes';
+import React from "react";
+import { Text, TextProps, StyleSheet } from "react-native";
+import colors from "../utils/colors";
+import sizes from "../utils/sizes";
 
 export interface Props extends TextProps {
   text?: string;
@@ -16,10 +16,10 @@ const ErrorText: React.FC<Props> = ({ text, ...props }) => (
 const styles = StyleSheet.create({
   text: {
     color: colors.theme.failure,
-    flexDirection: 'row',
+    flexDirection: "row",
     fontSize: sizes.buttonText.label,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

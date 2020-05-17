@@ -1,10 +1,10 @@
-import React from 'react';
-import { TouchableOpacityProps, StyleSheet, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { BasicList } from '../components';
-import { Patient } from '../services/types';
-import colors from '../utils/colors';
-import sizes from '../utils/sizes';
+import React from "react";
+import { TouchableOpacityProps, StyleSheet, View } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { BasicList } from "../components";
+import { Patient } from "../services/types";
+import colors from "../utils/colors";
+import sizes from "../utils/sizes";
 
 export interface Props extends TouchableOpacityProps {
   data?: Patient[];
@@ -31,14 +31,14 @@ const PacientList: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   contanier: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
   },
   icon: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     color: colors.theme.failure,
     fontSize: sizes.headline.h1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     marginHorizontal: 10,
   },
 });

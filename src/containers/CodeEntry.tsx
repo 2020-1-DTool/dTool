@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { InputCode } from '../components';
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { InputCode } from "../components";
 
 declare type onChangeType = { (value: string): void };
 declare type onCompleteType = { (value: string): void };
@@ -11,16 +11,16 @@ export interface Props {
 }
 
 const CodeEntry: React.FC<Props> = ({ onChange, onComplete }) => {
-  const [value1, setValue1] = useState('');
-  const [value2, setValue2] = useState('');
-  const [value3, setValue3] = useState('');
-  const [value4, setValue4] = useState('');
+  const [value1, setValue1] = useState("");
+  const [value2, setValue2] = useState("");
+  const [value3, setValue3] = useState("");
+  const [value4, setValue4] = useState("");
 
   useEffect(() => {
     if (value1.trim() && value2.trim() && value3.trim() && value4.trim()) {
       const value = `${value1}${value2}${value3}${value4}`;
       if (onComplete) onComplete(value);
-    } else if (onComplete) onComplete('');
+    } else if (onComplete) onComplete("");
   });
 
   const handleTextChange = (inputId: number, key: string) => {
@@ -56,7 +56,7 @@ const CodeEntry: React.FC<Props> = ({ onChange, onComplete }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginVertical: 80,
   },
 });

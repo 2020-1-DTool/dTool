@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -6,9 +6,9 @@ import {
   TextInputProps,
   View,
   ViewStyle,
-} from 'react-native';
-import colors from '../utils/colors';
-import sizes from '../utils/sizes';
+} from "react-native";
+import colors from "../utils/colors";
+import sizes from "../utils/sizes";
 
 export interface Props extends TextInputProps {
   title?: string;
@@ -31,7 +31,8 @@ const InputText: React.FC<Props> = ({
           {
             color: focused ? colors.theme.primary : colors.text.secondary,
           },
-        ]}>
+        ]}
+      >
         {title}
       </Text>
       <TextInput
@@ -51,7 +52,7 @@ const InputText: React.FC<Props> = ({
 const styles = StyleSheet.create({
   fieldBase: {
     fontSize: sizes.inputText.textField,
-    textAlign: 'left',
+    textAlign: "left",
   },
   focus: {
     borderBottomColor: colors.theme.primary,
@@ -64,10 +65,10 @@ const styles = StyleSheet.create({
   title: {
     color: colors.theme.primary,
     fontSize: sizes.buttonText.label,
-    marginBottom: '-2%',
+    marginBottom: "-2%",
   },
   view: {
-    width: '87%',
+    width: "87%",
   },
 });
 

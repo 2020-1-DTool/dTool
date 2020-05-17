@@ -1,9 +1,9 @@
-import 'react-native-gesture-handler';
-import React from 'react';
-import { StatusBar, YellowBox } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { HeaderButton, HeaderSearch } from './components';
+import "react-native-gesture-handler";
+import React from "react";
+import { StatusBar, YellowBox } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { HeaderButton, HeaderSearch } from "./components";
 import {
   AddPatient,
   CarouselScreen,
@@ -15,11 +15,11 @@ import {
   StartScreen,
   SelectPatient,
   ListPatient,
-} from './screens';
-import colors from './utils/colors';
-import sizes from './utils/sizes';
+} from "./screens";
+import colors from "./utils/colors";
+import sizes from "./utils/sizes";
 
-YellowBox.ignoreWarnings(['AsyncStorage has been extracted']);
+YellowBox.ignoreWarnings(["AsyncStorage has been extracted"]);
 
 const Stack = createStackNavigator();
 
@@ -29,7 +29,7 @@ const baseHeaderStyle = {
   },
   headerTintColor: colors.text.navigation,
   headerTitleStyle: {
-    fontWeight: 'normal',
+    fontWeight: "normal",
     fontSize: sizes.headline.h1,
   },
 };
@@ -54,7 +54,7 @@ const App = () => (
           name="HospitalCode"
           component={HospitalCode}
           options={{
-            title: 'Hospital',
+            title: "Hospital",
             ...baseHeaderStyle,
           }}
         />
@@ -62,7 +62,7 @@ const App = () => (
           name="AddPatient"
           component={AddPatient}
           options={{
-            title: 'Novo paciente',
+            title: "Novo paciente",
             ...baseHeaderStyle,
           }}
         />
@@ -70,7 +70,7 @@ const App = () => (
           name="ChooseActivity"
           component={ChooseActivity}
           options={{
-            title: 'Atividade',
+            title: "Atividade",
             ...baseHeaderStyle,
           }}
         />
@@ -86,7 +86,7 @@ const App = () => (
           name="ChooseTechnology"
           component={ChooseTechnology}
           options={{
-            title: 'Tecnologia',
+            title: "Tecnologia",
             headerTitle: () => (
               <HeaderSearch
                 title="Tecnologia"
@@ -113,11 +113,11 @@ const App = () => (
           name="ListPatient"
           component={ListPatient}
           options={({ navigation }) => ({
-            title: 'Paciente',
+            title: "Paciente",
             headerRight: () => (
               <HeaderButton
                 iconName="ios-camera"
-                onPress={() => navigation.navigate('SelectPatient')}
+                onPress={() => navigation.navigate("SelectPatient")}
               />
             ),
             ...baseHeaderStyle,
@@ -127,11 +127,11 @@ const App = () => (
           name="SelectPatient"
           component={SelectPatient}
           options={({ navigation }) => ({
-            title: 'Paciente',
+            title: "Paciente",
             headerRight: () => (
               <HeaderButton
                 iconName="ios-list"
-                onPress={() => navigation.navigate('ListPatient')}
+                onPress={() => navigation.navigate("ListPatient")}
               />
             ),
             ...baseHeaderStyle,

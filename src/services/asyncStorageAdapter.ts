@@ -1,5 +1,5 @@
-import { AsyncStorage } from 'react-native';
-import { Patient } from './types';
+import { AsyncStorage } from "react-native";
+import { Patient } from "./types";
 
 /**
  * Funções que facilitam e padronizam o acesso ao AsyncStorage por outras partes da aplicação.
@@ -18,7 +18,7 @@ import { Patient } from './types';
  */
 export async function getObject<T>(key: string): Promise<T> {
   const value = await getItem(key);
-  return JSON.parse(value ?? '{}');
+  return JSON.parse(value ?? "{}");
 }
 
 /**
@@ -27,7 +27,7 @@ export async function getObject<T>(key: string): Promise<T> {
  */
 export async function getArray<T>(key: string): Promise<T[]> {
   const value = await getItem(key);
-  return JSON.parse(value ?? '[]');
+  return JSON.parse(value ?? "[]");
 }
 
 /**
@@ -57,7 +57,7 @@ export const mergeObject = async (key: string, update: object) => {
 export const ifIdExists = async (key: string, id: string) => {
   let listItem: string[];
   let list: string | string[] | null = await getItem(key);
-  if (list) list = JSON.parse(list ?? '');
+  if (list) list = JSON.parse(list ?? "");
 
   if (Array.isArray(list) && list.length) {
     listItem = list.filter((item: any) => item?.id === id && item);
@@ -74,10 +74,10 @@ export const ifIdExists = async (key: string, id: string) => {
 export const addObjectItem = async (key: string, newItem: Patient) => {
   let list: string | string[] | null = await getItem(key);
 
-  if (list) list = JSON.parse(list ?? '');
+  if (list) list = JSON.parse(list ?? "");
   if (!Array.isArray(list) || !list?.length) list = [];
   else if (await ifIdExists(key, newItem.id)) {
-    console.log('⚠️  ID already exists: ', await getItem(key));
+    console.log("⚠️  ID already exists: ", await getItem(key));
     return false;
   }
 
@@ -94,7 +94,7 @@ export const addObjectItem = async (key: string, newItem: Patient) => {
  */
 export const removeObjectItem = async (key: string, index: number) => {
   let list: string | string[] | null = await getItem(key);
-  if (list) list = JSON.parse(list ?? '');
+  if (list) list = JSON.parse(list ?? "");
 
   if (Array.isArray(list) && list.length > 0) list.splice(index, 1);
   else console.log(`❌Error removing ${key}[${index}] from AsyncStorage`);
@@ -109,7 +109,7 @@ export const removeObjectItem = async (key: string, index: number) => {
 /** Limpa todos os dados armazenados pela aplicação (chaves que começam com `"@"`). */
 export const clear = async () => {
   const keys = await AsyncStorage.getAllKeys();
-  await AsyncStorage.multiRemove(keys.filter((key) => key.startsWith('@')));
+  await AsyncStorage.multiRemove(keys.filter((key) => key.startsWith("@")));
 };
 
 /**
@@ -121,7 +121,7 @@ export const getItem = async (key: string) => {
     return await AsyncStorage.getItem(key);
   } catch (error) {
     console.log(`❌ Error retrieving ${key} from AsyncStorage`, error);
-    return '';
+    return "";
   }
 };
 

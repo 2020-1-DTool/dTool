@@ -1,15 +1,15 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement } from "react";
 import {
   StyleSheet,
   FlatList,
   View,
   TouchableOpacity,
   Text,
-} from 'react-native';
-import { Patient } from '../services/types';
-import sizes from '../utils/sizes';
-import colors from '../utils/colors';
-import ErrorText from './ErrorText';
+} from "react-native";
+import { Patient } from "../services/types";
+import sizes from "../utils/sizes";
+import colors from "../utils/colors";
+import ErrorText from "./ErrorText";
 
 export interface Props {
   data?: Array<any>;
@@ -36,7 +36,8 @@ const BasicList: React.FC<Props> = ({
               <View style={styles.itemContainer}>
                 <TouchableOpacity
                   style={styles.itemContainer}
-                  onPress={() => onPress!(index)}>
+                  onPress={() => onPress!(index)}
+                >
                   <Text style={[styles.item, styles.patientName]}>
                     {item?.name}
                   </Text>
@@ -48,7 +49,8 @@ const BasicList: React.FC<Props> = ({
                   <TouchableOpacity
                     activeOpacity={0.9}
                     onPress={() => onPressTrashIcon!(index)}
-                    style={styles.iconButton}>
+                    style={styles.iconButton}
+                  >
                     {icon}
                   </TouchableOpacity>
                 )}
@@ -72,30 +74,30 @@ const BasicList: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   contanier: {
-    alignItems: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    flexDirection: "row",
     paddingBottom: 200,
   },
   iconButton: {
-    position: 'absolute',
+    position: "absolute",
     right: 10,
   },
   item: {
     color: colors.text.primary,
-    flexDirection: 'row',
+    flexDirection: "row",
     fontSize: sizes.buttonText.main,
-    fontStyle: 'normal',
-    fontWeight: 'normal',
+    fontStyle: "normal",
+    fontWeight: "normal",
     padding: 16,
   },
   itemContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     borderBottomColor: colors.basic.separator,
     borderBottomWidth: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   patientName: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   patientSubtitle: {
     color: colors.text.tertiary,

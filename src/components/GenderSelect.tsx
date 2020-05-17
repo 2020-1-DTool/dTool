@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Dropdown } from 'react-native-material-dropdown';
-import sizes from '../utils/sizes';
+import React from "react";
+import { StyleSheet } from "react-native";
+import { Dropdown } from "react-native-material-dropdown";
+import sizes from "../utils/sizes";
 
 export interface Props {
   disabled?: boolean;
@@ -12,10 +12,10 @@ export interface Props {
 const GenderSelect: React.FC<Props> = ({ disabled, label, onChange }) => {
   const data = [
     {
-      value: 'Feminino',
+      value: "Feminino",
     },
     {
-      value: 'Masculino',
+      value: "Masculino",
     },
   ];
 
@@ -35,9 +35,9 @@ const GenderSelect: React.FC<Props> = ({ disabled, label, onChange }) => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    justifyContent: "center",
     minHeight: 45,
-    minWidth: '87%',
+    minWidth: "87%",
   },
 });
 

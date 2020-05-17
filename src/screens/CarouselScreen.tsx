@@ -1,7 +1,7 @@
-import React from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import React from "react";
+import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
-import { Carousel } from '../containers';
+import { Carousel } from "../containers";
 
 const CarouselScreen: React.FC = () => {
   return (
@@ -15,8 +15,8 @@ const CarouselScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   body: {
-    alignItems: 'center',
-    minHeight: Dimensions.get('window').height,
+    alignItems: "center",
+    minHeight: Dimensions.get("window").height,
   },
 });
 

@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
-} from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-import * as localStorage from '../services/localStorage';
-import colors from '../utils/colors';
-import { BasicList } from '../components';
-import { RememberOption } from '../containers';
+import * as localStorage from "../services/localStorage";
+import colors from "../utils/colors";
+import { BasicList } from "../components";
+import { RememberOption } from "../containers";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -39,14 +39,15 @@ const ChooseRole: React.FC<ScreenProps> = ({ navigation }) => {
 
   const handleListPress = async (index: number) => {
     await localStorage.saveRole(roles[index].id, isChecked);
-    navigation.navigate('SelectPatient');
+    navigation.navigate("SelectPatient");
   };
 
   return (
     <SafeAreaView>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollView}>
+        style={styles.scrollView}
+      >
         <View style={styles.body}>
           <View style={styles.main}>
             <RememberOption
@@ -67,11 +68,11 @@ const ChooseRole: React.FC<ScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   body: {
-    alignItems: 'center',
-    minHeight: Dimensions.get('window').height,
+    alignItems: "center",
+    minHeight: Dimensions.get("window").height,
   },
   main: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 6,
     marginVertical: 50,
   },
