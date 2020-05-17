@@ -48,8 +48,8 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
         navigation.navigate("ChooseRole");
       }
     } else {
-      // TODO: ir para tela apropriada de acordo com permissão (listagem de tecnologias ou de hospitais)
-      console.warn(`permissão ${permission}`);
+      console.warn("TODO: navigate to adminTechnology screen");
+      // navigation.navigate('adminTechnology');
     }
   };
 
@@ -60,7 +60,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
         style={styles.main}
       >
         <View style={styles.main}>
-          <View style={styles.image}>
+          <View style={[styles.image, styles.headerContainer]}>
             <Image
               style={styles.image}
               source={require("../assets/logo-SVG.png")}
@@ -82,14 +82,22 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
           </View>
           <View style={styles.iniciateButton}>
             <ButtonPrimary
-              title="Iniciar Contagem"
+              title={
+                permission === "time-tracking"
+                  ? "Iniciar Contagem"
+                  : "Tecnologias"
+              }
               onPress={mainButtonAction}
             />
           </View>
           <View style={styles.variableButton}>
             <ButtonSecundary
               style={styles.variableButton}
-              title="Consultar Relatórios"
+              title={
+                permission === "time-tracking"
+                  ? "Consultar Relatórios"
+                  : "Exportar Relatório"
+              }
               onPress={() => "nothingyet"}
             />
           </View>
@@ -105,15 +113,21 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    elevation: 20,
+  },
   image: {
     alignItems: "flex-start",
     backgroundColor: colors.theme.primary,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     justifyContent: "center",
     marginBottom: 20,
     paddingLeft: 20,
   },
   imageTime: {
     alignItems: "flex-end",
+    elevation: 20,
     justifyContent: "center",
     marginBottom: 15,
     marginTop: -35,
