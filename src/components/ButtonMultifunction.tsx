@@ -12,24 +12,23 @@ import { Image } from "react-native";
 
 export interface Props extends TouchableOpacityProps {
   disabled?: boolean;
-  title: string;
-  //onPress: Function;
-  //onPress?: (index: number) => void;
-  style: Style;
   text: string;
   action: string;
 }
 
 const ButtonMultifunction: React.FC<Props> = ({
   disabled,
-  title,
-  //onPress,
-  style,
   text,
   action,
   ...props
 }) => {
-  const buttonStyle = disabled ? styles.buttonDisabled : styles.button;
+  let iconSource = "../assets/stop.png";
+  const buttonStyle = [
+    styles.base,
+    action === "start" && styles.start,
+    action === "stop" && styles.stop,
+  ];
+  // const buttonStyle = disabled ? styles.buttonDisabled : styles.button;
   return (
     <TouchableOpacity
       {...props}
@@ -37,11 +36,8 @@ const ButtonMultifunction: React.FC<Props> = ({
       disabled={disabled}
       style={[styles.base, buttonStyle]}
     >
-      <Text style={styles.text}>{title}</Text>
-      <Image
-        style={styles.icon}
-        source={require("../assets/" + action + ".png")}
-      />
+      <Text style={styles.text}>{text}</Text>
+      <Image style={styles.icon} source={require(iconSource)} />
     </TouchableOpacity>
   );
 };
@@ -56,14 +52,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     position: "relative",
   },
-  button: {
-    backgroundColor: colors.theme.primary,
-  },
-  buttonDisabled: {
-    backgroundColor: colors.basic.separator,
-  },
+  //button: {
+  //  backgroundColor: colors.theme.primary,
+  //},
+  //buttonDisabled: {
+  //  backgroundColor: colors.basic.separator,
+  //},
   text: {
-    color: colors.basic.background,
+    color: "black", //colors.theme.primary,
     fontSize: sizes.buttonText.main,
     fontWeight: "600",
     position: "absolute",
@@ -72,6 +68,21 @@ const styles = StyleSheet.create({
   icon: {
     position: "absolute",
     right: 16,
+  },
+  start: {
+    backgroundColor: colors.theme.primary,
+  },
+  stop: {
+    backgroundColor: "#FF9933",
+  },
+  cancel: {
+    backgroundColor: "#CC0000",
+  },
+  finish: {
+    backgroundColor: colors.theme.primary,
+  },
+  restart: {
+    backgroundColor: "#2D2D2D",
   },
 });
 
