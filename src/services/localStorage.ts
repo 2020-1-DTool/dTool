@@ -51,7 +51,10 @@ export const saveData = async (remoteData: any) => {
   const { accessToken, permission } = remoteData;
   await mergeObject("@auth", { token: accessToken, permission });
 
-  if (remoteData.permission === "time-tracking") {
+  if (
+    remoteData.permission === "time-tracking" ||
+    remoteData.permission === "administration-hospital"
+  ) {
     const { institution, roles, technologies } = remoteData;
 
     // salvar dados locais
