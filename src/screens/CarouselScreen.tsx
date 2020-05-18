@@ -1,13 +1,25 @@
 import React from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ButtonPrimary } from "../components";
 import { Carousel } from "../containers";
 
-const CarouselScreen: React.FC = () => {
+export interface ScreenProps {
+  navigation: StackNavigationProp<any, any>;
+}
+
+const CarouselScreen: React.FC<ScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView>
       <View style={styles.body}>
         <Carousel />
+        <ButtonPrimary
+          title="Teste"
+          onPress={() => {
+            return navigation.navigate("EmptyScreen");
+          }} // remover modificação futuramente, apenas para testes
+        />
       </View>
     </SafeAreaView>
   );

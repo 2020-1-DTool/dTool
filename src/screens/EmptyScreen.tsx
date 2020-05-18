@@ -2,7 +2,12 @@ import React from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View, Text } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getItem, removeItem } from "../services/localStorage";
-import { ButtonPrimary, GenderSelect, InputText } from "../components";
+import {
+  ButtonPrimary,
+  GenderSelect,
+  InputText,
+  ButtonPlus,
+} from "../components";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -30,6 +35,18 @@ const EmptyScreen: React.FC<ScreenProps> = ({ navigation }) => {
   const retrieveTech = async () => {
     const savedTech = await getItem("@tech");
     if (savedTech) console.warn(savedTech);
+  };
+
+  const adicionaAtividade = async () => {
+    const savedTech = await getItem("@tech");
+    const savedRole = await getItem("@role");
+    if (savedTech == null) {
+      navigation.navigate("ChooseTechnology");
+    } else if (savedRole == null) {
+      navigation.navigate("ChooseRole");
+    } else {
+      navigation.navigate("AddPatient");
+    }
   };
 
   return (
@@ -61,6 +78,7 @@ const EmptyScreen: React.FC<ScreenProps> = ({ navigation }) => {
             return navigation.navigate("CarouselScreen");
           }} // remover modificação futuramente, apenas para testes
         />
+        <ButtonPlus onPress={adicionaAtividade} />
       </View>
     </SafeAreaView>
   );

@@ -18,6 +18,7 @@ import {
 } from "./screens";
 import colors from "./utils/colors";
 import sizes from "./utils/sizes";
+import EmptyScreen from "./screens/EmptyScreen";
 
 YellowBox.ignoreWarnings(["AsyncStorage has been extracted"]);
 
@@ -147,6 +148,14 @@ const App = () => (
                 style={baseHeaderStyle.headerTitleStyle}
               />
             ),
+            ...baseHeaderStyle,
+          }}
+        />
+        <Stack.Screen
+          name="EmptyScreen"
+          component={EmptyScreen}
+          options={{
+            title: "Teste",
             ...baseHeaderStyle,
           }}
         />
