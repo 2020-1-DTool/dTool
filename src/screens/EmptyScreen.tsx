@@ -2,6 +2,7 @@ import React from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View, Text } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getItem, removeItem } from "../services/localStorage";
+import * as localStorage from "../services/localStorage";
 import {
   ButtonPrimary,
   GenderSelect,
@@ -38,14 +39,14 @@ const EmptyScreen: React.FC<ScreenProps> = ({ navigation }) => {
   };
 
   const adicionaAtividade = async () => {
-    const savedTech = await getItem("@tech");
-    const savedRole = await getItem("@role");
-    if (savedTech == null) {
+    const { technology } = await localStorage.getPreferences();
+    const { role } = await localStorage.getPreferences();
+    if (!technology) {
       navigation.navigate("ChooseTechnology");
-    } else if (savedRole == null) {
+    } else if (!role) {
       navigation.navigate("ChooseRole");
     } else {
-      navigation.navigate("AddPatient");
+      navigation.navigate("SelectPatient");
     }
   };
 
