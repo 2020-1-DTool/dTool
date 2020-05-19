@@ -22,7 +22,10 @@ const ButtonMultifunction: React.FC<Props> = ({
   action,
   ...props
 }) => {
-  let iconSource = "../assets/stop.png";
+  const iconSource = [
+    action === "start" && "../assets/start.png",
+    action === "stop" && "../assets/stop.png",
+  ];
   const buttonStyle = [
     styles.base,
     action === "start" && styles.start,
