@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
   contanier: {
     alignItems: "center",
     flexDirection: "row",
-    height: "100%",
     paddingBottom: 200,
     width: "100%",
   },
