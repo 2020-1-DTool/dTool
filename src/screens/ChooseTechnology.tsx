@@ -39,7 +39,7 @@ const ChooseTechnology: React.FC<ScreenProps> = ({ navigation }) => {
 
   const handleListPress = async (index: number) => {
     await localStorage.saveTechnology(technologies[index].id, isChecked);
-    navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+    navigation.reset({ index: 0, routes: [{ name: "ChooseRole" }] });
   };
 
   return (
