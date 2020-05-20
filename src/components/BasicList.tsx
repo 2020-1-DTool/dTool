@@ -6,13 +6,14 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-import { Patient } from "../services/types";
+import { Doc, Patient } from "../services/types";
 import sizes from "../utils/sizes";
 import colors from "../utils/colors";
 import ErrorText from "./ErrorText";
 
 export interface Props {
   data?: Array<any>;
+  docList?: Doc[];
   patientList?: Patient[];
   onPress?: (index: number) => void;
   onPressTrashIcon?: (item: number) => void;
@@ -25,14 +26,15 @@ const BasicList: React.FC<Props> = ({
   onPress,
   onPressTrashIcon,
   patientList,
+  docList,
 }) => {
   return (
     <View style={styles.contanier}>
-      {data?.length || patientList?.length ? (
+      {data?.length || patientList?.length || docList?.length ? (
         <FlatList
-          data={data || patientList}
+          data={data || patientList || docList}
           renderItem={({ item, index }) =>
-            patientList ? (
+            patientList || docList ? (
               <View style={styles.itemContainer}>
                 <TouchableOpacity
                   style={styles.itemContainer}
@@ -42,7 +44,7 @@ const BasicList: React.FC<Props> = ({
                     {item?.name}
                   </Text>
                   <Text style={[styles.item, styles.patientSubtitle]}>
-                    {item?.id} | {item?.sex}
+                    {item?.type || `${item?.id} |`} {item?.sex}
                   </Text>
                 </TouchableOpacity>
                 {icon && (

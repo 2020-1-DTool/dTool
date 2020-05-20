@@ -10,6 +10,7 @@ import {
   ChooseActivity,
   ChooseRole,
   ChooseTechnology,
+  DocList,
   HospitalCode,
   HospitalInformation,
   StartScreen,
@@ -108,6 +109,14 @@ const App = () => (
             ),
             ...baseHeaderStyle,
           }}
+        />
+        <Stack.Screen
+          name="DocList"
+          component={DocList}
+          options={({ navigation }) => ({
+            title: "Tecnologia Padrão",
+            ...baseHeaderStyle,
+          })}
         />
         <Stack.Screen
           name="ListPatient"

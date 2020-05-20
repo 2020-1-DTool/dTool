@@ -48,7 +48,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
         navigation.navigate("ChooseRole");
       }
     } else {
-      console.warn("TODO: navigate to adminTechnology screen");
+      navigation.navigate("DocList"); // TODO: temporário pra teste
       // navigation.navigate('adminTechnology');
     }
   };

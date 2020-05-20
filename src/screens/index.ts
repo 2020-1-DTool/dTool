@@ -3,6 +3,7 @@ export { default as AddPatient } from "./AddPatient";
 export { default as ChooseActivity } from "./ChooseActivity";
 export { default as ChooseRole } from "./ChooseRole";
 export { default as ChooseTechnology } from "./ChooseTechnology";
+export { default as DocList } from "./admin/DocList";
 export { default as HospitalCode } from "./HospitalCode";
 export { default as HospitalInformation } from "./HospitalInformation";
 export { default as ListPatient } from "./ListPatient";
