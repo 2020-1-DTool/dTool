@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Alert,
   Dimensions,
   SafeAreaView,
   StyleSheet,
@@ -32,7 +31,7 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
 
   const handleListPress = (index: number) => {
     const activ = activities[index];
-    Alert.alert(`(${index}) ${activ.name} (${activ.shortName}) selecionado!`);
+    if (activ) navigation.navigate("CarouselScreen");
   };
 
   return (
@@ -52,12 +51,6 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
           <BasicList
             data={activities.map((activity) => activity.name)}
             onPress={handleListPress}
-          />
-          <ButtonPrimary
-            title="Carousel"
-            onPress={() => {
-              return navigation.navigate("CarouselScreen");
-            }} // TODO: remover modificação futuramente, apenas para testes
           />
           <ButtonPrimary
             title="Início"
