@@ -27,20 +27,15 @@ YellowBox.ignoreWarnings(["AsyncStorage has been extracted"]);
 
 const Stack = createStackNavigator();
 
-const addNewProcedure = async (
-  navigation: StackNavigationProp<any, any>,
-  route: any
-) => {
-  navigation.setParams({ route: "Atividade" });
+const addNewProcedure = async (navigation: StackNavigationProp<any, any>) => {
   const { technology, role } = await localStorage.getPreferences();
   if (!technology) {
-    navigation.navigate("ChooseTechnology");
+    navigation.navigate("ChooseTechnology", { teste: "AdicionaAtividade" });
   } else if (!role) {
     navigation.navigate("ChooseRole");
   } else {
     navigation.navigate("SelectPatient");
   }
-  console.log(route.params);
 };
 
 const baseHeaderStyle = {
@@ -165,7 +160,7 @@ const App = () => (
         <Stack.Screen
           name="CarouselScreen"
           component={CarouselScreen}
-          options={({ navigation, route }) => ({
+          options={({ navigation }) => ({
             headerTitle: () => (
               <HeaderSearch
                 title="Carrosel"
@@ -175,7 +170,7 @@ const App = () => (
             headerRight: () => (
               <HeaderButton
                 iconName="ios-add-circle-outline"
-                onPress={() => addNewProcedure(navigation, route)}
+                onPress={() => addNewProcedure(navigation)}
               />
             ),
             ...baseHeaderStyle,
