@@ -3,6 +3,7 @@
  */
 
 import { StartScreen } from "src/screens";
+import { Moment } from "moment";
 
 /** Tipos de código de acesso. */
 export type Permission =
@@ -58,24 +59,24 @@ export type Patient = {
   sex: string;
 };
 
-export type ongoingExecution = {
+export type OngoingExecution = {
   startTime: string;
   elapsedTime: number;
-  latestStartTime: Date;
+  latestStartTime: Moment;
   idPatient: number;
   role: number;
   activity: Activity;
-  currentState: executionStatus;
+  currentState: ExecutionStatus;
 };
 
-export type finishedExecution = {
+export type FinishedExecution = {
   activity: number;
   role: number;
   date: string; //ISO8601
   duration: number;
 };
 
-export enum executionStatus {
+export enum ExecutionStatus {
   Initialized,
   Paused,
   Finished,
