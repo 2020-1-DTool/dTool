@@ -2,6 +2,8 @@
  * Definições de tipos usados nas funções de serviço.
  */
 
+import { StartScreen } from "src/screens";
+
 /** Tipos de código de acesso. */
 export type Permission =
   | "time-tracking"
@@ -55,3 +57,27 @@ export type Patient = {
   name: string;
   sex: string;
 };
+
+export type ongoingExecution = {
+  startTime: string;
+  elapsedTime: number;
+  latestStartTime: Date;
+  idPatient: number;
+  role: number;
+  activity: Activity;
+  currentState: executionStatus;
+};
+
+export type finishedExecution = {
+  activity: number;
+  role: number;
+  date: string; //ISO8601
+  duration: number;
+};
+
+export enum executionStatus {
+  Initialized,
+  Paused,
+  Finished,
+  Uninitialized,
+}
