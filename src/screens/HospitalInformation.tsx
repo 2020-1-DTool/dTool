@@ -13,6 +13,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import * as localStorage from "../services/localStorage";
 import colors from "../utils/colors";
+import { WarningBox } from "../containers";
 import { ButtonPrimary, ButtonSecundary } from "../components";
 
 export interface ScreenProps {
@@ -23,6 +24,7 @@ export interface ScreenProps {
 const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
   const [hospitalName, setHospitalName] = useState("Hospital não nomeado");
   const [permission, setPermission] = useState("");
+  const [pendingExecs, setPendingExecs] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -31,10 +33,18 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 
       const auth = await localStorage.getAuth();
       setPermission(auth.permission);
+
+      const list = localStorage.getFinishedExecutions();
+      if (Array.isArray(list) && list.length > 0) {
+        setPendingExecs(true);
+      }
     })();
   }, []);
 
   const handleBack = () => {
+    if (pendingExecs) {
+      return;
+    }
     localStorage.clear();
     navigation.reset({ index: 0, routes: [{ name: "HospitalCode" }] });
   };
@@ -101,9 +111,21 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               onPress={() => "nothingyet"}
             />
           </View>
+          {pendingExecs && WarningBox}
           <View>
-            <TouchableOpacity style={styles.outButton} onPress={handleBack}>
-              <Text style={styles.outButton}>Sair</Text>
+            <TouchableOpacity
+              style={
+                pendingExecs === true ? styles.fadedButton : styles.outButton
+              }
+              onPress={handleBack}
+            >
+              <Text
+                style={
+                  pendingExecs === true ? styles.fadedButton : styles.outButton
+                }
+              >
+                Sair
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -113,6 +135,14 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  fadedButton: {
+    alignContent: "center",
+    alignItems: "center",
+    color: colors.theme.faded,
+    fontSize: 16,
+    justifyContent: "center",
+    paddingBottom: 20,
+  },
   headerContainer: {
     elevation: 20,
   },

@@ -19,6 +19,7 @@ const theme = {
   failure: "#CC0000",
   primary: "#009688",
   highlight: "#FAD24D",
+  faded: "#808080",
 };
 
 export default { basic, theme, text };
