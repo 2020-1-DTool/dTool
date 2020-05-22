@@ -68,12 +68,12 @@ const ButtonMultifunction: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: 8,
-    justifyContent: "center",
     alignItems: "center",
+    borderRadius: 8,
+    flexDirection: "row",
+    justifyContent: "center",
     minHeight: 50,
     minWidth: 328,
-    flexDirection: "row",
     position: "relative",
   },
 
