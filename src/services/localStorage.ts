@@ -1,12 +1,24 @@
 import {
-  addObjectItem,
+  addPatientItem,
   ifIdExists,
   getObject,
   setObject,
   mergeObject,
   removeObjectItem,
+  addFinishedExecutionItem,
+  addOngoingExecutionItem,
+  getItem,
+  removeItem,
 } from "./asyncStorageAdapter";
-import { LocalData, Preferences, Session, Auth, Patient } from "./types";
+import {
+  LocalData,
+  Preferences,
+  Session,
+  Auth,
+  Patient,
+  FinishedExecution,
+  OngoingExecution,
+} from "./types";
 
 /**
  * Coordena o armazenamento de informações locais, usando o AsyncStorage.
@@ -42,7 +54,9 @@ export {
   getItem,
   setItem,
   removeItem,
-  addObjectItem,
+  addPatientItem,
+  addFinishedExecutionItem,
+  addOngoingExecutionItem,
   removeObjectItem,
 } from "./asyncStorageAdapter";
 
@@ -104,9 +118,9 @@ export const getPreferences = () => getObject<Preferences>("@preferences");
 /** Retorna as informações da sessão de uso do app. */
 export const getSession = () => getObject<Session>("@session");
 
-/** Retorna lista de pacientes salva localmente, se existir */
+/** Adiciona a lista de pacientes salva localmente, se ja nao existir */
 export const addPatient = (newPatient: Patient) =>
-  addObjectItem("@patient", newPatient);
+  addPatientItem("@patient", newPatient);
 
 /** Retorna paciente da lista salva localmente a partir de seu id, se existir */
 export const getPatient = (id: string) => ifIdExists("@patient", id);
@@ -114,6 +128,20 @@ export const getPatient = (id: string) => ifIdExists("@patient", id);
 /** Remove paciente da lista salva localmente a partir de seu índice no array */
 export const removePatient = (index: number) =>
   removeObjectItem("@patient", index);
+
+/** Adiciona a lista de execucoes concluidas salva localmente */
+export const addFinishedExecution = (newExecution: FinishedExecution) =>
+  addFinishedExecutionItem("@finishedExecution", newExecution);
+
+/** Retorna toda a lista de execucoes concluidas salva localmente */
+export const getFinishedExecutions = () => getItem("@finishedExecution");
+
+/** Reseta toda a lista de execucoes concluidas salva localmente */
+export const resetFinishedExecutions = () => removeItem("@finishedExecution");
+
+/** Adiciona a lista de execucoes em andamento salva localmente */
+export const addOngoingExecution = (newExecution: OngoingExecution) =>
+  addOngoingExecutionItem("@ongoingExecution", newExecution);
 
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.
