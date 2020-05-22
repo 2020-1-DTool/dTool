@@ -40,7 +40,7 @@ const ChooseTechnology: React.FC<ScreenProps> = ({ route, navigation }) => {
   const handleListPress = async (index: number) => {
     if (route.params?.running) {
       await localStorage.saveTechnology(technologies[index].id, isChecked);
-      navigation.reset({ index: 0, routes: [{ name: "ChooseRole" }] });
+      navigation.navigate("ChooseRole");
     } else {
       await localStorage.saveTechnology(technologies[index].id, isChecked);
       navigation.reset({ index: 0, routes: [{ name: "Home" }] });
