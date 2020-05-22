@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dimensions,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import * as localStorage from "../../services/localStorage";
 import colors from "../../utils/colors";
 import { TechnologyList } from "../../containers";
 import { ButtonPlus } from "../../components";
-import { Technology } from "../../services/types";
 
 export interface ScreenProps {
   storageResult: Array<Record<string, any>>;
@@ -19,51 +19,50 @@ export interface ScreenProps {
 }
 
 const ListTechnology: React.FC<ScreenProps> = ({ navigation }) => {
-  const [data, setData] = useState([] as Technology[]);
+  const [data] = useState([
+    "AVC",
+    "Acidente de Trânsito",
+    "ELA",
+    "PEF",
+    "Cirurgia Bariátrica",
+  ]);
 
-  useEffect(() => {
-    (async () => {
-      const data = await localStorage.getData();
-      setData(data.technologies ?? []);
-    })();
-  }, []);
-
-  const eraseTechology = async (index: number) => {
-    let currentList = await localStorage.removeTechnology(index);
-    if (currentList) {
-      currentList = JSON.parse(currentList);
-      setData(currentList);
-    }
-    return true;
+  const handleListPress = async (item: string) => {
+    Alert.alert(`selecionado: ${item}`);
   };
 
-  const handleListPress = async (item: Technology) => {
-    console.log("selecionado: ", item);
-    navigation.navigate("ChooseActivity", { technology: item });
+  const eraseTechology = (item: number) => {
+    Alert.alert(`apagar: ${item}`);
   };
 
   return (
     <SafeAreaView>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollView}
-      >
-        <View style={styles.body}>
-          <View style={styles.main}>
-            <TechnologyList
-              data={data ?? []}
-              onPressList={(item) => handleListPress(item)}
-              onPressTrashIcon={(index) => eraseTechology(index)}
+      {data ? (
+        <>
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            style={styles.scrollView}
+          >
+            <View style={styles.body}>
+              <View style={styles.main}>
+                <TechnologyList
+                  data={data ?? []}
+                  onPressList={(item) => handleListPress(item)}
+                  onPressTrashIcon={(index) => eraseTechology(index)}
+                />
+              </View>
+            </View>
+          </ScrollView>
+          <View style={styles.buttonPlus}>
+            <ButtonPlus
+              onPress={() => navigation.navigate("ListTechnology")}
+              style={styles.iconPlus}
             />
           </View>
-        </View>
-      </ScrollView>
-      <View style={styles.buttonPlus}>
-        <ButtonPlus
-          onPress={() => navigation.navigate("ListTechnology")}
-          style={styles.iconPlus}
-        />
-      </View>
+        </>
+      ) : (
+        <ActivityIndicator size="large" />
+      )}
     </SafeAreaView>
   );
 };

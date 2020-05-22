@@ -7,9 +7,9 @@ import colors from "../../utils/colors";
 import sizes from "../../utils/sizes";
 
 export interface Props extends TouchableOpacityProps {
-  data?: Technology[];
+  data?: string[];
   onPressTrashIcon: (item: number) => void;
-  onPressList: (item: Technology) => void;
+  onPressList: (item: string) => void;
 }
 
 const TechnologyList: React.FC<Props> = ({

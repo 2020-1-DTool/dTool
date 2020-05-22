@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-import { Patient, Technology } from "../services/types";
+import { Patient } from "../services/types";
 import sizes from "../utils/sizes";
 import colors from "../utils/colors";
 import ErrorText from "./ErrorText";
@@ -14,7 +14,7 @@ import ErrorText from "./ErrorText";
 export interface Props {
   data?: Array<any>;
   patientList?: Patient[];
-  technologyList?: Technology[];
+  technologyList?: string[];
   onPress?: (index: number) => void;
   onPressTrashIcon?: (item: number) => void;
   icon?: ReactElement;
@@ -41,10 +41,10 @@ const BasicList: React.FC<Props> = ({
                   onPress={() => onPress!(index)}
                 >
                   <Text style={[styles.item, styles.patientName]}>
-                    {item?.name}
+                    {item?.name || item}
                   </Text>
                   <Text style={[styles.item, styles.patientSubtitle]}>
-                    {item?.id} | {item?.sex}
+                    {item?.id} {item?.id && "|"} {item?.sex}
                   </Text>
                 </TouchableOpacity>
                 {icon && (
