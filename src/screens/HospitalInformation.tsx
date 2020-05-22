@@ -13,7 +13,11 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import * as localStorage from "../services/localStorage";
 import colors from "../utils/colors";
-import { ButtonPrimary, ButtonSecundary } from "../components";
+import {
+  ButtonPrimary,
+  ButtonSecundary,
+  ButtonExecutions,
+} from "../components";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -95,6 +99,35 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
                   : "Exportar Relatório"
               }
               onPress={() => "nothingyet"}
+            />
+          </View>
+
+          <View style={styles.variableButton}>
+            {/* TODO: botões de execução estão aqui somente para teste */}
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="start"
+              text="INICIAR"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="stop"
+              text="PARAR"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="finish"
+              text="CONCLUIR E SALVAR"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="restart"
+              text="RETOMAR CONTAGEM"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="cancel"
+              text="CANCELAR"
             />
           </View>
           <View>
