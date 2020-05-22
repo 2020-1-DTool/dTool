@@ -72,14 +72,10 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               source={require("../assets/time-SVG.png")}
             />
           </View>
-          <View style={styles.textHospital}>
-            <Text style={styles.textHospital}>{hospitalName}</Text>
-          </View>
-          <View style={styles.text}>
-            <Text style={styles.text}>
-              Coleta de tempo de atividades hospitalares
-            </Text>
-          </View>
+          <Text style={styles.textHospital}>{hospitalName}</Text>
+          <Text style={styles.text}>
+            Coleta de tempo de atividades hospitalares
+          </Text>
           <View style={styles.iniciateButton}>
             <ButtonPrimary
               title={
@@ -157,22 +153,17 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   text: {
-    alignContent: "flex-start",
-    alignItems: "flex-start",
     color: colors.text.secondary,
     fontSize: 15,
-    justifyContent: "center",
-    paddingLeft: 20,
+    paddingHorizontal: 16,
+    textAlign: "center",
   },
   textHospital: {
-    alignContent: "center",
-    alignItems: "flex-start",
     color: colors.text.primary,
     fontSize: 20,
     fontWeight: "bold",
-    justifyContent: "center",
     paddingBottom: 1,
-    paddingLeft: 20,
+    paddingHorizontal: 16,
     textAlign: "center",
   },
   variableButton: {
