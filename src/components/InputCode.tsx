@@ -1,11 +1,11 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import { StyleSheet } from "react-native";
 import { Textfield, TextfieldProps } from "react-native-material-kit";
 import colors from "../utils/colors";
 
 export type Props = TextfieldProps;
 
-const InputCode = React.forwardRef<ReactElement, Props>((props, ref) => {
+const InputCode = (props: any, ref: any) => {
   const [focused, setFocused] = React.useState(false);
   return (
     <Textfield
@@ -24,7 +24,7 @@ const InputCode = React.forwardRef<ReactElement, Props>((props, ref) => {
       tint={focused ? colors.theme.primary : colors.basic.separator}
     />
   );
-});
+};
 
 const styles = StyleSheet.create({
   base: {
@@ -38,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InputCode;
+export default React.forwardRef(InputCode);
