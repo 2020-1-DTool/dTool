@@ -1,5 +1,6 @@
+/* eslint-disable prettier/prettier */
 import { AsyncStorage } from "react-native";
-import { Patient } from "./types";
+import { Patient, FinishedExecution, OngoingExecution } from "./types";
 
 /**
  * Funções que facilitam e padronizam o acesso ao AsyncStorage por outras partes da aplicação.
@@ -69,9 +70,9 @@ export const ifIdExists = async (key: string, id: string) => {
 /**
  * Adiciona novo objeto no array de objetos informado
  * @param key Chave do array salvo no AsyncStorage
- * @param newItem Objeto que contém identificador(id), no momento compatível para objeto Patient
+ * @param newItem Objeto a ser adicionado, neste caso Patient
  */
-export const addObjectItem = async (key: string, newItem: Patient) => {
+export const addPatientItem = async (key: string, newItem: Patient) => {
   let list: string | string[] | null = await getItem(key);
 
   if (list) list = JSON.parse(list ?? "");
@@ -85,6 +86,93 @@ export const addObjectItem = async (key: string, newItem: Patient) => {
   await setItem(key, JSON.stringify(list));
 
   return true;
+};
+
+/**
+ * Adiciona novo objeto no array de objetos informado
+ * @param key Chave do array salvo no AsyncStorage
+ * @param newItem Objeto a ser adicionado, neste caso FinishedExecution
+ */
+export const addFinishedExecutionItem = async (
+  key: string,
+  newItem: FinishedExecution
+) => {
+  let list: string | string[] | null = await getItem(key);
+
+  if (list) list = JSON.parse(list ?? "");
+  if (!Array.isArray(list) || !list?.length) list = [];
+
+  list.push(newItem);
+  await setItem(key, JSON.stringify(list));
+
+  return true;
+};
+
+/**
+ * Adiciona novo objeto no array de objetos informado
+ * @param key Chave do array salvo no AsyncStorage
+ * @param newItem Objeto a ser adicionado, neste caso OngoingExecution
+ */
+export const addOngoingExecutionItem = async (
+  key: string,
+  newItem: OngoingExecution
+) => {
+  let list: string | string[] | null = await getItem(key);
+
+  if (list) list = JSON.parse(list ?? "");
+  if (!Array.isArray(list) || !list?.length) list = [];
+
+  list.push(newItem);
+  await setItem(key, JSON.stringify(list));
+
+  return true;
+};
+
+/**
+ * Altera objeto em dado index da lista indicada para o objeto determinado
+ * @param key Chave do array salvo no AsyncStorage
+ * @param newItem O novo objeto para aquele indice
+ * @param index O indice na lista onde o objeto deve ser alterado
+ */
+export const setOngoingExecutionItem = async (
+  key: string,
+  newItem: OngoingExecution,
+  index: number
+) => {
+  let list: string | string[] | null = await getItem(key);
+
+  if (list) list = JSON.parse(list ?? "");
+  if (!Array.isArray(list) || !list?.length) list = [];
+
+  list[index] = newItem;
+  await setItem(key, JSON.stringify(list));
+
+  return true;
+};
+
+/**
+ * Remove objeto do array de objetos informado no indice indicado
+ * @param key Chave do array salvo no AsyncStorage
+ * @param index Índice do objeto no array
+ */
+export const removeOngoingExecutionItem = async (
+  key: string,
+  index: number
+) => {
+  let list: string | string[] | null = await getItem(key);
+  if (list) list = JSON.parse(list ?? "");
+
+  if (Array.isArray(list) && list.length > 0) list.splice(index, 1);
+  else {
+    console.log(`❌Error removing ${key}[${index}] from AsyncStorage`);
+    return null;
+  }
+  const removed = JSON.parse(list[index]);
+  await setItem(key, JSON.stringify(list));
+  const currentList = await getItem(key);
+  console.log(`✅ ${key}: ${currentList}`);
+
+  return removed;
 };
 
 /**
