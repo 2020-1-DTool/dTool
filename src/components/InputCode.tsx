@@ -5,7 +5,7 @@ import colors from "../utils/colors";
 
 export type Props = TextfieldProps;
 
-const InputCode: React.FC<Props> = (props) => {
+const InputCode = (props: any, ref: any) => {
   const [focused, setFocused] = React.useState(false);
   return (
     <Textfield
@@ -17,6 +17,7 @@ const InputCode: React.FC<Props> = (props) => {
       onBlur={() => setFocused(false)}
       onFocus={() => setFocused(true)}
       placeholder="A"
+      ref={ref}
       selectTextOnFocus
       style={styles.input}
       textInputStyle={styles.base}
@@ -37,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InputCode;
+export default React.forwardRef(InputCode);
