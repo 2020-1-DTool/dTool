@@ -129,6 +129,28 @@ export const addOngoingExecutionItem = async (
 };
 
 /**
+ * Altera objeto em dado index da lista indicada para o objeto determinado
+ * @param key Chave do array salvo no AsyncStorage
+ * @param newItem O novo objeto para aquele indice
+ * @param index O indice na lista onde o objeto deve ser alterado
+ */
+export const setOngoingExecutionItem = async (
+  key: string,
+  newItem: OngoingExecution,
+  index: number
+) => {
+  let list: string | string[] | null = await getItem(key);
+
+  if (list) list = JSON.parse(list ?? "");
+  if (!Array.isArray(list) || !list?.length) list = [];
+
+  list[index] = newItem;
+  await setItem(key, JSON.stringify(list));
+
+  return true;
+};
+
+/**
  * Remove objeto do array de objetos informado
  * @param key Chave do array salvo no AsyncStorage
  * @param index Índice do objeto no array
