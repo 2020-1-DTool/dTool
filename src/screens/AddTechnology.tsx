@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   baseText: {
     color: colors.text.primary,
     fontSize: sizes.headline.h6,
+    paddingBottom: "40%",
     paddingLeft: "5%",
     paddingRight: "5%",
     paddingTop: "5%",
