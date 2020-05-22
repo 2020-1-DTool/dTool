@@ -30,10 +30,10 @@ const styles = StyleSheet.create({
   base: {
     borderColor: colors.theme.primary,
     borderRadius: 8,
-    borderWidth: 3,
+    borderWidth: 2,
     justifyContent: "center",
     minHeight: 45,
-    minWidth: 328,
+    // minWidth: 328,
   },
   button: {
     backgroundColor: colors.basic.background,

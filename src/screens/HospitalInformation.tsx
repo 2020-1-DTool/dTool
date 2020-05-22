@@ -138,8 +138,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
     paddingBottom: 10,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingHorizontal: 16,
     paddingTop: 40,
   },
   main: {
@@ -179,8 +178,7 @@ const styles = StyleSheet.create({
   variableButton: {
     alignContent: "center",
     paddingBottom: 60,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingHorizontal: 16,
   },
 });
 
