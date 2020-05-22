@@ -8,7 +8,6 @@ import {
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { Image } from "react-native";
 
 export interface Props extends TouchableOpacityProps {
   disabled?: boolean;
@@ -16,7 +15,7 @@ export interface Props extends TouchableOpacityProps {
   action: string;
 }
 
-const ButtonMultifunction: React.FC<Props> = ({
+const ButtonExecutions: React.FC<Props> = ({
   disabled,
   text,
   action,
@@ -61,7 +60,7 @@ const ButtonMultifunction: React.FC<Props> = ({
       style={[styles.base, buttonStyle]}
     >
       <Text style={styles.text}>{text}</Text>
-      <Icon name={iconName} size={24} color="white" style={styles.icon} />
+      <Icon name={iconName} size={24} color={colors.basic.white} style={styles.icon} />
     </TouchableOpacity>
   );
 };
@@ -76,33 +75,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     position: "relative",
   },
-
-  text: {
-    color: "white",
-    fontSize: sizes.buttonText.main,
-    fontWeight: "600",
-    position: "absolute",
-    left: 16,
+  cancel: {
+    backgroundColor: colors.theme.failure,
+  },
+  finish: {
+    backgroundColor: colors.theme.primary,
   },
   icon: {
     position: "absolute",
     right: 16,
   },
+  restart: {
+    backgroundColor: colors.text.header,
+  },
   start: {
     backgroundColor: colors.theme.primary,
   },
   stop: {
-    backgroundColor: "#FF9933",
+    backgroundColor: colors.theme.accent,
   },
-  cancel: {
-    backgroundColor: "#CC0000",
-  },
-  finish: {
-    backgroundColor: colors.theme.primary,
-  },
-  restart: {
-    backgroundColor: "#2D2D2D",
-  },
+  text: {
+    color: colors.basic.white,
+    fontSize: sizes.buttonText.main,
+    fontWeight: "600",
+    position: "absolute",
+    left: 16,
+  }
 });
 
-export default ButtonMultifunction;
+export default ButtonExecutions;
