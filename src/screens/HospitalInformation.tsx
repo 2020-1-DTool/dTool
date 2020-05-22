@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   fadedButton: {
     alignContent: "center",
     alignItems: "center",
-    color: colors.theme.faded,
+    color: colors.text.secondary,
     fontSize: 16,
     justifyContent: "center",
     paddingBottom: 20,
