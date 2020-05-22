@@ -30,7 +30,7 @@ const Stack = createStackNavigator();
 const addNewProcedure = async (navigation: StackNavigationProp<any, any>) => {
   const { technology, role } = await localStorage.getPreferences();
   if (!technology) {
-    navigation.navigate("ChooseTechnology", { teste: "AdicionaAtividade" });
+    navigation.navigate("ChooseTechnology", { running: "AaddActivity" });
   } else if (!role) {
     navigation.navigate("ChooseRole");
   } else {
