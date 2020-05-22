@@ -58,8 +58,11 @@ const BasicList: React.FC<Props> = ({
                 )}
               </View>
             ) : (
-              <View style={styles.itemContainer}>
-                <TouchableOpacity onPress={() => onPress!(index)}>
+              <View>
+                <TouchableOpacity
+                  style={styles.itemContainer}
+                  onPress={() => onPress!(index)}
+                >
                   <Text style={styles.item}>{item}</Text>
                 </TouchableOpacity>
               </View>
@@ -79,6 +82,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     paddingBottom: 200,
+    width: "100%",
   },
   iconButton: {
     position: "absolute",
@@ -97,6 +101,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.basic.separator,
     borderBottomWidth: 1,
     flexDirection: "row",
+    width: "100%",
   },
   patientName: {
     fontWeight: "bold",

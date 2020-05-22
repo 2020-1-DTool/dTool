@@ -91,8 +91,10 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignContent: "flex-end",
-    bottom: "1%",
     flex: 3,
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    width: "100%",
   },
   main: {
     alignItems: "center",
