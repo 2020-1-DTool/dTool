@@ -5,9 +5,9 @@ import {
   TouchableOpacityProps,
   StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
-import Icon from "react-native-vector-icons/MaterialIcons";
 
 export interface Props extends TouchableOpacityProps {
   disabled?: boolean;
@@ -60,11 +60,12 @@ const ButtonExecutions: React.FC<Props> = ({
       style={[styles.base, buttonStyle]}
     >
       <Text style={styles.text}>{text}</Text>
-<<<<<<< HEAD:src/components/ButtonExecutions.tsx
-      <Icon name={iconName} size={24} color={colors.basic.white} style={styles.icon} />
-=======
-      <Icon name={iconName} size={32} color="white" style={styles.icon} />
->>>>>>> 2c63896d6cb1e14309def98e1cafeaf7b909118a:src/components/ButtonMultifunction.tsx
+      <Icon
+        name={iconName}
+        size={32}
+        color={colors.basic.white}
+        style={styles.icon}
+      />
     </TouchableOpacity>
   );
 };
@@ -102,9 +103,9 @@ const styles = StyleSheet.create({
     color: colors.basic.white,
     fontSize: sizes.buttonText.main,
     fontWeight: "600",
-    position: "absolute",
     left: 16,
-  }
+    position: "absolute",
+  },
 });
 
 export default ButtonExecutions;

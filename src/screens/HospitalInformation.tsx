@@ -97,7 +97,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
           <View style={styles.variableButton}>
             <ButtonSecundary
               style={styles.variableButton}
-             title={
+              title={
                 permission === "time-tracking"
                   ? "Consultar Relatórios"
                   : "Exportar Relatório"
