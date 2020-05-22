@@ -18,6 +18,7 @@ import {
   StartScreen,
   SelectPatient,
   ListPatient,
+  ListTechnology,
 } from "./screens";
 import colors from "./utils/colors";
 import sizes from "./utils/sizes";
@@ -143,6 +144,16 @@ const App = () => (
             ...baseHeaderStyle,
           })}
         />
+
+        <Stack.Screen
+          name="ListTechnology"
+          component={ListTechnology}
+          options={({ navigation }) => ({
+            title: "Tecnologia",
+            ...baseHeaderStyle,
+          })}
+        />
+
         <Stack.Screen
           name="SelectPatient"
           component={SelectPatient}
