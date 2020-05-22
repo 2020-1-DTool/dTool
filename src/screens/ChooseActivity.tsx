@@ -30,8 +30,8 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
   }, []);
 
   const handleListPress = (index: number) => {
-    const activ = activities[index];
-    if (activ) {
+    const activity = activities[index];
+    if (activity) {
       navigation.reset({ index: 0, routes: [{ name: "CarouselScreen" }] });
     }
   };
