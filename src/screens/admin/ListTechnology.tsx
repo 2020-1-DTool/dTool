@@ -29,10 +29,12 @@ const ListTechnology: React.FC<ScreenProps> = ({ navigation }) => {
 
   const handleListPress = async (item: string) => {
     Alert.alert(`selecionado: ${item}`);
+    // TODO: sincronizar com a API
   };
 
   const eraseTechology = (item: number) => {
     Alert.alert(`apagar: ${item}`);
+    // TODO: sincronizar com a API
   };
 
   return (
@@ -55,6 +57,7 @@ const ListTechnology: React.FC<ScreenProps> = ({ navigation }) => {
           </ScrollView>
           <View style={styles.buttonPlus}>
             <ButtonPlus
+              // TODO> ir para a próxima tela
               onPress={() => navigation.navigate("ListTechnology")}
               style={styles.iconPlus}
             />
