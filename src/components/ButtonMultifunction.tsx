@@ -61,7 +61,7 @@ const ButtonMultifunction: React.FC<Props> = ({
       style={[styles.base, buttonStyle]}
     >
       <Text style={styles.text}>{text}</Text>
-      <Icon name={iconName} size={24} color="white" style={styles.icon} />
+      <Icon name={iconName} size={32} color="white" style={styles.icon} />
     </TouchableOpacity>
   );
 };
