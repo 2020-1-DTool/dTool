@@ -1,5 +1,6 @@
 export { default as CarouselScreen } from "./CarouselScreen";
 export { default as AddPatient } from "./AddPatient";
+export { default as AddTechnology } from "./AddTechnology";
 export { default as ChooseActivity } from "./ChooseActivity";
 export { default as ChooseRole } from "./ChooseRole";
 export { default as ChooseTechnology } from "./ChooseTechnology";
