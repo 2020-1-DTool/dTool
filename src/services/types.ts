@@ -2,7 +2,6 @@
  * Definições de tipos usados nas funções de serviço.
  */
 
-import { StartScreen } from "src/screens";
 import { Moment } from "moment";
 
 /** Tipos de código de acesso. */
@@ -72,7 +71,7 @@ export type OngoingExecution = {
 export type FinishedExecution = {
   activity: number;
   role: number;
-  date: string; //ISO8601
+  date: string; // ISO8601
   duration: number;
 };
 
