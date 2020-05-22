@@ -151,6 +151,31 @@ export const setOngoingExecutionItem = async (
 };
 
 /**
+ * Remove objeto do array de objetos informado no indice indicado
+ * @param key Chave do array salvo no AsyncStorage
+ * @param index Índice do objeto no array
+ */
+export const removeOngoingExecutionItem = async (
+  key: string,
+  index: number
+) => {
+  let list: string | string[] | null = await getItem(key);
+  if (list) list = JSON.parse(list ?? "");
+
+  if (Array.isArray(list) && list.length > 0) list.splice(index, 1);
+  else {
+    console.log(`❌Error removing ${key}[${index}] from AsyncStorage`);
+    return null;
+  }
+  const removed = JSON.parse(list[index]);
+  await setItem(key, JSON.stringify(list));
+  const currentList = await getItem(key);
+  console.log(`✅ ${key}: ${currentList}`);
+
+  return removed;
+};
+
+/**
  * Remove objeto do array de objetos informado
  * @param key Chave do array salvo no AsyncStorage
  * @param index Índice do objeto no array

@@ -8,6 +8,7 @@ import {
   addFinishedExecutionItem,
   addOngoingExecutionItem,
   setOngoingExecutionItem,
+  removeOngoingExecutionItem,
   getItem,
   removeItem,
 } from "./asyncStorageAdapter";
@@ -153,7 +154,7 @@ export const setOngoingExecution = (newItem: OngoingExecution, index: number) =>
 
 /** Remove um objeto em dado index na lista de execucoes em andamento salva localmente */
 export const removeOngoingExecution = (index: number) =>
-  removeObjectItem("@ongoingExecution", index);
+  removeOngoingExecutionItem("@ongoingExecution", index);
 
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.
