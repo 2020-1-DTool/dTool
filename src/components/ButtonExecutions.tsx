@@ -60,19 +60,23 @@ const ButtonExecutions: React.FC<Props> = ({
       style={[styles.base, buttonStyle]}
     >
       <Text style={styles.text}>{text}</Text>
+<<<<<<< HEAD:src/components/ButtonExecutions.tsx
       <Icon name={iconName} size={24} color={colors.basic.white} style={styles.icon} />
+=======
+      <Icon name={iconName} size={32} color="white" style={styles.icon} />
+>>>>>>> 2c63896d6cb1e14309def98e1cafeaf7b909118a:src/components/ButtonMultifunction.tsx
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: 8,
-    justifyContent: "center",
     alignItems: "center",
+    borderRadius: 8,
+    flexDirection: "row",
+    justifyContent: "center",
     minHeight: 50,
     minWidth: 328,
-    flexDirection: "row",
     position: "relative",
   },
   cancel: {
