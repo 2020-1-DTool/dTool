@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
-import { Style } from "react-native-material-kit";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { Image } from "react-native";
 
 export interface Props extends TouchableOpacityProps {
@@ -22,16 +22,37 @@ const ButtonMultifunction: React.FC<Props> = ({
   action,
   ...props
 }) => {
-  const iconSource = [
-    action === "start" && "../assets/start.png",
-    action === "stop" && "../assets/stop.png",
-  ];
+  let iconName = "";
+
+  switch (action) {
+    case "start":
+      iconName = "play-circle-outline";
+      break;
+    case "stop":
+      iconName = "pause-circle-outline";
+      break;
+    case "cancel":
+      iconName = "delete";
+      break;
+    case "finish":
+      iconName = "save";
+      break;
+    case "restart":
+      iconName = "play-circle-outline";
+      break;
+    default:
+      break;
+  }
+
   const buttonStyle = [
     styles.base,
     action === "start" && styles.start,
     action === "stop" && styles.stop,
+    action === "cancel" && styles.cancel,
+    action === "finish" && styles.finish,
+    action === "restart" && styles.restart,
   ];
-  // const buttonStyle = disabled ? styles.buttonDisabled : styles.button;
+
   return (
     <TouchableOpacity
       {...props}
@@ -40,7 +61,7 @@ const ButtonMultifunction: React.FC<Props> = ({
       style={[styles.base, buttonStyle]}
     >
       <Text style={styles.text}>{text}</Text>
-      <Image style={styles.icon} source={require(iconSource)} />
+      <Icon name={iconName} size={24} color="white" style={styles.icon} />
     </TouchableOpacity>
   );
 };
@@ -55,14 +76,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     position: "relative",
   },
-  //button: {
-  //  backgroundColor: colors.theme.primary,
-  //},
-  //buttonDisabled: {
-  //  backgroundColor: colors.basic.separator,
-  //},
+
   text: {
-    color: "black", //colors.theme.primary,
+    color: "white",
     fontSize: sizes.buttonText.main,
     fontWeight: "600",
     position: "absolute",

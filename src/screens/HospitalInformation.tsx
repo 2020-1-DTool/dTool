@@ -97,14 +97,11 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
           <View style={styles.variableButton}>
             <ButtonSecundary
               style={styles.variableButton}
-              title={
-                permission === "time-tracking"
-                  ? "Consultar Relatórios"
-                  : "Exportar Relatório"
-              }
+              title="Consultar Relatórios"
               onPress={() => "nothingyet"}
             />
           </View>
+
           <View style={styles.variableButton}>
             <ButtonMultifunction
               //style={styles.variableButton}
@@ -112,7 +109,32 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               action="start"
               text="INICIAR"
             />
+            <ButtonMultifunction
+              //style={styles.variableButton}
+              onPress={() => "nothingyet"}
+              action="stop"
+              text="PARAR"
+            />
+            <ButtonMultifunction
+              //style={styles.variableButton}
+              onPress={() => "nothingyet"}
+              action="finish"
+              text="CONCLUIR E SALVAR"
+            />
+            <ButtonMultifunction
+              //style={styles.variableButton}
+              onPress={() => "nothingyet"}
+              action="restart"
+              text="RETOMAR CONTAGEM"
+            />
+            <ButtonMultifunction
+              //style={styles.variableButton}
+              onPress={() => "nothingyet"}
+              action="cancel"
+              text="CANCELAR"
+            />
           </View>
+
           <View>
             <TouchableOpacity style={styles.outButton} onPress={handleBack}>
               <Text style={styles.outButton}>Sair</Text>
