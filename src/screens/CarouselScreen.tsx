@@ -6,7 +6,6 @@ import { Carousel } from "../containers";
 import * as localStorage from "../services/localStorage";
 import { Activity, Patient, Card } from "../services/types";
 import { CardRow } from "../components";
-
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
   route?: { params: { patientName: string; activityName: string } };
@@ -31,32 +30,36 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
       console.log("CarouselScreen.tsx blablabla");
       const responseCard = await localStorage.getSession();
       setRole(responseCard?.role?.toString() || "");
-      let complete: Card[] = data;
-      let tam = complete.length || 1;
-      console.log("Antes " + complete);
-      if (complete.length == 0) {
-        let dataCard: Card = {
+      let strComplete = await localStorage.getCards();
+      let complete: Card[];
+      let dataCard: Card;
+      if(strComplete != null){
+      complete= JSON.parse(strComplete);
+      dataCard = {
+        patient: "DDD",
+        activity: "BBB",
+        role: "CCC",
+        time: "00:00:00",
+      };
+      //complete.push(dataCard);
+      
+      complete.push(dataCard);
+    }
+      else {
+        dataCard = {
           patient: "AAA",
           activity: "BBB",
           role: "CCC",
           time: "00:00:00",
         };
         //complete.push(dataCard);
-        complete = [dataCard];
+        complete= [dataCard];
         console.log("CarouselScreen.tsx Entrou if");
-      } else {
-        let dataCard: Card = {
-          patient: "AAA",
-          activity: "BBB",
-          role: "CCC",
-          time: "00:00:00",
-        };
+      } 
         //complete.push(dataCard);
-        complete.push(dataCard);
-        console.log("CarouselScreen.tsx Entrou 2 if");
-      }
+        
       //let complete: Card[] = [{patient: 1, activity:2, role:2, time:"Teste"}];
-
+      await localStorage.addCard(dataCard);
       setData(complete);
     })();
   }, []);

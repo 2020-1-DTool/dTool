@@ -5,8 +5,12 @@ import {
   setObject,
   mergeObject,
   removeObjectItem,
+  addCardItem,
+  setCardItem,
+  removeCardItem,
+  getItem,
 } from "./asyncStorageAdapter";
-import { LocalData, Preferences, Session, Auth, Patient } from "./types";
+import { LocalData, Preferences, Session, Auth, Patient, Card } from "./types";
 
 /**
  * Coordena o armazenamento de informações locais, usando o AsyncStorage.
@@ -115,6 +119,20 @@ export const getPatient = (id: string) => ifIdExists("@patient", id);
 export const removePatient = (index: number) =>
   removeObjectItem("@patient", index);
 
+/** Adiciona a lista de execucoes em andamento salva localmente */
+export const addCard = (newCard: Card) =>
+addCardItem("@Card", newCard);
+
+/** Retorna toda a lista de execucoes em andamento salva localmente */
+export const getCards = () => getItem("@Card");
+
+/** Altera um objeto em dado index na lista de execucoes em andamento salva localmente */
+export const setCard = (newItem: Card, index: number) =>
+setCardItem("@Card", newItem, index);
+
+/** Remove um objeto em dado index na lista de execucoes em andamento salva localmente */
+export const removeCard = (index: number) =>
+removeCardItem("@Card", index);
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.
  * @param technology ID da tecnologia selecionada.
