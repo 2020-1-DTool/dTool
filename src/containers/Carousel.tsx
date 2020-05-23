@@ -43,7 +43,7 @@ let initialData = [
 ];
 
 const Carousel: React.FC = () => {
-  const [data, setData] = useState(initialData);
+  const [data] = useState(initialData);
   return (
     <View style={styles.carouselStyle}>
       <ScrollView>

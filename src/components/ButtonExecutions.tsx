@@ -39,6 +39,9 @@ const ButtonExecutions: React.FC<Props> = ({
     case "restart":
       iconName = "play-circle-outline";
       break;
+    case "upload":
+      iconName = "file-upload";
+      break;
     default:
       break;
   }
@@ -50,6 +53,7 @@ const ButtonExecutions: React.FC<Props> = ({
     action === "cancel" && styles.cancel,
     action === "finish" && styles.finish,
     action === "restart" && styles.restart,
+    action === "upload" && styles.upload,
   ];
 
   return (
@@ -105,6 +109,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     left: 16,
     position: "absolute",
+  },
+  upload: {
+    backgroundColor: colors.theme.primary,
   },
 });
 
