@@ -2,7 +2,10 @@ import "react-native-gesture-handler";
 import React from "react";
 import { StatusBar, YellowBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from "@react-navigation/stack";
 import { HeaderButton, HeaderSearch } from "./components";
 import {
   AddPatient,
@@ -16,13 +19,26 @@ import {
   StartScreen,
   SelectPatient,
   ListPatient,
+  ListTechnology,
 } from "./screens";
 import colors from "./utils/colors";
 import sizes from "./utils/sizes";
+import * as localStorage from "./services/localStorage";
 
 YellowBox.ignoreWarnings(["AsyncStorage has been extracted"]);
 
 const Stack = createStackNavigator();
+
+const addNewProcedure = async (navigation: StackNavigationProp<any, any>) => {
+  const { technology, role } = await localStorage.getPreferences();
+  if (!technology) {
+    navigation.navigate("ChooseTechnology", { running: "AaddActivity" });
+  } else if (!role) {
+    navigation.navigate("ChooseRole");
+  } else {
+    navigation.navigate("SelectPatient");
+  }
+};
 
 const baseHeaderStyle = {
   headerStyle: {
@@ -33,6 +49,11 @@ const baseHeaderStyle = {
     fontWeight: "normal",
     fontSize: sizes.headline.h1,
   },
+  icon: {
+    color: colors.text.navigation,
+    fontSize: sizes.headline.h1,
+  },
+  buttonPlus: { bottom: 0, position: "relative", right: 0 },
 };
 
 const App = () => (
@@ -132,6 +153,16 @@ const App = () => (
             ...baseHeaderStyle,
           })}
         />
+
+        <Stack.Screen
+          name="ListTechnology"
+          component={ListTechnology}
+          options={({ navigation }) => ({
+            title: "Tecnologia",
+            ...baseHeaderStyle,
+          })}
+        />
+
         <Stack.Screen
           name="SelectPatient"
           component={SelectPatient}
@@ -149,15 +180,21 @@ const App = () => (
         <Stack.Screen
           name="CarouselScreen"
           component={CarouselScreen}
-          options={{
+          options={({ navigation }) => ({
             headerTitle: () => (
               <HeaderSearch
                 title="Carrosel"
                 style={baseHeaderStyle.headerTitleStyle}
               />
             ),
+            headerRight: () => (
+              <HeaderButton
+                iconName="ios-add-circle-outline"
+                onPress={() => addNewProcedure(navigation)}
+              />
+            ),
             ...baseHeaderStyle,
-          }}
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>
