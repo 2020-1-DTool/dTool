@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import {
+  Alert,
   Dimensions,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
 } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import colors from "../../utils/colors";
-import { BasicList, ButtonPlus } from "../../components";
+import { BasicList } from "../../components";
 
 export interface ScreenProps {
   storageResult: Array<Record<string, any>>;
@@ -33,11 +35,15 @@ let initialData = [
   },
 ];
 
-const DocList: React.FC<ScreenProps> = ({ navigation }) => {
-  const [data, setData] = useState(initialData);
+const DocList: React.FC<ScreenProps> = () => {
+  const [data] = useState(initialData);
 
-  const handleListPress = async (item: number) => {
-    console.log("selecionado: ", item);
+  const handleListPress = (item: number) => {
+    Alert.alert(`Selecionado: ${item}`);
+  };
+
+  const handleIconDownloadPress = (item: number) => {
+    Alert.alert(`Download: ${item}`);
   };
 
   return (
@@ -51,16 +57,14 @@ const DocList: React.FC<ScreenProps> = ({ navigation }) => {
             <BasicList
               docList={data}
               onPress={(item) => handleListPress(item)}
+              onPressIconDownload={(item) => handleIconDownloadPress(item)}
+              iconDownload={
+                <Icon size={32} color={colors.theme.primary} name="get-app" />
+              }
             />
           </View>
         </View>
       </ScrollView>
-      <View style={styles.buttonPlus}>
-        <ButtonPlus
-          onPress={() => navigation.navigate("AddPatient")}
-          style={styles.iconPlus}
-        />
-      </View>
     </SafeAreaView>
   );
 };
@@ -70,18 +74,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     minHeight: Dimensions.get("window").height,
   },
-  buttonPlus: {
-    bottom: -70,
-    position: "absolute",
-    right: 50,
-  },
-  iconPlus: {
-    alignSelf: "flex-end",
-  },
   main: {
     alignItems: "center",
     flex: 1,
-    justifyContent: "flex-end",
   },
   scrollView: {
     backgroundColor: colors.basic.background,

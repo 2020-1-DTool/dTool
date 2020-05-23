@@ -17,24 +17,31 @@ export interface Props {
   patientList?: Patient[];
   onPress?: (index: number) => void;
   onPressTrashIcon?: (item: number) => void;
+  onPressIconDownload?: (item: number) => void;
   icon?: ReactElement;
+  iconDownload?: ReactElement;
 }
 
 const BasicList: React.FC<Props> = ({
   data,
   icon,
+  iconDownload,
   onPress,
   onPressTrashIcon,
+  onPressIconDownload,
   patientList,
   docList,
 }) => {
+  const dataLength = data?.length || patientList?.length || docList?.length;
+  const content = data || patientList || docList;
+  const list = patientList || docList;
   return (
     <View style={styles.contanier}>
-      {data?.length || patientList?.length || docList?.length ? (
+      {dataLength ? (
         <FlatList
-          data={data || patientList || docList}
+          data={content}
           renderItem={({ item, index }) =>
-            patientList || docList ? (
+            list ? (
               <View style={styles.itemContainer}>
                 <TouchableOpacity
                   style={styles.itemContainer}
@@ -54,6 +61,15 @@ const BasicList: React.FC<Props> = ({
                     style={styles.iconButton}
                   >
                     {icon}
+                  </TouchableOpacity>
+                )}
+                {iconDownload && (
+                  <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={() => onPressIconDownload!(index)}
+                    style={styles.iconButton}
+                  >
+                    {iconDownload}
                   </TouchableOpacity>
                 )}
               </View>
