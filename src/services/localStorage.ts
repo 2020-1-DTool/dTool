@@ -120,19 +120,17 @@ export const removePatient = (index: number) =>
   removeObjectItem("@patient", index);
 
 /** Adiciona a lista de execucoes em andamento salva localmente */
-export const addCard = (newCard: Card) =>
-addCardItem("@Card", newCard);
+export const addCard = (newCard: Card) => addCardItem("@Card", newCard);
 
 /** Retorna toda a lista de execucoes em andamento salva localmente */
 export const getCards = () => getItem("@Card");
 
 /** Altera um objeto em dado index na lista de execucoes em andamento salva localmente */
 export const setCard = (newItem: Card, index: number) =>
-setCardItem("@Card", newItem, index);
+  setCardItem("@Card", newItem, index);
 
 /** Remove um objeto em dado index na lista de execucoes em andamento salva localmente */
-export const removeCard = (index: number) =>
-removeCardItem("@Card", index);
+export const removeCard = (index: number) => removeCardItem("@Card", index);
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.
  * @param technology ID da tecnologia selecionada.

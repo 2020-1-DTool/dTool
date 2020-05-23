@@ -35,7 +35,7 @@ const CardRow: React.FC<ScreenProps> = ({ data }) => {
         <View />
         <View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {data?.map((item, key) => (
+            {data?.reverse().map((item, key) => (
               <View key={key}>
                 <TouchableOpacity
                   key={item.patient + item.activity}

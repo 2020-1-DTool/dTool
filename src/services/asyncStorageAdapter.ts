@@ -87,10 +87,7 @@ export const addObjectItem = async (key: string, newItem: Patient) => {
   return true;
 };
 
-export const addCardItem = async (
-  key: string,
-  newItem: Card,
-) => {
+export const addCardItem = async (key: string, newItem: Card) => {
   let list: string | string[] | null = await getItem(key);
 
   if (list) list = JSON.parse(list ?? "");
@@ -118,10 +115,7 @@ export const setCardItem = async (
   return true;
 };
 
-export const removeCardItem = async (
-  key: string,
-  index: number
-) => {
+export const removeCardItem = async (key: string, index: number) => {
   let list: string | string[] | null = await getItem(key);
   if (list) list = JSON.parse(list ?? "");
 
@@ -137,7 +131,6 @@ export const removeCardItem = async (
 
   return removed;
 };
-
 
 /**
  * Remove objeto do array de objetos informado
@@ -157,7 +150,6 @@ export const removeObjectItem = async (key: string, index: number) => {
 
   return currentList;
 };
-
 
 /** Limpa todos os dados armazenados pela aplicação (chaves que começam com `"@"`). */
 export const clear = async () => {
