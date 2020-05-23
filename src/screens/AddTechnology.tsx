@@ -8,13 +8,16 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
 } from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { ButtonSecundary } from "../components";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 
-export type Props = TouchableOpacityProps;
+export interface ScreenProps extends TouchableOpacityProps {
+  navigation: StackNavigationProp<any, any>;
+}
 
-const AddTechnology: React.FC<Props> = ({ ...props }) => {
+const AddTechnology: React.FC<ScreenProps> = ({ navigation, ...props }) => {
   return (
     <SafeAreaView>
       <View style={styles.body}>

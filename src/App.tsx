@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { HeaderButton, HeaderSearch } from "./components";
 import {
   AddPatient,
+  AddTechnology,
   CarouselScreen,
   ChooseActivity,
   ChooseRole,
@@ -64,6 +65,14 @@ const App = () => (
           options={{
             title: "Novo paciente",
             ...baseHeaderStyle,
+          }}
+        />
+        <Stack.Screen
+          name="NewTechnology"
+          component={AddTechnology}
+          options={{
+            ...baseHeaderStyle,
+            title: "Nova tecnologia",
           }}
         />
         <Stack.Screen
