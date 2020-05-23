@@ -30,12 +30,6 @@ const CarouselScreen: React.FC<ScreenProps> = () => {
             },
           ]}
         />
-
-        <ButtonExecutions
-          onPress={() => "nothingyet"}
-          action="start"
-          text="INICIAR"
-        />
       </View>
     </SafeAreaView>
   );
