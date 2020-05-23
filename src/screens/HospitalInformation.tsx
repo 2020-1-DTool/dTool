@@ -42,6 +42,8 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
   }, []);
 
   const handleBack = () => {
+    console.log("Tentando enviar agora...");
+
     if (pendingExecs) {
       return;
     }
@@ -111,7 +113,9 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               onPress={() => "nothingyet"}
             />
           </View>
-          {pendingExecs && WarningBox}
+          {/* pendingExecs && <WarningBox handleBack={handleBack} /> */}
+          <WarningBox handleBack={handleBack} />
+          {/* TODO: só aparecer quando tiver execuções pendentes */}
           <View>
             <TouchableOpacity
               style={
