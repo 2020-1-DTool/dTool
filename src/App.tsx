@@ -157,7 +157,7 @@ const App = () => (
         <Stack.Screen
           name="ListTechnology"
           component={ListTechnology}
-          options={({ navigation }) => ({
+          options={() => ({
             title: "Tecnologia",
             ...baseHeaderStyle,
           })}

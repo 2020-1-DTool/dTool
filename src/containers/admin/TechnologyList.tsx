@@ -2,7 +2,6 @@ import React from "react";
 import { TouchableOpacityProps, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { BasicList } from "../../components";
-import { Technology } from "../../services/types";
 import colors from "../../utils/colors";
 import sizes from "../../utils/sizes";
 
