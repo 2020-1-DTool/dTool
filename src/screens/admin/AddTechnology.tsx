@@ -30,7 +30,7 @@ const AddTechnology: React.FC<ScreenProps> = ({ navigation }) => {
             <ButtonSecundary
               title="Exemplos"
               // TODO: Adicionar proxima pagina de navegacao
-              onPress={() => navigation.navigate("nothingyet")}
+              onPress={() => "nothingyet"}
             />
           </View>
         </View>
