@@ -59,8 +59,6 @@ const EmptyScreen: React.FC<ScreenProps> = () => {
             timeToString(testTime);
           }} // remover modificação futuramente, apenas para testes
         />
-      </View>
-      <View style={styles.variableButton}>
         {/* TODO: botões de execução estão aqui somente para teste */}
         <ButtonExecutions
           onPress={() => {
@@ -104,11 +102,6 @@ const styles = StyleSheet.create({
   body: {
     alignItems: "center",
     minHeight: Dimensions.get("window").height,
-  },
-  variableButton: {
-    alignContent: "center",
-    paddingBottom: 60,
-    paddingHorizontal: 16,
   },
 });
 
