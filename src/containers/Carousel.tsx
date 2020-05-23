@@ -9,7 +9,7 @@ export type Props = {
 };
 
 const Carousel: React.FC<Props> = ({ data }) => {
-  console.log("CARDS", data);
+  console.log("Carousel.tsx CARDS", data);
   return (
     <View style={styles.carouselStyle}>
       <ScrollView>

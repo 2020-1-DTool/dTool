@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -26,35 +26,81 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
   const patient = route?.params?.patientName;
   const activity = route?.params?.activityName;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     (async () => {
-      console.log("blablabla");
+      console.log("CarouselScreen.tsx blablabla");
       const responseCard = await localStorage.getSession();
       setRole(responseCard?.role?.toString() || "");
-      let complete = data;
+      let complete: Card[] = data;
       let tam = complete.length || 1;
-
-      if (
-        patient &&
-        activity &&
-        complete[tam - 1]?.patient !== patient &&
-        complete[tam - 1]?.activity !== activity
-      ) {
-        let dataCard = {
-          patient,
-          activity,
-          role,
+      console.log("Antes " + complete);
+      if (complete.length == 0) {
+        let dataCard: Card = {
+          patient: "AAA",
+          activity: "BBB",
+          role: "CCC",
           time: "00:00:00",
         };
+        //complete.push(dataCard);
+        complete = [dataCard];
+        console.log("CarouselScreen.tsx Entrou if");
+      } else {
+        let dataCard: Card = {
+          patient: "AAA",
+          activity: "BBB",
+          role: "CCC",
+          time: "00:00:00",
+        };
+        //complete.push(dataCard);
         complete.push(dataCard);
+        console.log("CarouselScreen.tsx Entrou 2 if");
       }
-
-      // nitialData.push(initialData);
+      //let complete: Card[] = [{patient: 1, activity:2, role:2, time:"Teste"}];
 
       setData(complete);
     })();
   }, []);
+  /*  useEffect(() => {
+    async function load(){
+      console.log("CarouselScreen.tsx blablabla");
+      const responseCard = await localStorage.getSession();
+      setRole(responseCard?.role?.toString() || "");
+      //let complete: Card[] = data;
+      let carta: Card = { patient: "1", activity: "2", role: "2", time: "Teste" };
+      let complete: Card[] = [carta];
+      let tam = complete.length || 1;
+      console.log(complete);
+      /*if (( complete.length == 0 )||
+        (patient &&
+        activity &&
+        complete[tam - 1]?.patient !== patient &&
+        complete[tam - 1]?.activity !== activity)
+      ) {
+        let dataCard: Card = {
+          patient: "AAA",
+          activity:"BBB",
+          role: "CCC",
+          time: "00:00:00",
+        };
+        complete.push(dataCard);
+        console.log("CarouselScreen.tsx Entrou if");
+      }
+      //let complete: Card[] = [{patient: 1, activity:2, role:2, time:"Teste"}];
 
+      // nitialData.push(initialData);
+      console.log("Complete: "+complete);
+      return complete;
+      //setData(complete);
+    }
+
+    let newData = load();
+    if(newData != null){
+      console.log(newData);
+      setData(newData);
+    }
+   
+    //setData(newData);
+  });*/
   return (
     <SafeAreaView>
       <View style={styles.body}>
