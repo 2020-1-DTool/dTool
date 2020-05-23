@@ -156,6 +156,10 @@ export const setOngoingExecution = (newItem: OngoingExecution, index: number) =>
 export const removeOngoingExecution = (index: number) =>
   removeOngoingExecutionItem("@ongoingExecution", index);
 
+/** Remove tecnologia da lista salva localmente a partir de seu índice no array */
+export const removeTechnology = (index: number) =>
+  removeObjectItem("@technology", index);
+
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.
  * @param technology ID da tecnologia selecionada.

@@ -155,7 +155,7 @@ export const updateAll = async () => {
     if (execution.currentState === ExecutionStatus.Initialized) {
       execution = addElapsedTime(execution);
       isOneRunning = true;
-      await setOngoingExecution(execution, i);
+      setOngoingExecution(execution, i);
     }
   }
   return isOneRunning;

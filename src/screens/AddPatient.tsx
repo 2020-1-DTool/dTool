@@ -91,7 +91,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 2 / 8,
-    padding: "5%",
+    paddingHorizontal: 16,
+    paddingVertical: 20,
   },
   input: {
     paddingBottom: "10%",
