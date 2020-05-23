@@ -1,7 +1,7 @@
 import React from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
-import { Carousel, CardDescricao } from "../containers";
+import { Carousel, CardDescription } from "../containers";
 
 export interface ScreenProps {
   role?: string;
@@ -12,14 +12,14 @@ const CarouselScreen: React.FC = () => {
     <SafeAreaView>
       <View style={styles.body}>
         <Carousel />
-        <CardDescricao
+        <CardDescription
           data={[
             {
               id: 1,
               patient: "Iniciais",
               title: "Medir pressão ",
               time: "00:15:37",
-              role: "enfermeiro",
+              role: "Enfermeiro",
             },
           ]}
         />

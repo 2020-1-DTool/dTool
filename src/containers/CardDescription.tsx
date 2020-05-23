@@ -16,7 +16,7 @@ export interface ScreenProps {
   data?: itemType[];
 }
 
-const CardDescricao: React.FC<ScreenProps> = ({ data }) => {
+const CardDescription: React.FC<ScreenProps> = ({ data }) => {
   return (
     <View>
       <Card containerStyle={styles.cardStyle}>
@@ -94,4 +94,4 @@ let styles = StyleSheet.create({
   },
 });
 
-export default CardDescricao;
+export default CardDescription;
