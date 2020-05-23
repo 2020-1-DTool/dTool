@@ -1,23 +1,15 @@
 import React from "react";
-import {
-  Dimensions,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { ButtonSecundary } from "../../components";
+import { ButtonSecundary, ButtonExecutions } from "../../components";
 import colors from "../../utils/colors";
 import sizes from "../../utils/sizes";
 
-export interface ScreenProps extends TouchableOpacityProps {
+export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
 }
 
-const AddTechnology: React.FC<ScreenProps> = ({ navigation, ...props }) => {
+const AddTechnology: React.FC<ScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView>
       <View style={styles.body}>
@@ -29,14 +21,16 @@ const AddTechnology: React.FC<ScreenProps> = ({ navigation, ...props }) => {
           atividades.
         </Text>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            {...props}
-            // TODO: Usar componente "ButtonExecutions" para criacao do botao de "Importar tecnologia"
-          >
-            <Text>Importar Tecnologia</Text>
-          </TouchableOpacity>
+          <ButtonExecutions
+            onPress={() => "nothingyet"}
+            action="upload"
+            text="Importar tecnologia"
+          />
           <View style={styles.secondaryButton}>
-            <ButtonSecundary title="Exemplos" onPress={() => "nothingyet"} />
+            <ButtonSecundary
+              title="Exemplos"
+              onPress={() => navigation.navigate("nothingyet")}
+            />
           </View>
         </View>
       </View>
@@ -48,7 +42,7 @@ const styles = StyleSheet.create({
   baseText: {
     color: colors.text.primary,
     fontSize: sizes.headline.h6,
-    paddingBottom: "40%",
+    paddingBottom: "30%",
     paddingLeft: "5%",
     paddingRight: "5%",
     paddingTop: "5%",
@@ -71,7 +65,7 @@ const styles = StyleSheet.create({
   },
 
   secondaryButton: {
-    paddingTop: "4%",
+    paddingTop: "5%",
   },
 });
 

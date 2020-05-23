@@ -89,14 +89,6 @@ const App = () => (
           }}
         />
         <Stack.Screen
-          name="NewTechnology"
-          component={AddTechnology}
-          options={{
-            ...baseHeaderStyle,
-            title: "Nova tecnologia",
-          }}
-        />
-        <Stack.Screen
           name="ChooseActivity"
           component={ChooseActivity}
           options={{
@@ -153,7 +145,6 @@ const App = () => (
             ...baseHeaderStyle,
           })}
         />
-
         <Stack.Screen
           name="ListTechnology"
           component={ListTechnology}
@@ -162,7 +153,14 @@ const App = () => (
             ...baseHeaderStyle,
           })}
         />
-
+        <Stack.Screen
+          name="NewTechnology"
+          component={AddTechnology}
+          options={{
+            ...baseHeaderStyle,
+            title: "Nova tecnologia",
+          }}
+        />
         <Stack.Screen
           name="SelectPatient"
           component={SelectPatient}
