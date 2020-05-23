@@ -12,6 +12,7 @@ import colors from "../utils/colors";
 import { PacientList } from "../containers";
 import { ButtonPlus } from "../components";
 import { Patient } from "../services/types";
+import * as localStorage from "../services/localStorage";
 
 export interface ScreenProps {
   storageResult: Array<Record<string, any>>;
@@ -44,7 +45,6 @@ const ListPatient: React.FC<ScreenProps> = ({ navigation }) => {
   };
 
   const handleListPress = async (item: Patient) => {
-    console.log("selecionado: ", item);
     navigation.navigate("ChooseActivity", { pacient: item });
   };
 

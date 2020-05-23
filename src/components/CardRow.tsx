@@ -9,18 +9,14 @@ import {
 } from "react-native";
 
 import { Card } from "react-native-elements";
+import { Card as CardType } from "../services/types";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 
-export type itemType = {
-  id: number;
-  patient: string;
-  title: string;
-  time: string;
-};
+export type itemType = CardType;
 
 export interface ScreenProps {
-  data?: itemType[];
+  data?: itemType[] | undefined;
 }
 
 const CardRow: React.FC<ScreenProps> = ({ data }) => {
@@ -40,19 +36,19 @@ const CardRow: React.FC<ScreenProps> = ({ data }) => {
         <View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {data?.map((item, key) => (
-              <View key={item.id}>
+              <View key={key}>
                 <TouchableOpacity
-                  key={item.id}
+                  key={item.patient + item.activity}
                   style={[
                     styles.viewGeral,
                     selectedCard === key
                       ? styles.borderGreen
                       : styles.borderWhite,
                   ]}
-                  onPress={() => setBorder(item.title, key)}
+                  onPress={() => setBorder(item.activity, key)}
                 >
                   <View style={styles.cardTitle}>
-                    <Text style={styles.boldText}>{item.title}</Text>
+                    <Text style={styles.boldText}>{item.activity}</Text>
                   </View>
                   <View style={styles.cardInfo}>
                     <Image

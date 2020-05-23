@@ -55,3 +55,10 @@ export type Patient = {
   name: string;
   sex: string;
 };
+
+export type Card = {
+  patient: string;
+  activity: string;
+  role?: string;
+  time: string;
+};
