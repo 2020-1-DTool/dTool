@@ -58,7 +58,7 @@ const ListTechnology: React.FC<ScreenProps> = ({ navigation }) => {
           <View style={styles.buttonPlus}>
             <ButtonPlus
               // TODO> ir para a próxima tela
-              onPress={() => navigation.navigate("ListTechnology")}
+              onPress={() => navigation.navigate("NewTechnology")}
               style={styles.iconPlus}
             />
           </View>

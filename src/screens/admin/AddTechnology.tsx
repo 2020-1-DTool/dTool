@@ -9,9 +9,9 @@ import {
   TouchableOpacityProps,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { ButtonSecundary } from "../components";
-import colors from "../utils/colors";
-import sizes from "../utils/sizes";
+import { ButtonSecundary } from "../../components";
+import colors from "../../utils/colors";
+import sizes from "../../utils/sizes";
 
 export interface ScreenProps extends TouchableOpacityProps {
   navigation: StackNavigationProp<any, any>;
