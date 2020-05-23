@@ -19,7 +19,6 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
 
   useEffect(() => {
     (async () => {
-      console.log("CarouselScreen.tsx blablabla");
       const responseCard = await localStorage.getSession();
       setRole(responseCard?.role?.toString() || "");
       let strComplete = await localStorage.getCards();
@@ -39,7 +38,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
 
         // Evitar que insira duas vezes a mesma execução, em sequência
         if (
-          complete[tam - 1]?.patient !== patient &&
+          complete[tam - 1]?.patient !== patient ||
           complete[tam - 1]?.activity !== activity
         ) {
           complete.push(dataCard);
@@ -58,7 +57,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
   return (
     <SafeAreaView>
       <View style={styles.body}>
-        <Carousel data={data} />
+        <Carousel data={data.reverse()} />
       </View>
     </SafeAreaView>
   );

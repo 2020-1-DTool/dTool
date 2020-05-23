@@ -9,6 +9,7 @@ import {
 import { HeaderButton, HeaderSearch } from "./components";
 import {
   AddPatient,
+  AddTechnology,
   CarouselScreen,
   ChooseActivity,
   ChooseRole,
@@ -18,6 +19,7 @@ import {
   StartScreen,
   SelectPatient,
   ListPatient,
+  ListTechnology,
 } from "./screens";
 import colors from "./utils/colors";
 import sizes from "./utils/sizes";
@@ -142,6 +144,22 @@ const App = () => (
             ),
             ...baseHeaderStyle,
           })}
+        />
+        <Stack.Screen
+          name="ListTechnology"
+          component={ListTechnology}
+          options={() => ({
+            title: "Tecnologia",
+            ...baseHeaderStyle,
+          })}
+        />
+        <Stack.Screen
+          name="NewTechnology"
+          component={AddTechnology}
+          options={{
+            ...baseHeaderStyle,
+            title: "Nova tecnologia",
+          }}
         />
         <Stack.Screen
           name="SelectPatient"

@@ -131,6 +131,10 @@ export const setCard = (newItem: Card, index: number) =>
 
 /** Remove um objeto em dado index na lista de execucoes em andamento salva localmente */
 export const removeCard = (index: number) => removeCardItem("@Card", index);
+/** Remove tecnologia da lista salva localmente a partir de seu índice no array */
+export const removeTechnology = (index: number) =>
+  removeObjectItem("@technology", index);
+
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.
  * @param technology ID da tecnologia selecionada.
