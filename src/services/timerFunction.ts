@@ -6,7 +6,12 @@ import {
   setOngoingExecution,
   removeOngoingExecution,
 } from "./localStorage";
-import { ExecutionStatus, OngoingExecution, FinishedExecution } from "./types";
+import {
+  ExecutionStatus,
+  OngoingExecution,
+  FinishedExecution,
+  CardExecutionType,
+} from "./types";
 
 /**
  * Coordena o a manipulação de execuções.
@@ -18,16 +23,18 @@ import { ExecutionStatus, OngoingExecution, FinishedExecution } from "./types";
  *
  */
 
-/** Função responsável por criar uma nova execução */
-export const createExecution = async (cardInfo: any) => {
-  let startTime: Moment = moment();
-  let strStartTime: string = startTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ");
+/** Função responsável por criar uma nova execução de atividade
+ * @param cardInfo, com os dados para execução atual
+ */
+export const createExecution = async (cardInfo: CardExecutionType) => {
+  const startTime: Moment = moment();
+  const strStartTime: string = startTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ");
   console.log(
     "timerFunction.createExecution: Criando execução - Horário atual: ",
     strStartTime
   );
 
-  let newExecution: OngoingExecution = {
+  const newExecution: OngoingExecution = {
     startTime: strStartTime,
     elapsedTime: 0,
     latestStartTime: startTime,
@@ -37,19 +44,16 @@ export const createExecution = async (cardInfo: any) => {
     currentState: ExecutionStatus.Uninitialized,
   };
   await addOngoingExecution(newExecution);
-  // Chamar add ao storage
 };
 
-/** Função responsável por iniciar contagem de tempo de uma execução
+/** Função responsável por iniciar contagem de tempo de uma execução de atividade
  * Retorna true se foi possível iniciar, podendo determinar a criação de setInterval()
  * para fazer update de todas as execuções
+ * @param index, índice do objeto no array de execuções de atividade
  */
-
-export const initializeExecution = async (id: number) => {
-  // Usar get do storage por indice
-
+export const initializeExecution = async (index: number) => {
   let isInitialized: boolean;
-  let execution = await getSingleOngoingExecution(id);
+  let execution = await getSingleOngoingExecution(index);
   if (execution === null) {
     return false;
   }
@@ -57,8 +61,8 @@ export const initializeExecution = async (id: number) => {
     execution.currentState === ExecutionStatus.Paused ||
     execution.currentState === ExecutionStatus.Uninitialized
   ) {
-    let startTime: Moment = moment();
-    let strTime: string = startTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ");
+    const startTime: Moment = moment();
+    const strTime: string = startTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ");
     console.log(
       "timerFunction.initializeExecution: Inicializando execução - Horário atual: ",
       strTime
@@ -70,8 +74,7 @@ export const initializeExecution = async (id: number) => {
     execution.latestStartTime = startTime;
     execution.currentState = ExecutionStatus.Initialized;
 
-    // Usar set de storage
-    await setOngoingExecution(execution, id);
+    await setOngoingExecution(execution, index);
     isInitialized = true;
   } else {
     console.warn("Execução já iniciada");
@@ -79,17 +82,18 @@ export const initializeExecution = async (id: number) => {
   }
   return isInitialized;
 };
-/** Função responsável por pausar uma execução */
-export const pauseExecution = async (id: number) => {
-  // Usar get do storage por indice
 
-  let execution = await getSingleOngoingExecution(id);
+/** Função responsável por pausar uma execução e no momento, o elapsedTime é calculado ao pausar
+ * @param index, índice da execução a ser pausada no array
+ */
+export const pauseExecution = async (index: number) => {
+  let execution = await getSingleOngoingExecution(index);
   if (execution === null) {
     return false;
   }
   if (execution.currentState === ExecutionStatus.Initialized) {
     execution = addElapsedTime(execution);
-    await setOngoingExecution(execution, id);
+    await setOngoingExecution(execution, index);
     return true;
   }
 
@@ -97,17 +101,19 @@ export const pauseExecution = async (id: number) => {
   return false;
 };
 
-/** Função responsável por cancelar uma execução */
-export const cancelExecution = async (id: number) => {
-  // Usar remove
-  await removeOngoingExecution(id);
+/** Função responsável por cancelar uma execução
+ * @param index, índice da execução a ser removida do array
+ */
+export const cancelExecution = async (index: number) => {
+  await removeOngoingExecution(index);
 };
 
 /** Função responsável por finalisar uma execução, removendo-a da lista de
  * execuções correntes e passando para a lista de execuções a serem enviadas ao BD
+ * @param index, índice da execução a ser removida do array e adicionada ao outro
  */
-export const finishExecution = async (id: number) => {
-  let execution = await getSingleOngoingExecution(id);
+export const finishExecution = async (index: number) => {
+  let execution = await getSingleOngoingExecution(index);
   if (execution === null) {
     return false;
   }
@@ -121,8 +127,8 @@ export const finishExecution = async (id: number) => {
       execution = addElapsedTime(execution);
     }
     execution.currentState = ExecutionStatus.Finished;
-    await removeOngoingExecution(id);
-    let newFinishedExecution: FinishedExecution = {
+    await removeOngoingExecution(index);
+    const newFinishedExecution: FinishedExecution = {
       activity: execution.activity,
       role: execution.role,
       date: execution.startTime,
@@ -133,7 +139,7 @@ export const finishExecution = async (id: number) => {
     return addFinishedExecution(newFinishedExecution);
   }
   console.error("Execução nunca foi iniciada.");
-  await removeOngoingExecution(id);
+  await removeOngoingExecution(index);
   return false;
 };
 
@@ -141,13 +147,13 @@ export const finishExecution = async (id: number) => {
  * Retorna false se não há execuções para serem atualizadas e true se há
  */
 export const updateAll = async () => {
-  let strArray = await getOngoingExecutions();
+  const strArray = await getOngoingExecutions();
   if (!strArray || strArray.length === 0) {
     console.warn("Não há execuções.");
     return false;
   }
 
-  let arExecutions: OngoingExecution[] = JSON.parse(strArray);
+  const arExecutions: OngoingExecution[] = JSON.parse(strArray);
   let execution: OngoingExecution;
   let isOneRunning = false;
   for (let i = 0; i < arExecutions.length; i++) {
@@ -162,15 +168,19 @@ export const updateAll = async () => {
 };
 
 /** Recebe tempo em segundos e devolve string formatada corretamente.
+ * @param time, tempo em segundos que deve ser formatado
  */
 export const timeToString = (time: number) => {
-  let strTime = moment.unix(time).utc().format("HH:mm:ss");
+  const strTime = moment.unix(time).utc().format("HH:mm:ss");
   console.log(strTime);
   return strTime;
 };
 
+/** Atualiza os valores de tempo de um objeto adicionando o tempo atual percorrido
+ * @param execution, objeto a receber os valores de tempo atualizados
+ */
 const addElapsedTime = (execution: OngoingExecution) => {
-  let pauseTime: Moment = moment();
+  const pauseTime: Moment = moment();
   console.log(
     "timerFunction.addElapsedTime: Horário atual: ",
     pauseTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")
@@ -180,14 +190,14 @@ const addElapsedTime = (execution: OngoingExecution) => {
     execution.elapsedTime
   );
 
-  let diffTime: number = Math.round(
+  const diffTime: number = Math.round(
     moment.duration(pauseTime.diff(execution.latestStartTime)).asSeconds()
   );
   console.log(
     "timerFunction.addElapsedTime: Contagem a ser adicionada: ",
     diffTime
   );
-  let newElapsedTime: number = execution.elapsedTime + diffTime;
+  const newElapsedTime: number = execution.elapsedTime + diffTime;
   console.log(
     "timerFunction.addElapsedTime: Pausando execução - Contagem atual: ",
     newElapsedTime
@@ -197,15 +207,18 @@ const addElapsedTime = (execution: OngoingExecution) => {
   return execution;
 };
 
-const getSingleOngoingExecution = async (id: number) => {
-  let lstExecution = await getOngoingExecutions();
+/** Função que retorna um único objeto da lista de objetos a partir do indice especificado
+ * @param index, o indice da lista onde o objeto deve ser obtido e retornado
+ */
+const getSingleOngoingExecution = async (index: number) => {
+  const lstExecution = await getOngoingExecutions();
   if (!lstExecution || lstExecution.length === 0) {
     console.warn("Não há execuções.");
     return null;
   }
 
-  if (JSON.parse(lstExecution).length > id) {
-    let execution: OngoingExecution = JSON.parse(lstExecution)[id];
+  if (JSON.parse(lstExecution).length > index) {
+    const execution: OngoingExecution = JSON.parse(lstExecution)[index];
     return execution;
   }
 

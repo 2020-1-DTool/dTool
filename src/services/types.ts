@@ -82,3 +82,9 @@ export enum ExecutionStatus {
   Finished,
   Uninitialized,
 }
+
+export type CardExecutionType = {
+  idPatient: number;
+  role: number;
+  activity: number;
+};
