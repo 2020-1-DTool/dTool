@@ -13,7 +13,11 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import * as localStorage from "../services/localStorage";
 import colors from "../utils/colors";
-import { ButtonPrimary, ButtonSecundary } from "../components";
+import {
+  ButtonPrimary,
+  ButtonSecundary,
+  ButtonExecutions,
+} from "../components";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -47,10 +51,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
       } else {
         navigation.navigate("ChooseRole");
       }
-    } else {
-      // TODO: ir para tela apropriada de acordo com permissão (listagem de tecnologias ou de hospitais)
-      console.warn(`permissão ${permission}`);
-    }
+    } else navigation.navigate("ListTechnology");
   };
 
   return (
@@ -60,7 +61,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
         style={styles.main}
       >
         <View style={styles.main}>
-          <View style={styles.image}>
+          <View style={[styles.image, styles.headerContainer]}>
             <Image
               style={styles.image}
               source={require("../assets/logo-SVG.png")}
@@ -72,25 +73,58 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               source={require("../assets/time-SVG.png")}
             />
           </View>
-          <View style={styles.textHospital}>
-            <Text style={styles.textHospital}>{hospitalName}</Text>
-          </View>
-          <View style={styles.text}>
-            <Text style={styles.text}>
-              Coleta de tempo de atividades hospitalares
-            </Text>
-          </View>
+          <Text style={styles.textHospital}>{hospitalName}</Text>
+          <Text style={styles.text}>
+            Coleta de tempo de atividades hospitalares
+          </Text>
           <View style={styles.iniciateButton}>
             <ButtonPrimary
-              title="Iniciar Contagem"
+              title={
+                permission === "time-tracking"
+                  ? "Iniciar Contagem"
+                  : "Tecnologias"
+              }
               onPress={mainButtonAction}
             />
           </View>
           <View style={styles.variableButton}>
             <ButtonSecundary
               style={styles.variableButton}
-              title="Consultar Relatórios"
+              title={
+                permission === "time-tracking"
+                  ? "Consultar Relatórios"
+                  : "Exportar Relatório"
+              }
               onPress={() => "nothingyet"}
+            />
+          </View>
+
+          <View style={styles.variableButton}>
+            {/* TODO: botões de execução estão aqui somente para teste */}
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="start"
+              text="INICIAR"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="stop"
+              text="PARAR"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="finish"
+              text="CONCLUIR E SALVAR"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="restart"
+              text="RETOMAR CONTAGEM"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="cancel"
+              text="CANCELAR"
             />
           </View>
           <View>
@@ -105,15 +139,21 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    elevation: 20,
+  },
   image: {
     alignItems: "flex-start",
     backgroundColor: colors.theme.primary,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     justifyContent: "center",
     marginBottom: 20,
     paddingLeft: 20,
   },
   imageTime: {
     alignItems: "flex-end",
+    elevation: 20,
     justifyContent: "center",
     marginBottom: 15,
     marginTop: -35,
@@ -124,8 +164,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
     paddingBottom: 10,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingHorizontal: 16,
     paddingTop: 40,
   },
   main: {
@@ -144,29 +183,23 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   text: {
-    alignContent: "flex-start",
-    alignItems: "flex-start",
     color: colors.text.secondary,
     fontSize: 15,
-    justifyContent: "center",
-    paddingLeft: 20,
+    paddingHorizontal: 16,
+    textAlign: "center",
   },
   textHospital: {
-    alignContent: "center",
-    alignItems: "flex-start",
     color: colors.text.primary,
     fontSize: 20,
     fontWeight: "bold",
-    justifyContent: "center",
     paddingBottom: 1,
-    paddingLeft: 20,
+    paddingHorizontal: 16,
     textAlign: "center",
   },
   variableButton: {
     alignContent: "center",
     paddingBottom: 60,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingHorizontal: 16,
   },
 });
 

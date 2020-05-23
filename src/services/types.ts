@@ -20,7 +20,7 @@ interface Role {
   activities: Activity[];
 }
 
-interface Technology {
+export interface Technology {
   id: number;
   name: string;
   activities: Activity[];

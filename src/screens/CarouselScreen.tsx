@@ -1,13 +1,22 @@
 import React from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
+<<<<<<< HEAD
 import { Carousel, CardDescription } from "../containers";
 
 export interface ScreenProps {
   role?: string;
 }
+=======
+import { StackNavigationProp } from "@react-navigation/stack";
+import { Carousel } from "../containers";
+>>>>>>> db2a19d757d6f9ca3da7b465817bb38dde14fb96
 
-const CarouselScreen: React.FC = () => {
+export interface ScreenProps {
+  navigation: StackNavigationProp<any, any>;
+}
+
+const CarouselScreen: React.FC<ScreenProps> = () => {
   return (
     <SafeAreaView>
       <View style={styles.body}>

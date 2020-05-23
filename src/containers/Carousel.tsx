@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { CardRow, ButtonPlus } from "../components";
+import { CardRow } from "../components";
 import colors from "../utils/colors";
 
 let initialData = [
@@ -44,24 +44,8 @@ let initialData = [
 
 const Carousel: React.FC = () => {
   const [data, setData] = useState(initialData);
-
-  const handleChange = () => {
-    let currentData = [...data];
-
-    let newData = {
-      id: currentData.length + 1,
-      patient: "BCM",
-      title: `Consulta ${currentData.length + 1}`,
-      time: "00:15:31",
-    };
-
-    currentData.unshift(newData);
-    return setData(currentData);
-  };
-
   return (
     <View style={styles.carouselStyle}>
-      <ButtonPlus style={styles.buttonPlus} onPress={() => handleChange()} />
       <ScrollView>
         <View>
           <CardRow data={data} />
@@ -72,7 +56,6 @@ const Carousel: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  buttonPlus: { bottom: 0, position: "relative", right: 0 },
   carouselStyle: {
     alignItems: "center",
     backgroundColor: colors.basic.backgroundHighlight,

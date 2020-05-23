@@ -14,6 +14,7 @@ import ErrorText from "./ErrorText";
 export interface Props {
   data?: Array<any>;
   patientList?: Patient[];
+  technologyList?: string[];
   onPress?: (index: number) => void;
   onPressTrashIcon?: (item: number) => void;
   icon?: ReactElement;
@@ -25,24 +26,25 @@ const BasicList: React.FC<Props> = ({
   onPress,
   onPressTrashIcon,
   patientList,
+  technologyList,
 }) => {
   return (
     <View style={styles.contanier}>
-      {data?.length || patientList?.length ? (
+      {data?.length || patientList?.length || technologyList?.length ? (
         <FlatList
-          data={data || patientList}
+          data={data || patientList || technologyList}
           renderItem={({ item, index }) =>
-            patientList ? (
+            patientList || technologyList ? (
               <View style={styles.itemContainer}>
                 <TouchableOpacity
                   style={styles.itemContainer}
                   onPress={() => onPress!(index)}
                 >
                   <Text style={[styles.item, styles.patientName]}>
-                    {item?.name}
+                    {item?.name || item}
                   </Text>
                   <Text style={[styles.item, styles.patientSubtitle]}>
-                    {item?.id} | {item?.sex}
+                    {item?.id} {item?.id && "|"} {item?.sex}
                   </Text>
                 </TouchableOpacity>
                 {icon && (
@@ -56,8 +58,11 @@ const BasicList: React.FC<Props> = ({
                 )}
               </View>
             ) : (
-              <View style={styles.itemContainer}>
-                <TouchableOpacity onPress={() => onPress!(index)}>
+              <View>
+                <TouchableOpacity
+                  style={styles.itemContainer}
+                  onPress={() => onPress!(index)}
+                >
                   <Text style={styles.item}>{item}</Text>
                 </TouchableOpacity>
               </View>
@@ -77,6 +82,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     paddingBottom: 200,
+    width: "100%",
   },
   iconButton: {
     position: "absolute",
@@ -95,6 +101,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.basic.separator,
     borderBottomWidth: 1,
     flexDirection: "row",
+    width: "100%",
   },
   patientName: {
     fontWeight: "bold",

@@ -51,7 +51,10 @@ export const saveData = async (remoteData: any) => {
   const { accessToken, permission } = remoteData;
   await mergeObject("@auth", { token: accessToken, permission });
 
-  if (remoteData.permission === "time-tracking") {
+  if (
+    remoteData.permission === "time-tracking" ||
+    remoteData.permission === "administration-hospital"
+  ) {
     const { institution, roles, technologies } = remoteData;
 
     // salvar dados locais
@@ -111,6 +114,10 @@ export const getPatient = (id: string) => ifIdExists("@patient", id);
 /** Remove paciente da lista salva localmente a partir de seu índice no array */
 export const removePatient = (index: number) =>
   removeObjectItem("@patient", index);
+
+/** Remove tecnologia da lista salva localmente a partir de seu índice no array */
+export const removeTechnology = (index: number) =>
+  removeObjectItem("@technology", index);
 
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.
