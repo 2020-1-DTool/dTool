@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Image } from "react-native";
 
 import { Card } from "react-native-elements";
 import colors from "../utils/colors";
+import { ButtonExecutions } from "../components";
 
 export type itemType = {
   id: number;
@@ -52,6 +53,22 @@ const CardDescription: React.FC<ScreenProps> = ({ data }) => {
           ))}
         </View>
       </Card>
+      <View style={styles.buttonsWrap}>
+        <View style={styles.buttonsCardDescription}>
+          <ButtonExecutions
+            onPress={() => "nothingyet"}
+            action="start"
+            text="INICIAR"
+          />
+        </View>
+        <View style={styles.buttonsCardDescription}>
+          <ButtonExecutions
+            onPress={() => "nothingyet"}
+            action="cancel"
+            text="CANCELAR"
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -62,6 +79,13 @@ let styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  buttonsCardDescription: {
+    padding: 7,
+  },
+  buttonsWrap: {
+    bottom: 0,
+    position: "relative",
   },
   cardInfo: {
     alignItems: "center",
@@ -78,7 +102,9 @@ let styles = StyleSheet.create({
     justifyContent: "flex-start",
     margin: 5,
     padding: 40,
+    position: "relative",
     width: 400,
+    zIndex: -1,
   },
   cardTitle: {
     flexDirection: "row",
