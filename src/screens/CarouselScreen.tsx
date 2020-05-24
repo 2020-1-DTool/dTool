@@ -3,11 +3,6 @@ import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Carousel, CardDescription } from "../containers";
-import {
-  ButtonPrimary,
-  ButtonSecundary,
-  ButtonExecutions,
-} from "../components";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
