@@ -1,24 +1,26 @@
 import {
+  addCardItem,
+  addObjectItem,
   addPatientItem,
-  ifIdExists,
-  getObject,
-  setObject,
-  mergeObject,
-  removeObjectItem,
-  addExecutionItem,
-  setOngoingExecutionItem,
-  removeOngoingExecutionItem,
-  removeItem,
   getArray,
+  getObject,
+  ifIdExists,
+  mergeObject,
+  removeItem,
+  removeObjectItem,
+  removeObjectItemV2,
+  setObject,
+  setObjectItem,
 } from "./asyncStorageAdapter";
 import {
+  Auth,
+  Card,
+  FinishedExecution,
   LocalData,
+  OngoingExecution,
+  Patient,
   Preferences,
   Session,
-  Auth,
-  Patient,
-  FinishedExecution,
-  OngoingExecution,
 } from "./types";
 
 /**
@@ -50,15 +52,17 @@ import {
 
 /** Funções auxiliares */
 export {
-  clear,
-  ifIdExists,
-  getItem,
-  getArray,
-  setItem,
-  removeItem,
+  addCardItem,
+  addObjectItem,
   addPatientItem,
-  addExecutionItem,
+  clear,
+  getArray,
+  getItem,
+  ifIdExists,
+  removeItem,
   removeObjectItem,
+  removeObjectItemV2,
+  setItem,
 } from "./asyncStorageAdapter";
 
 /** Salva os dados retornados na rota de autenticação localmente, para uso pelo app. */
@@ -130,9 +134,22 @@ export const getPatient = (id: string) => ifIdExists("@patient", id);
 export const removePatient = (index: number) =>
   removeObjectItem("@patient", index);
 
+/** Adiciona a lista de cards salva localmente */
+export const addCard = (newCard: Card) => addCardItem("@Card", newCard);
+
+/** Retorna toda a lista de cards salva localmente */
+export const getCards = () => getArray<Card>("@Card");
+
+/** Altera um objeto em dado index na lista de execucoes em andamento salva localmente */
+export const setCard = (newItem: Card, index: number) =>
+  setObjectItem("@Card", newItem, index);
+
+/** Remove um objeto em dado index na lista de execucoes em andamento salva localmente */
+export const removeCard = (index: number) => removeObjectItemV2("@Card", index);
+
 /** Adiciona a lista de execucoes concluidas salva localmente */
 export const addFinishedExecution = (newExecution: FinishedExecution) =>
-  addExecutionItem("@finishedExecution", newExecution);
+  addObjectItem("@finishedExecution", newExecution);
 
 /** Retorna toda a lista de execucoes concluidas salva localmente */
 export const getFinishedExecutions = () =>
@@ -143,7 +160,7 @@ export const resetFinishedExecutions = () => removeItem("@finishedExecution");
 
 /** Adiciona a lista de execucoes em andamento salva localmente */
 export const addOngoingExecution = (newExecution: OngoingExecution) =>
-  addExecutionItem("@ongoingExecution", newExecution);
+  addObjectItem("@ongoingExecution", newExecution);
 
 /** Retorna toda a lista de execucoes em andamento salva localmente */
 export const getOngoingExecutions = () =>
@@ -151,11 +168,11 @@ export const getOngoingExecutions = () =>
 
 /** Altera um objeto em dado index na lista de execucoes em andamento salva localmente */
 export const setOngoingExecution = (newItem: OngoingExecution, index: number) =>
-  setOngoingExecutionItem("@ongoingExecution", newItem, index);
+  setObjectItem("@ongoingExecution", newItem, index);
 
 /** Remove um objeto em dado index na lista de execucoes em andamento salva localmente */
 export const removeOngoingExecution = (index: number) =>
-  removeOngoingExecutionItem("@ongoingExecution", index);
+  removeObjectItemV2("@ongoingExecution", index);
 
 /** Remove tecnologia da lista salva localmente a partir de seu índice no array */
 export const removeTechnology = (index: number) =>

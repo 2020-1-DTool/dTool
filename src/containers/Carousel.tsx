@@ -1,54 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { CardRow } from "../components";
+import { Card } from "../services/types";
 import colors from "../utils/colors";
 
-let initialData = [
-  {
-    id: 1,
-    patient: "RVRS",
-    title: "Medir pressão ",
-    time: "00:15:37",
-  },
-  {
-    id: 2,
-    patient: "Iniciais",
-    title: "Conferir dados cadastrais ",
-    time: "00:15:37",
-  },
-  {
-    id: 3,
-    patient: "Iniciais",
-    title: "Trocar roupa de cama ",
-    time: "00:15:37",
-  },
-  {
-    id: 4,
-    patient: "Iniciais",
-    title: "Conferir dados cadastrais ",
-    time: "00:15:37",
-  },
-  {
-    id: 5,
-    patient: "Iniciais",
-    title: "Conferir dados cadastrais ",
-    time: "00:15:37",
-  },
-  {
-    id: 6,
-    patient: "Iniciais",
-    title: "Conferir dados cadastrais ",
-    time: "00:15:37",
-  },
-];
+export type Props = {
+  data: Card[] | undefined;
+  onPress: (card: Card, index: number) => void;
+};
 
-const Carousel: React.FC = () => {
-  const [data] = useState(initialData);
+const Carousel: React.FC<Props> = ({ data, onPress }) => {
   return (
     <View style={styles.carouselStyle}>
       <ScrollView>
         <View>
-          <CardRow data={data} />
+          <CardRow data={data} onPress={onPress} />
         </View>
       </ScrollView>
     </View>
