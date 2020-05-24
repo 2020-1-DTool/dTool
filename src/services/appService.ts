@@ -4,6 +4,7 @@ import {
   getAuth,
   setAccessCode,
   saveData,
+  getCards,
 } from "./localStorage";
 import api from "./API";
 import { Permission } from "./types";
@@ -22,8 +23,9 @@ import { Permission } from "./types";
  * - `home`: tela de início;
  * - `readCode`: tela para informar código de acesso;
  * - `technology`: tela para selecionar tecnologia.
+ * - `CarouselScreen`: tela de execuções de atividades.
  */
-type Screen = "home" | "readCode" | "technology";
+type Screen = "home" | "readCode" | "technology" | "execution";
 
 /**
  * Faz as verificações necessárias ao iniciar o app e retorna um código
@@ -81,8 +83,12 @@ const firstScreenAfterAppStartup = async (): Promise<Screen> => {
 
   const { technology } = await getPreferences();
   const hasTechnology = technology !== null && technology !== undefined;
+  const cards = await getCards();
 
-  return hasTechnology ? "home" : "technology";
+  if (cards) return "execution";
+  if (hasTechnology) return "home";
+
+  return "technology";
 };
 
 /**

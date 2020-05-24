@@ -2,11 +2,7 @@
  * Definições de tipos usados nas funções de serviço.
  */
 
-/** Tipos de código de acesso. */
-export type Permission =
-  | "time-tracking"
-  | "administration-hospital"
-  | "administration-app";
+import { Moment } from "moment";
 
 export interface Activity {
   id: number;
@@ -14,17 +10,45 @@ export interface Activity {
   shortName: string;
 }
 
-interface Role {
-  id: number;
-  name: string;
-  activities: Activity[];
+export interface Auth {
+  code: string;
+  token: string;
+  permission: string;
 }
 
-export interface Technology {
+export type Card = {
+  patient: Patient;
+  activity: string;
+  role?: string;
+  technology?: string;
+  time: string;
+};
+
+export type CardExecutionType = {
+  idPatient: string;
+  role: number;
+  activity: number;
+};
+
+export type Doc = {
   id: number;
   name: string;
-  activities: Activity[];
+  type?: string;
+};
+
+export enum ExecutionStatus {
+  Initialized,
+  Paused,
+  Finished,
+  Uninitialized,
 }
+
+export type FinishedExecution = {
+  activity: number;
+  role: number;
+  date: string; // ISO8601
+  duration: number;
+};
 
 export interface LocalData {
   institution?: { name: string };
@@ -34,9 +58,37 @@ export interface LocalData {
   institutions?: { id: number; name: string }[];
 }
 
+export type OngoingExecution = {
+  startTime: string;
+  elapsedTime: number;
+  latestStartTime: Moment;
+  idPatient: string;
+  role: number;
+  activity: number;
+  currentState: ExecutionStatus;
+};
+
+export type Patient = {
+  id: string;
+  name: string;
+  sex: string;
+};
+
+/** Tipos de código de acesso. */
+export type Permission =
+  | "time-tracking"
+  | "administration-hospital"
+  | "administration-app";
+
 export interface Preferences {
   technology?: number;
   role?: number;
+}
+
+interface Role {
+  id: number;
+  name: string;
+  activities: Activity[];
 }
 
 export interface Session {
@@ -44,14 +96,8 @@ export interface Session {
   role?: number;
 }
 
-export interface Auth {
-  code: string;
-  token: string;
-  permission: string;
-}
-
-export type Patient = {
-  id: string;
+export interface Technology {
+  id: number;
   name: string;
-  sex: string;
-};
+  activities: Activity[];
+}
