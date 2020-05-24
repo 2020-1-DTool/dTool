@@ -12,7 +12,6 @@ import colors from "../utils/colors";
 import { PacientList } from "../containers";
 import { ButtonPlus } from "../components";
 import { Patient } from "../services/types";
-import * as localStorage from "../services/localStorage";
 
 export interface ScreenProps {
   storageResult: Array<Record<string, any>>;

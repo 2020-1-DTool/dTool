@@ -6,35 +6,44 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-import { Patient } from "../services/types";
+import { Doc, Patient } from "../services/types";
 import sizes from "../utils/sizes";
 import colors from "../utils/colors";
 import ErrorText from "./ErrorText";
 
 export interface Props {
   data?: Array<any>;
+  docList?: Doc[];
   patientList?: Patient[];
   technologyList?: string[];
   onPress?: (index: number) => void;
   onPressTrashIcon?: (item: number) => void;
+  onPressIconDownload?: (item: number) => void;
   icon?: ReactElement;
+  iconDownload?: ReactElement;
 }
 
 const BasicList: React.FC<Props> = ({
   data,
   icon,
+  iconDownload,
   onPress,
   onPressTrashIcon,
+  onPressIconDownload,
   patientList,
+  docList,
   technologyList,
 }) => {
   return (
     <View style={styles.contanier}>
-      {data?.length || patientList?.length || technologyList?.length ? (
+      {data?.length ||
+      patientList?.length ||
+      technologyList?.length ||
+      docList?.length ? (
         <FlatList
-          data={data || patientList || technologyList}
+          data={data || patientList || technologyList || docList}
           renderItem={({ item, index }) =>
-            patientList || technologyList ? (
+            patientList || technologyList || docList ? (
               <View style={styles.itemContainer}>
                 <TouchableOpacity
                   style={styles.itemContainer}
@@ -44,7 +53,8 @@ const BasicList: React.FC<Props> = ({
                     {item?.name || item}
                   </Text>
                   <Text style={[styles.item, styles.patientSubtitle]}>
-                    {item?.id} {item?.id && "|"} {item?.sex}
+                    {!technologyList && (item?.type || `${item?.id} |`)}{" "}
+                    {item?.sex}
                   </Text>
                 </TouchableOpacity>
                 {icon && (
@@ -54,6 +64,15 @@ const BasicList: React.FC<Props> = ({
                     style={styles.iconButton}
                   >
                     {icon}
+                  </TouchableOpacity>
+                )}
+                {iconDownload && (
+                  <TouchableOpacity
+                    activeOpacity={0.9}
+                    onPress={() => onPressIconDownload!(index)}
+                    style={styles.iconButton}
+                  >
+                    {iconDownload}
                   </TouchableOpacity>
                 )}
               </View>

@@ -13,10 +13,8 @@ import { Card as CardType } from "../services/types";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 
-export type itemType = CardType;
-
 export interface ScreenProps {
-  data?: itemType[] | undefined;
+  data?: CardType[] | undefined;
   onPress: (card: CardType) => void;
 }
 
