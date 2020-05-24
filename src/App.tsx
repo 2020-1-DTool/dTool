@@ -199,7 +199,7 @@ const App = () => (
           options={({ navigation }) => ({
             headerTitle: () => (
               <HeaderSearch
-                title="Carrosel"
+                title="Em execução"
                 style={baseHeaderStyle.headerTitleStyle}
               />
             ),

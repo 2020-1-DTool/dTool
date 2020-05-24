@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 
@@ -83,12 +82,12 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
             data={data}
             onPress={(item, index) => handlePress(item, index)}
           />
-          {/* TODO: substituir por card com detalhes do card */}
-          <Text>{JSON.stringify(selectedCard || data[0])}</Text>
           <CardDescription
-            data={selectedCard}
-            state="finished"
-            onPress1={() => console.warn("onPress1")}
+            data={selectedCard || data[0]}
+            state="finished" /* TODO: essa info deve vir do @ongoingExecution na integração, para alternar de estado */
+            onPress1={() =>
+              console.warn("onPress1")
+            } /* TODO: cada callback destes, deve chamar as ações paropriadas */
             onPress2={() => console.warn("onPress2")}
             onPress3={() => console.warn("onPress3")}
           />

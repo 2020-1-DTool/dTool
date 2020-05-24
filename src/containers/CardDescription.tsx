@@ -22,12 +22,12 @@ const CardDescription: React.FC<ScreenProps> = ({
   onPress2,
   onPress3,
 }) => {
-  let button1;
-  let button2;
-  let button3;
-  let buttonText1;
-  let buttonText2;
-  let buttonText3;
+  let button1 = "";
+  let button2 = "";
+  let button3 = "";
+  let buttonText1 = "";
+  let buttonText2 = "";
+  let buttonText3 = "";
 
   switch (state) {
     case "uninitialized":
@@ -96,13 +96,11 @@ const CardDescription: React.FC<ScreenProps> = ({
           />
         </View>
         <View style={styles.buttonsCardDescription}>
-          {state === "finished" && (
-            <ButtonExecutions
-              onPress={onPress2}
-              action={button2}
-              text={buttonText2}
-            />
-          )}
+          <ButtonExecutions
+            onPress={onPress2}
+            action={button2}
+            text={buttonText2}
+          />
         </View>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
