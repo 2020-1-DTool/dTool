@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: "center",
     minHeight: 45,
-    minWidth: 328,
   },
   button: {
     backgroundColor: colors.theme.primary,

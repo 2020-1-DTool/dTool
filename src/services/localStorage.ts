@@ -115,6 +115,10 @@ export const getPatient = (id: string) => ifIdExists("@patient", id);
 export const removePatient = (index: number) =>
   removeObjectItem("@patient", index);
 
+/** Remove tecnologia da lista salva localmente a partir de seu índice no array */
+export const removeTechnology = (index: number) =>
+  removeObjectItem("@technology", index);
+
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.
  * @param technology ID da tecnologia selecionada.

@@ -13,7 +13,11 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import * as localStorage from "../services/localStorage";
 import colors from "../utils/colors";
-import { ButtonPrimary, ButtonSecundary } from "../components";
+import {
+  ButtonPrimary,
+  ButtonSecundary,
+  ButtonExecutions,
+} from "../components";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -47,10 +51,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
       } else {
         navigation.navigate("ChooseRole");
       }
-    } else {
-      navigation.navigate("DocList"); // TODO: temporário pra teste
-      // navigation.navigate('adminTechnology');
-    }
+    } else navigation.navigate("ListTechnology");
   };
 
   return (
@@ -72,14 +73,10 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               source={require("../assets/time-SVG.png")}
             />
           </View>
-          <View style={styles.textHospital}>
-            <Text style={styles.textHospital}>{hospitalName}</Text>
-          </View>
-          <View style={styles.text}>
-            <Text style={styles.text}>
-              Coleta de tempo de atividades hospitalares
-            </Text>
-          </View>
+          <Text style={styles.textHospital}>{hospitalName}</Text>
+          <Text style={styles.text}>
+            Coleta de tempo de atividades hospitalares
+          </Text>
           <View style={styles.iniciateButton}>
             <ButtonPrimary
               title={
@@ -99,6 +96,35 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
                   : "Exportar Relatório"
               }
               onPress={() => "nothingyet"}
+            />
+          </View>
+
+          <View style={styles.variableButton}>
+            {/* TODO: botões de execução estão aqui somente para teste */}
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="start"
+              text="INICIAR"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="stop"
+              text="PARAR"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="finish"
+              text="CONCLUIR E SALVAR"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="restart"
+              text="RETOMAR CONTAGEM"
+            />
+            <ButtonExecutions
+              onPress={() => "nothingyet"}
+              action="cancel"
+              text="CANCELAR"
             />
           </View>
           <View>
@@ -138,8 +164,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
     paddingBottom: 10,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingHorizontal: 16,
     paddingTop: 40,
   },
   main: {
@@ -158,29 +183,23 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   text: {
-    alignContent: "flex-start",
-    alignItems: "flex-start",
     color: colors.text.secondary,
     fontSize: 15,
-    justifyContent: "center",
-    paddingLeft: 20,
+    paddingHorizontal: 16,
+    textAlign: "center",
   },
   textHospital: {
-    alignContent: "center",
-    alignItems: "flex-start",
     color: colors.text.primary,
     fontSize: 20,
     fontWeight: "bold",
-    justifyContent: "center",
     paddingBottom: 1,
-    paddingLeft: 20,
+    paddingHorizontal: 16,
     textAlign: "center",
   },
   variableButton: {
     alignContent: "center",
     paddingBottom: 60,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingHorizontal: 16,
   },
 });
 
