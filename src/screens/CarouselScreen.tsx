@@ -4,7 +4,7 @@ import { Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Carousel } from "../containers";
 import * as localStorage from "../services/localStorage";
-import { Card, Patient } from "../services/types";
+import { Card } from "../services/types";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -25,7 +25,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
         sessionCardResponse?.role?.toString() ||
         preferencesCardResponse?.role?.toString();
 
-      // só exibe tecnologia se ela não for a padrão/salva como default
+      // Só exibe tecnologia se ela não for a padrão/salva como default
       const currentTech = sessionCardResponse?.technology?.toString();
 
       let strComplete = await localStorage.getCards();
@@ -54,12 +54,10 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
           dataCard.patient
         ) {
           complete.push(dataCard);
-          console.warn("CarouselScreen.tsx Entrou if");
           await localStorage.addCard(dataCard);
         }
       } else {
         complete = [dataCard];
-        console.warn("CarouselScreen.tsx Entrou if");
         await localStorage.addCard(dataCard);
       }
       setData(complete);
@@ -68,13 +66,13 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
 
   const handlePress = (item: Card) => {
     setSelectedCard(item);
-    console.warn(selectedCard);
   };
   return (
     <SafeAreaView>
       <View style={styles.body}>
         <Carousel data={data} onPress={(item) => handlePress(item)} />
-        <Text>{JSON.stringify(selectedCard)}</Text>
+        {/* TODO: substituir por card com detalhes do card */}
+        <Text>{JSON.stringify(selectedCard || data[0])}</Text>
       </View>
     </SafeAreaView>
   );
