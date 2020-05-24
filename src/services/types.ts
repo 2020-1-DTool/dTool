@@ -55,3 +55,9 @@ export type Patient = {
   name: string;
   sex: string;
 };
+
+export type Doc = {
+  id: number;
+  name: string;
+  type?: string;
+};
