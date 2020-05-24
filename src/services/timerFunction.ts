@@ -204,6 +204,17 @@ export const timeToString = (time: number) => {
   return strTime;
 };
 
+export const getNextTimestamp = (strTimeStamp: string) => {
+  const secondsToAdd = 1;
+  const strNewTimestamp: string = moment(strTimeStamp, "HH:mm:ss")
+    .add(secondsToAdd, "s")
+    .format("HH:mm:ss");
+  console.log(
+    `Previous Timestamp: ${strTimeStamp}. New Timestamp: ${strNewTimestamp}`
+  );
+  return strNewTimestamp;
+};
+
 /** Atualiza os valores de tempo de um objeto adicionando o tempo atual percorrido
  * @param execution, objeto a receber os valores de tempo atualizados
  */

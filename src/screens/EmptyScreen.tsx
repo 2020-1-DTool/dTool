@@ -9,6 +9,7 @@ import {
   pauseExecution,
   finishExecution,
   updateAll,
+  getNextTimestamp,
 } from "../services/timerFunction";
 import { ButtonPrimary, InputText, ButtonExecutions } from "../components";
 
@@ -26,6 +27,7 @@ const EmptyScreen: React.FC<ScreenProps> = () => {
 
   const testTime = 100;
   const [position, setPosition] = useState("0");
+  const [timestamp, setTimestamp] = useState("00:00:00");
 
   return (
     <SafeAreaView>
@@ -58,6 +60,12 @@ const EmptyScreen: React.FC<ScreenProps> = () => {
           title="TimeToStringTest"
           onPress={() => {
             timeToString(testTime);
+          }} // remover modificação futuramente, apenas para testes
+        />
+        <ButtonPrimary
+          title={timestamp}
+          onPress={() => {
+            setTimestamp(getNextTimestamp(timestamp));
           }} // remover modificação futuramente, apenas para testes
         />
         {/* TODO: botões de execução estão aqui somente para teste */}
