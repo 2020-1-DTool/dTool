@@ -57,7 +57,7 @@ const ListTechnology: React.FC<ScreenProps> = ({ navigation }) => {
           </ScrollView>
           <View style={styles.buttonPlus}>
             <ButtonPlus
-              onPress={() => navigation.navigate("AddTechnology")}
+              onPress={() => navigation.navigate("NewTechnology")}
               style={styles.iconPlus}
             />
           </View>
