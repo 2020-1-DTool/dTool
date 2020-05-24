@@ -64,13 +64,17 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
     })();
   }, []);
 
-  const handlePress = (item: Card) => {
+  const handlePress = (item: Card, index: number) => {
     setSelectedCard(item);
+    console.log(`Selected card ${index}`);
   };
   return (
     <SafeAreaView>
       <View style={styles.body}>
-        <Carousel data={data} onPress={(item) => handlePress(item)} />
+        <Carousel
+          data={data}
+          onPress={(item, index) => handlePress(item, index)}
+        />
         {/* TODO: substituir por card com detalhes do card */}
         <Text>{JSON.stringify(selectedCard || data[0])}</Text>
       </View>

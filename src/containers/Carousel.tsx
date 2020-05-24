@@ -6,7 +6,7 @@ import colors from "../utils/colors";
 
 export type Props = {
   data: Card[] | undefined;
-  onPress: (card: Card) => void;
+  onPress: (card: Card, index: number) => void;
 };
 
 const Carousel: React.FC<Props> = ({ data, onPress }) => {

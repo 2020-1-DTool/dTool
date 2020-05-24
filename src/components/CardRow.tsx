@@ -15,21 +15,21 @@ import sizes from "../utils/sizes";
 
 export interface ScreenProps {
   data?: CardType[] | undefined;
-  onPress: (card: CardType) => void;
+  onPress: (card: CardType, index: number) => void;
 }
 
 const CardRow: React.FC<ScreenProps> = ({ data, onPress }) => {
   const [selectedCard, setSelectedCard] = useState(0);
 
-  const setBorder = (key: number) => {
+  const setBorder = (index: number) => {
     console.log(`Previous sected card ${selectedCard}`);
-    setSelectedCard(key);
-    console.log(`Current selected card ${key}`);
+    setSelectedCard(index);
+    console.log(`Current selected card ${index}`);
   };
 
   const handlePress = (item: CardType, key: number) => {
     setBorder(key);
-    onPress(item);
+    onPress(item, key);
   };
 
   return (
