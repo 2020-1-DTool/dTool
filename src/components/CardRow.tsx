@@ -43,7 +43,7 @@ const CardRow: React.FC<ScreenProps> = ({ data, onPress }) => {
             {data?.map((item, key) => (
               <View key={key}>
                 <TouchableOpacity
-                  key={item.patient + item.activity}
+                  key={item.patient.id + item.activity}
                   style={[
                     styles.viewGeral,
                     selectedCard === key
@@ -60,7 +60,7 @@ const CardRow: React.FC<ScreenProps> = ({ data, onPress }) => {
                       style={styles.imagePadding}
                       source={require("../assets/profile-carousel.png")}
                     />
-                    <Text style={styles.normalText}>{item.patient}</Text>
+                    <Text style={styles.normalText}>{item.patient.name}</Text>
                   </View>
                   <View style={styles.cardInfo}>
                     <Image

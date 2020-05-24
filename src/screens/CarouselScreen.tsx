@@ -4,18 +4,18 @@ import { Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Carousel } from "../containers";
 import * as localStorage from "../services/localStorage";
-import { Card } from "../services/types";
+import { Card, Patient } from "../services/types";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
-  route?: { params: { patientName: string; activityName: string } };
+  route?: { params: { patientId: string; activityName: string } };
 }
 
 const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
   const [data, setData] = useState([] as Card[]);
   const [selectedCard, setSelectedCard] = useState(data[0] as Card);
-  const patient = route?.params?.patientName;
   const activity = route?.params?.activityName;
+  const patientId = route?.params?.patientId;
 
   useEffect(() => {
     (async () => {
@@ -31,6 +31,9 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
       let strComplete = await localStorage.getCards();
       let complete: Card[];
       let dataCard: Card;
+      let patient: any;
+
+      if (patientId) patient = await localStorage.getPatient(patientId);
 
       dataCard = {
         patient: patient || "",
@@ -65,6 +68,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
 
   const handlePress = (item: Card) => {
     setSelectedCard(item);
+    console.warn(selectedCard);
   };
   return (
     <SafeAreaView>

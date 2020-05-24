@@ -57,7 +57,7 @@ export type Patient = {
 };
 
 export type Card = {
-  patient: string;
+  patient: Patient;
   activity: string;
   role?: string;
   technology?: string;

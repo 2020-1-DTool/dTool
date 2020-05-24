@@ -39,7 +39,7 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
             {
               name: "CarouselScreen",
               params: {
-                patientName: patient?.name,
+                patientId: patient?.id,
                 activityName: activity?.name,
               },
             },
