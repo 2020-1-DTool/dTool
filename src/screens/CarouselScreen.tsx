@@ -86,15 +86,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
           {/* TODO: substituir por card com detalhes do card */}
           <Text>{JSON.stringify(selectedCard || data[0])}</Text>
           <CardDescription
-            data={[
-              {
-                id: 1,
-                patient: "Teste",
-                title: "Medir pressão ",
-                time: "00:15:37",
-                role: "Enfermeiro",
-              },
-            ]}
+            data={selectedCard}
             state="finished"
             onPress1={() => console.warn("onPress1")}
             onPress2={() => console.warn("onPress2")}

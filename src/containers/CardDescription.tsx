@@ -3,18 +3,12 @@ import { Text, View, StyleSheet, Image } from "react-native";
 
 import { Card } from "react-native-elements";
 import colors from "../utils/colors";
+import sizes from "../utils/sizes";
 import { ButtonExecutions } from "../components";
-
-export type itemType = {
-  id: number;
-  patient: string;
-  title: string;
-  time: string;
-  role?: string;
-};
+import { Card as CardType } from "../services/types";
 
 export interface ScreenProps {
-  data?: itemType[];
+  data?: CardType;
   state: "uninitialized" | "initialized" | "finished";
   onPress1: () => void;
   onPress2: () => void;
@@ -63,34 +57,35 @@ const CardDescription: React.FC<ScreenProps> = ({
   return (
     <Card containerStyle={styles.cardStyle}>
       <View style={styles.container}>
-        {data?.map((item) => (
-          <View key={item.id}>
-            <View style={styles.cardTitle}>
-              <Text style={styles.boldText}>{item.title}</Text>
-            </View>
-            <View style={styles.cardInfo}>
-              <Image
-                style={styles.imagePadding}
-                source={require("../assets/profile-carousel.png")}
-              />
-              <Text style={styles.normalText}>{item.patient}</Text>
-            </View>
-            <View style={styles.cardInfo}>
-              <Image
-                style={styles.imagePadding}
-                source={require("../assets/clock-carousel.png")}
-              />
-              <Text style={styles.normalText}>{item.time}</Text>
-            </View>
-            <View style={styles.cardInfo}>
-              <Image
-                style={styles.imagePadding}
-                source={require("../assets/profile-carousel.png")}
-              />
-              <Text style={styles.normalText}>{item.role}</Text>
-            </View>
+        <View>
+          <View style={styles.cardTitle}>
+            <Text style={styles.boldText}>{data?.activity}</Text>
           </View>
-        ))}
+          <View style={styles.cardInfo}>
+            <Image
+              style={styles.imagePadding}
+              source={require("../assets/profile-carousel.png")}
+            />
+            <Text style={styles.normalText}>{data?.patient.name}</Text>
+            <Text
+              style={styles.patientSubtitle}
+            >{` ${data?.patient.id} | ${data?.patient.sex}`}</Text>
+          </View>
+          <View style={styles.cardInfo}>
+            <Image
+              style={styles.imagePadding}
+              source={require("../assets/clock-carousel.png")}
+            />
+            <Text style={styles.normalText}>{data?.time}</Text>
+          </View>
+          <View style={styles.cardInfo}>
+            <Image
+              style={styles.imagePadding}
+              source={require("../assets/profile-carousel.png")}
+            />
+            <Text style={styles.normalText}>{data?.role}</Text>
+          </View>
+        </View>
       </View>
       <View style={styles.buttonsWrap}>
         <View style={styles.buttonsCardDescription}>
@@ -166,6 +161,10 @@ let styles = StyleSheet.create({
   normalText: {
     color: colors.text.primary,
     fontWeight: "700",
+  },
+  patientSubtitle: {
+    color: colors.text.tertiary,
+    fontSize: sizes.buttonText.label,
   },
 });
 
