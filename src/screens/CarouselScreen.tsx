@@ -44,7 +44,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
       };
 
       if (strComplete !== null) {
-        complete = JSON.parse(strComplete);
+        complete = strComplete;
         const { length } = complete;
 
         // Evitar que insira duas vezes a mesma execução, em sequência
