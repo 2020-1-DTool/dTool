@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Carousel } from "../containers";
@@ -13,14 +13,21 @@ export interface ScreenProps {
 
 const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
   const [data, setData] = useState([] as Card[]);
-  const [role, setRole] = useState("");
+  const [selectedCard, setSelectedCard] = useState(data[0] as Card);
   const patient = route?.params?.patientName;
   const activity = route?.params?.activityName;
 
   useEffect(() => {
     (async () => {
-      const responseCard = await localStorage.getSession();
-      setRole(responseCard?.role?.toString() || "");
+      const sessionCardResponse = await localStorage.getSession();
+      const preferencesCardResponse = await localStorage.getPreferences();
+      const currentRole =
+        sessionCardResponse?.role?.toString() ||
+        preferencesCardResponse?.role?.toString();
+
+      // só exibe tecnologia se ela não for a padrão/salva como default
+      const currentTech = sessionCardResponse?.technology?.toString();
+
       let strComplete = await localStorage.getCards();
       let complete: Card[];
       let dataCard: Card;
@@ -28,18 +35,20 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
       dataCard = {
         patient: patient || "",
         activity: activity || "",
-        role,
+        role: currentRole || "",
+        technology: currentTech || "",
         time: "00:00:00",
       };
 
       if (strComplete !== null) {
         complete = JSON.parse(strComplete);
-        let tam = complete.length;
+        const { length } = complete;
 
         // Evitar que insira duas vezes a mesma execução, em sequência
         if (
-          complete[tam - 1]?.patient !== patient ||
-          complete[tam - 1]?.activity !== activity
+          (complete[length - 1]?.patient !== patient ||
+            complete[length - 1]?.activity !== activity) &&
+          dataCard.patient
         ) {
           complete.push(dataCard);
           console.warn("CarouselScreen.tsx Entrou if");
@@ -54,10 +63,14 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
     })();
   }, []);
 
+  const handlePress = (item: Card) => {
+    setSelectedCard(item);
+  };
   return (
     <SafeAreaView>
       <View style={styles.body}>
-        <Carousel data={data.reverse()} />
+        <Carousel data={data} onPress={(item) => handlePress(item)} />
+        <Text>{JSON.stringify(selectedCard)}</Text>
       </View>
     </SafeAreaView>
   );

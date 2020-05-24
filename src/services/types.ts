@@ -60,5 +60,6 @@ export type Card = {
   patient: string;
   activity: string;
   role?: string;
+  technology?: string;
   time: string;
 };

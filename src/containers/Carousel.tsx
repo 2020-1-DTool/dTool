@@ -6,14 +6,15 @@ import colors from "../utils/colors";
 
 export type Props = {
   data: Card[] | undefined;
+  onPress: (card: Card) => void;
 };
 
-const Carousel: React.FC<Props> = ({ data }) => {
+const Carousel: React.FC<Props> = ({ data, onPress }) => {
   return (
     <View style={styles.carouselStyle}>
       <ScrollView>
         <View>
-          <CardRow data={data} />
+          <CardRow data={data} onPress={onPress} />
         </View>
       </ScrollView>
     </View>

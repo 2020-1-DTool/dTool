@@ -17,16 +17,21 @@ export type itemType = CardType;
 
 export interface ScreenProps {
   data?: itemType[] | undefined;
+  onPress: (card: CardType) => void;
 }
 
-const CardRow: React.FC<ScreenProps> = ({ data }) => {
+const CardRow: React.FC<ScreenProps> = ({ data, onPress }) => {
   const [selectedCard, setSelectedCard] = useState(0);
 
-  const setBorder = (title: string, key: number) => {
-    console.log(title);
+  const setBorder = (key: number) => {
     console.log(`Previous sected card ${selectedCard}`);
     setSelectedCard(key);
     console.log(`Current selected card ${key}`);
+  };
+
+  const handlePress = (item: CardType, key: number) => {
+    setBorder(key);
+    onPress(item);
   };
 
   return (
@@ -45,7 +50,7 @@ const CardRow: React.FC<ScreenProps> = ({ data }) => {
                       ? styles.borderGreen
                       : styles.borderWhite,
                   ]}
-                  onPress={() => setBorder(item.activity, key)}
+                  onPress={() => handlePress(item, key)}
                 >
                   <View style={styles.cardTitle}>
                     <Text style={styles.boldText}>{item.activity}</Text>

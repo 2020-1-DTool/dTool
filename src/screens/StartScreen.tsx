@@ -18,6 +18,9 @@ const StartScreen: React.FC<ScreenProps> = ({ navigation }) => {
     const firstScreen = await appService.startupScreen();
 
     switch (firstScreen) {
+      case "execution":
+        navigation.reset({ index: 0, routes: [{ name: "CarouselScreen" }] });
+        break;
       case "home":
         navigation.reset({ index: 0, routes: [{ name: "Home" }] });
         break;

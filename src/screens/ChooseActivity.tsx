@@ -6,7 +6,7 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { CommonActions } from "@react-navigation/native";
 import { BasicList, ButtonPrimary, PatientHeader } from "../components";
 
 import colors from "../utils/colors";
@@ -14,7 +14,7 @@ import * as localStorage from "../services/localStorage";
 import { Activity, Patient } from "../services/types";
 
 export interface ScreenProps {
-  navigation: StackNavigationProp<any, any>;
+  navigation: any;
   route?: { params: { pacient: Patient } };
 }
 
@@ -32,11 +32,20 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
   const handleListPress = (index: number) => {
     const activity = activities[index];
     if (activity) {
-      // TODO: ver modo de usar .reset com params
-      navigation.navigate("CarouselScreen", {
-        patientName: patient?.name,
-        activityName: activities[index].name,
-      });
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: "CarouselScreen",
+              params: {
+                patientName: patient?.name,
+                activityName: activity?.name,
+              },
+            },
+          ],
+        })
+      );
     }
   };
 
