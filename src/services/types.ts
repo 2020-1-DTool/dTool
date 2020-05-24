@@ -58,6 +58,12 @@ export type Patient = {
   sex: string;
 };
 
+export type Doc = {
+  id: number;
+  name: string;
+  type?: string;
+};
+
 export type OngoingExecution = {
   startTime: string;
   elapsedTime: number;

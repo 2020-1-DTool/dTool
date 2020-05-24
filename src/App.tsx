@@ -9,10 +9,12 @@ import {
 import { HeaderButton, HeaderSearch } from "./components";
 import {
   AddPatient,
+  AddTechnology,
   CarouselScreen,
   ChooseActivity,
   ChooseRole,
   ChooseTechnology,
+  DocList,
   HospitalCode,
   HospitalInformation,
   StartScreen,
@@ -140,6 +142,14 @@ const App = () => (
           }}
         />
         <Stack.Screen
+          name="DocList"
+          component={DocList}
+          options={() => ({
+            title: "Tecnologia Padrão",
+            ...baseHeaderStyle,
+          })}
+        />
+        <Stack.Screen
           name="ListPatient"
           component={ListPatient}
           options={({ navigation }) => ({
@@ -153,16 +163,22 @@ const App = () => (
             ...baseHeaderStyle,
           })}
         />
-
         <Stack.Screen
           name="ListTechnology"
           component={ListTechnology}
-          options={({ navigation }) => ({
+          options={() => ({
             title: "Tecnologia",
             ...baseHeaderStyle,
           })}
         />
-
+        <Stack.Screen
+          name="NewTechnology"
+          component={AddTechnology}
+          options={{
+            ...baseHeaderStyle,
+            title: "Nova tecnologia",
+          }}
+        />
         <Stack.Screen
           name="SelectPatient"
           component={SelectPatient}
