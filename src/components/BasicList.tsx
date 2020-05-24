@@ -53,7 +53,8 @@ const BasicList: React.FC<Props> = ({
                     {item?.name || item}
                   </Text>
                   <Text style={[styles.item, styles.patientSubtitle]}>
-                    {item?.type || `${item?.id} |`} {item?.sex}
+                    {!technologyList && (item?.type || `${item?.id} |`)}{" "}
+                    {item?.sex}
                   </Text>
                 </TouchableOpacity>
                 {icon && (
