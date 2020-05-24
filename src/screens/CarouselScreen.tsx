@@ -29,6 +29,10 @@ const CarouselScreen: React.FC<ScreenProps> = () => {
               role: "Enfermeiro",
             },
           ]}
+          state="finished"
+          onPress1={() => console.warn("onPress1")}
+          onPress2={() => console.warn("onPress2")}
+          onPress3={() => console.warn("onPress3")}
         />
       </View>
     </SafeAreaView>

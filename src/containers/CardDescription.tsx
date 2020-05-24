@@ -15,9 +15,51 @@ export type itemType = {
 
 export interface ScreenProps {
   data?: itemType[];
+  state: "uninitialized" | "initialized" | "finished";
+  onPress1: () => void;
+  onPress2: () => void;
+  onPress3?: () => void;
 }
 
-const CardDescription: React.FC<ScreenProps> = ({ data }) => {
+const CardDescription: React.FC<ScreenProps> = ({
+  state,
+  data,
+  onPress1,
+  onPress2,
+  onPress3,
+}) => {
+  let button1;
+  let button2;
+  let button3;
+  let buttonText1;
+  let buttonText2;
+  let buttonText3;
+
+  switch (state) {
+    case "uninitialized":
+      button1 = "start";
+      button2 = "cancel";
+      buttonText1 = "INICIAR";
+      buttonText2 = "REMOVER";
+      break;
+    case "initialized":
+      button1 = "stop";
+      button2 = "cancel";
+      buttonText1 = "PARAR";
+      buttonText2 = "CANCELAR";
+      break;
+    case "finished":
+      button1 = "finish";
+      button2 = "restart";
+      button3 = "cancel";
+      buttonText1 = "CONCLUIR E SALVAR";
+      buttonText2 = "RETOMAR CONTAGEM";
+      buttonText3 = "CANCELAR";
+      break;
+    default:
+      break;
+  }
+
   return (
     <Card containerStyle={styles.cardStyle}>
       <View style={styles.container}>
@@ -53,16 +95,25 @@ const CardDescription: React.FC<ScreenProps> = ({ data }) => {
       <View style={styles.buttonsWrap}>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={() => "nothingyet"}
-            action="start"
-            text="INICIAR"
+            onPress={onPress1}
+            action={button1}
+            text={buttonText1}
           />
         </View>
         <View style={styles.buttonsCardDescription}>
+          {state === "finished" && (
+            <ButtonExecutions
+              onPress={onPress2}
+              action={button2}
+              text={buttonText2}
+            />
+          )}
+        </View>
+        <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={() => "nothingyet"}
-            action="cancel"
-            text="CANCELAR"
+            onPress={onPress3}
+            action={button3}
+            text={buttonText3}
           />
         </View>
       </View>
