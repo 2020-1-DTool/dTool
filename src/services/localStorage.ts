@@ -5,12 +5,11 @@ import {
   setObject,
   mergeObject,
   removeObjectItem,
-  addFinishedExecutionItem,
-  addOngoingExecutionItem,
+  addExecutionItem,
   setOngoingExecutionItem,
   removeOngoingExecutionItem,
-  getItem,
   removeItem,
+  getArray,
 } from "./asyncStorageAdapter";
 import {
   LocalData,
@@ -54,11 +53,11 @@ export {
   clear,
   ifIdExists,
   getItem,
+  getArray,
   setItem,
   removeItem,
   addPatientItem,
-  addFinishedExecutionItem,
-  addOngoingExecutionItem,
+  addExecutionItem,
   removeObjectItem,
 } from "./asyncStorageAdapter";
 
@@ -133,20 +132,22 @@ export const removePatient = (index: number) =>
 
 /** Adiciona a lista de execucoes concluidas salva localmente */
 export const addFinishedExecution = (newExecution: FinishedExecution) =>
-  addFinishedExecutionItem("@finishedExecution", newExecution);
+  addExecutionItem("@finishedExecution", newExecution);
 
 /** Retorna toda a lista de execucoes concluidas salva localmente */
-export const getFinishedExecutions = () => getItem("@finishedExecution");
+export const getFinishedExecutions = () =>
+  getArray<FinishedExecution>("@finishedExecution");
 
 /** Reseta toda a lista de execucoes concluidas salva localmente */
 export const resetFinishedExecutions = () => removeItem("@finishedExecution");
 
 /** Adiciona a lista de execucoes em andamento salva localmente */
 export const addOngoingExecution = (newExecution: OngoingExecution) =>
-  addOngoingExecutionItem("@ongoingExecution", newExecution);
+  addExecutionItem("@ongoingExecution", newExecution);
 
 /** Retorna toda a lista de execucoes em andamento salva localmente */
-export const getOngoingExecutions = () => getItem("@ongoingExecution");
+export const getOngoingExecutions = () =>
+  getArray<OngoingExecution>("@ongoingExecution");
 
 /** Altera um objeto em dado index na lista de execucoes em andamento salva localmente */
 export const setOngoingExecution = (newItem: OngoingExecution, index: number) =>

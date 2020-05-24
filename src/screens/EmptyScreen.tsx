@@ -19,7 +19,7 @@ export interface ScreenProps {
 const EmptyScreen: React.FC<ScreenProps> = () => {
   // TODO: na tela apropriada, pegar dados do paciente atual do AsyncStorage
   const cardInfo = {
-    idPatient: 1234,
+    idPatient: "1234",
     role: 1,
     activity: 42,
   };
@@ -83,7 +83,9 @@ const EmptyScreen: React.FC<ScreenProps> = () => {
           text="CONCLUIR E SALVAR"
         />
         <ButtonExecutions
-          onPress={() => "nothingyet"}
+          onPress={() => {
+            initializeExecution(Number(position));
+          }} // remover modificação futuramente, apenas para testes
           action="restart"
           text="RETOMAR CONTAGEM"
         />

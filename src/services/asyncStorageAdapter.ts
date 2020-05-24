@@ -93,29 +93,9 @@ export const addPatientItem = async (key: string, newItem: Patient) => {
  * @param key Chave do array salvo no AsyncStorage
  * @param newItem Objeto a ser adicionado, neste caso FinishedExecution
  */
-export const addFinishedExecutionItem = async (
+export const addExecutionItem = async (
   key: string,
-  newItem: FinishedExecution
-) => {
-  let list: string | string[] | null = await getItem(key);
-
-  if (list) list = JSON.parse(list ?? "");
-  if (!Array.isArray(list) || !list?.length) list = [];
-
-  list.push(newItem);
-  await setItem(key, JSON.stringify(list));
-
-  return true;
-};
-
-/**
- * Adiciona novo objeto no array de objetos informado
- * @param key Chave do array salvo no AsyncStorage
- * @param newItem Objeto a ser adicionado, neste caso OngoingExecution
- */
-export const addOngoingExecutionItem = async (
-  key: string,
-  newItem: OngoingExecution
+  newItem: OngoingExecution | FinishedExecution
 ) => {
   let list: string | string[] | null = await getItem(key);
 
@@ -160,18 +140,18 @@ export const removeOngoingExecutionItem = async (
   index: number
 ) => {
   let list: string | string[] | null = await getItem(key);
+  let removed;
   if (list) list = JSON.parse(list ?? "");
 
-  if (Array.isArray(list) && list.length > 0) list.splice(index, 1);
-  else {
+  if (Array.isArray(list) && list.length > 0) {
+    removed = list[index];
+    list.splice(index, 1);
+  } else {
     console.log(`❌Error removing ${key}[${index}] from AsyncStorage`);
     return null;
   }
-  const removed = JSON.parse(list[index]);
-  await setItem(key, JSON.stringify(list));
-  const currentList = await getItem(key);
-  console.log(`✅ ${key}: ${currentList}`);
 
+  await setItem(key, JSON.stringify(list));
   return removed;
 };
 

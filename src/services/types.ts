@@ -62,7 +62,7 @@ export type OngoingExecution = {
   startTime: string;
   elapsedTime: number;
   latestStartTime: Moment;
-  idPatient: number;
+  idPatient: string;
   role: number;
   activity: number;
   currentState: ExecutionStatus;
@@ -73,7 +73,6 @@ export type FinishedExecution = {
   role: number;
   date: string; // ISO8601
   duration: number;
-  currentState: ExecutionStatus;
 };
 
 export enum ExecutionStatus {
@@ -84,7 +83,7 @@ export enum ExecutionStatus {
 }
 
 export type CardExecutionType = {
-  idPatient: number;
+  idPatient: string;
   role: number;
   activity: number;
 };

@@ -133,7 +133,6 @@ export const finishExecution = async (index: number) => {
       role: execution.role,
       date: execution.startTime,
       duration: execution.elapsedTime,
-      currentState: execution.currentState,
     };
 
     return addFinishedExecution(newFinishedExecution);
@@ -153,7 +152,7 @@ export const updateAll = async () => {
     return false;
   }
 
-  const arExecutions: OngoingExecution[] = JSON.parse(strArray);
+  const arExecutions: OngoingExecution[] = strArray;
   let execution: OngoingExecution;
   let isOneRunning = false;
   for (let i = 0; i < arExecutions.length; i++) {
@@ -217,8 +216,8 @@ const getSingleOngoingExecution = async (index: number) => {
     return null;
   }
 
-  if (JSON.parse(lstExecution).length > index) {
-    const execution: OngoingExecution = JSON.parse(lstExecution)[index];
+  if (lstExecution.length > index) {
+    const execution: OngoingExecution = lstExecution[index];
     return execution;
   }
 
