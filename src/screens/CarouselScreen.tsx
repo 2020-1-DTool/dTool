@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Carousel } from "../containers";
@@ -70,14 +77,16 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
   };
   return (
     <SafeAreaView>
-      <View style={styles.body}>
-        <Carousel
-          data={data}
-          onPress={(item, index) => handlePress(item, index)}
-        />
-        {/* TODO: substituir por card com detalhes do card */}
-        <Text>{JSON.stringify(selectedCard || data[0])}</Text>
-      </View>
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <View style={styles.body}>
+          <Carousel
+            data={data}
+            onPress={(item, index) => handlePress(item, index)}
+          />
+          {/* TODO: substituir por card com detalhes do card */}
+          <Text>{JSON.stringify(selectedCard || data[0])}</Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
