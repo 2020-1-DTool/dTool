@@ -94,6 +94,7 @@ export const pauseExecution = async (index: number) => {
   }
   if (execution.currentState === ExecutionStatus.Initialized) {
     execution = addElapsedTime(execution);
+    execution.currentState = ExecutionStatus.Paused;
     await setOngoingExecution(execution, index);
     return true;
   }
@@ -230,7 +231,6 @@ const addElapsedTime = (execution: OngoingExecution) => {
     newElapsedTime
   );
   execution.elapsedTime = newElapsedTime;
-  execution.currentState = ExecutionStatus.Paused;
   return execution;
 };
 
