@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import moment, { Moment } from "moment";
 import {
   addFinishedExecution,
@@ -101,11 +102,38 @@ export const pauseExecution = async (index: number) => {
   return false;
 };
 
+const showExecutionAlert = (type: "remove" | "cancel"): Promise<boolean> => {
+  const [action, capitalizedAction] =
+    type === "remove" ? ["remover", "Remover"] : ["cancelar", "Cancelar"];
+  const title = `${capitalizedAction} atividade?`;
+  const message = `Se você ${action} essa atividade, o tempo gasto nela não será contabilizado.`;
+  const yesButtonText = `Sim, ${action}`;
+
+  return new Promise((resolve) => {
+    Alert.alert(
+      title,
+      message,
+      [
+        {
+          text: yesButtonText,
+          style: "destructive",
+          onPress: () => resolve(true),
+        },
+        { text: "Não, voltar", style: "cancel", onPress: () => resolve(false) },
+      ],
+      { cancelable: true, onDismiss: () => resolve(false) }
+    );
+  });
+};
+
 /** Função responsável por cancelar uma execução
  * @param index, índice da execução a ser removida do array
  */
 export const cancelExecution = async (index: number) => {
-  await removeOngoingExecution(index);
+  const confirmed = await showExecutionAlert("remove");
+  if (confirmed) {
+    await removeOngoingExecution(index);
+  }
 };
 
 /** Função responsável por finalisar uma execução, removendo-a da lista de
