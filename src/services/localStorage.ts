@@ -1,4 +1,5 @@
 import {
+  addCardItem,
   addObjectItem,
   addPatientItem,
   getArray,
@@ -51,6 +52,7 @@ import {
 
 /** Funções auxiliares */
 export {
+  addCardItem,
   addObjectItem,
   addPatientItem,
   clear,
@@ -133,7 +135,7 @@ export const removePatient = (index: number) =>
   removeObjectItem("@patient", index);
 
 /** Adiciona a lista de cards salva localmente */
-export const addCard = (newCard: Card) => addObjectItem("@Card", newCard);
+export const addCard = (newCard: Card) => addCardItem("@Card", newCard);
 
 /** Retorna toda a lista de cards salva localmente */
 export const getCards = () => getArray<Card>("@Card");

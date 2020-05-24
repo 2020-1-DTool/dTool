@@ -89,13 +89,30 @@ export const addPatientItem = async (key: string, newItem: Patient) => {
 };
 
 /**
- * Adiciona novo objeto no array de objetos informado
+ * Adiciona novo Card no inicio do array de Cards
+ * @param key Chave do array salvo no AsyncStorage
+ * @param newItem Card a ser adicionado
+ */
+export const addCardItem = async (key: string, newItem: Card) => {
+  let list: string | string[] | null = await getItem(key);
+
+  if (list) list = JSON.parse(list ?? "");
+  if (!Array.isArray(list) || !list?.length) list = [];
+
+  list.unshift(newItem);
+  await setItem(key, JSON.stringify(list));
+
+  return true;
+};
+
+/**
+ * Adiciona novo objeto no final do array de objetos informado
  * @param key Chave do array salvo no AsyncStorage
  * @param newItem Objeto a ser adicionado
  */
 export const addObjectItem = async (
   key: string,
-  newItem: OngoingExecution | FinishedExecution | Card
+  newItem: OngoingExecution | FinishedExecution
 ) => {
   let list: string | string[] | null = await getItem(key);
 

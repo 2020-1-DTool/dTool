@@ -53,7 +53,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
             complete[length - 1]?.activity !== activity) &&
           dataCard.patient
         ) {
-          complete.push(dataCard);
+          complete.unshift(dataCard);
           await localStorage.addCard(dataCard);
         }
       } else {
