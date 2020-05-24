@@ -135,7 +135,7 @@ const App = () => (
         <Stack.Screen
           name="DocList"
           component={DocList}
-          options={({ navigation }) => ({
+          options={() => ({
             title: "Tecnologia Padrão",
             ...baseHeaderStyle,
           })}

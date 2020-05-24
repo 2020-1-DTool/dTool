@@ -13,7 +13,6 @@ import colors from "../../utils/colors";
 import { BasicList } from "../../components";
 
 export interface ScreenProps {
-  storageResult: Array<Record<string, any>>;
   navigation: StackNavigationProp<any, any>;
 }
 
