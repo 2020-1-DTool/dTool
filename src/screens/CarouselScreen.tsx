@@ -29,8 +29,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
       const sessionCardResponse = await localStorage.getSession();
       const preferencesCardResponse = await localStorage.getPreferences();
       const currentRole =
-        sessionCardResponse?.role?.toString() ||
-        preferencesCardResponse?.role?.toString();
+        sessionCardResponse?.roleName || preferencesCardResponse?.roleName;
 
       // Só exibe tecnologia se ela não for a padrão/salva como default
       const currentTech = sessionCardResponse?.technology?.toString();
@@ -45,7 +44,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
       dataCard = {
         patient: patient || "",
         activity: activity || "",
-        role: currentRole || "",
+        role: currentRole,
         technology: currentTech || "",
         time: "00:00:00",
       };

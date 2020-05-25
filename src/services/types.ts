@@ -83,6 +83,7 @@ export type Permission =
 export interface Preferences {
   technology?: number;
   role?: number;
+  roleName?: string;
 }
 
 interface Role {
@@ -94,6 +95,7 @@ interface Role {
 export interface Session {
   technology?: number;
   role?: number;
+  roleName?: string;
 }
 
 export interface Technology {
