@@ -203,6 +203,17 @@ export const timeToString = (time: number) => {
   console.log(strTime);
   return strTime;
 };
+/** Função responsável por retornar o status de execução de uma execução específica
+ * @param index, índice da execução cujo status irá ser retornado
+ */
+export const getExecutionStatus = async (index: number) => {
+  let execution = await getSingleOngoingExecution(index);
+  if (execution === null) {
+    console.warn(`Execução ${index} não encontrada`);
+    return null;
+  }
+  return execution.currentState;
+};
 
 /** Atualiza os valores de tempo de um objeto adicionando o tempo atual percorrido
  * @param execution, objeto a receber os valores de tempo atualizados
