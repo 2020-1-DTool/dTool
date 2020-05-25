@@ -195,11 +195,15 @@ export const saveTechnology = async (
   }
 };
 
-export const saveRole = async (role: number, permanent: boolean) => {
+export const saveRole = async (
+  role: number,
+  name: string,
+  permanent: boolean
+) => {
   if (permanent) {
-    await mergeObject("@preferences", { role });
+    await mergeObject("@preferences", { role, roleName: name });
   } else {
-    await mergeObject("@session", { role });
+    await mergeObject("@session", { role, roleName: name });
   }
 };
 

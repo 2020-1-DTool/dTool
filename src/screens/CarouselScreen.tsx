@@ -4,14 +4,14 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Carousel } from "../containers";
+import { Carousel, CardDescription } from "../containers";
 import * as localStorage from "../services/localStorage";
 import { Card } from "../services/types";
+import colors from "../utils/colors";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -29,8 +29,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
       const sessionCardResponse = await localStorage.getSession();
       const preferencesCardResponse = await localStorage.getPreferences();
       const currentRole =
-        sessionCardResponse?.role?.toString() ||
-        preferencesCardResponse?.role?.toString();
+        sessionCardResponse?.roleName || preferencesCardResponse?.roleName;
 
       // Só exibe tecnologia se ela não for a padrão/salva como default
       const currentTech = sessionCardResponse?.technology?.toString();
@@ -45,7 +44,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
       dataCard = {
         patient: patient || "",
         activity: activity || "",
-        role: currentRole || "",
+        role: currentRole,
         technology: currentTech || "",
         time: "00:00:00",
       };
@@ -83,8 +82,15 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
             data={data}
             onPress={(item, index) => handlePress(item, index)}
           />
-          {/* TODO: substituir por card com detalhes do card */}
-          <Text>{JSON.stringify(selectedCard || data[0])}</Text>
+          <CardDescription
+            data={selectedCard || data[0]}
+            state="finished" /* TODO: essa info deve vir do @ongoingExecution na integração, para alternar de estado */
+            onPress1={() =>
+              console.warn("onPress1")
+            } /* TODO: cada callback destes, deve chamar as ações apropriadas */
+            onPress2={() => console.warn("onPress2")}
+            onPress3={() => console.warn("onPress3")}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -94,6 +100,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
 const styles = StyleSheet.create({
   body: {
     alignItems: "center",
+    backgroundColor: colors.basic.backgroundHighlight,
     minHeight: Dimensions.get("window").height,
   },
 });
