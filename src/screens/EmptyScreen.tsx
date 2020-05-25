@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View, Text } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import {
@@ -28,6 +28,24 @@ const EmptyScreen: React.FC<ScreenProps> = () => {
   const testTime = 100;
   const [position, setPosition] = useState("0");
   const [timestamp, setTimestamp] = useState("00:00:00");
+  const [time, setTime] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+
+  const toggle = () => {
+    setIsActive(!isActive);
+  };
+
+  useEffect(() => {
+    let interval: any = null;
+    if (isActive) {
+      interval = setInterval(() => {
+        setTime(() => time + 1);
+      }, 1000);
+    } else if (!isActive && time !== 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isActive, time]);
 
   return (
     <SafeAreaView>
@@ -63,10 +81,14 @@ const EmptyScreen: React.FC<ScreenProps> = () => {
           }} // remover modificação futuramente, apenas para testes
         />
         <ButtonPrimary
-          title={timestamp}
+          title={timestamp.toString()}
           onPress={() => {
             setTimestamp(getNextTimestamp(timestamp));
           }} // remover modificação futuramente, apenas para testes
+        />
+        <ButtonPrimary
+          title={time.toString()}
+          onPress={toggle} // remover modificação futuramente, apenas para testes
         />
         {/* TODO: botões de execução estão aqui somente para teste */}
         <ButtonExecutions
