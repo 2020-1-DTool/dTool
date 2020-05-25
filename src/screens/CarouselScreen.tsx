@@ -11,6 +11,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { Carousel, CardDescription } from "../containers";
 import * as localStorage from "../services/localStorage";
 import { Card } from "../services/types";
+import colors from "../utils/colors";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -87,7 +88,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
             state="finished" /* TODO: essa info deve vir do @ongoingExecution na integração, para alternar de estado */
             onPress1={() =>
               console.warn("onPress1")
-            } /* TODO: cada callback destes, deve chamar as ações paropriadas */
+            } /* TODO: cada callback destes, deve chamar as ações apropriadas */
             onPress2={() => console.warn("onPress2")}
             onPress3={() => console.warn("onPress3")}
           />
@@ -100,6 +101,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
 const styles = StyleSheet.create({
   body: {
     alignItems: "center",
+    backgroundColor: colors.basic.backgroundHighlight,
     minHeight: Dimensions.get("window").height,
   },
 });
