@@ -86,7 +86,7 @@ export interface Preferences {
   roleName?: string;
 }
 
-interface Role {
+export interface Role {
   id: number;
   name: string;
   activities: Activity[];

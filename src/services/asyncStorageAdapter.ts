@@ -81,9 +81,20 @@ export const addPatientItem = async (key: string, newItem: Patient) => {
     console.log("⚠️  ID already exists: ", await getItem(key));
     return false;
   }
-
-  list.push(newItem);
-  await setItem(key, JSON.stringify(list));
+  let array: Patient[] = list.map(function parser(value) {
+    return (value as unknown) as Patient;
+  });
+  array.push(newItem);
+  array = array.sort(function order(a, b) {
+    if (a.name < b.name) {
+      return -1;
+    }
+    if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
+  });
+  await setItem(key, JSON.stringify(array));
 
   return true;
 };
