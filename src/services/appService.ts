@@ -1,3 +1,5 @@
+import { getUniqueId } from "react-native-device-info";
+import axios from "axios";
 import {
   clear,
   getPreferences,
@@ -5,6 +7,8 @@ import {
   setAccessCode,
   saveData,
   getCards,
+  getFinishedExecutions,
+  resetFinishedExecutions,
 } from "./localStorage";
 import api from "./API";
 import { Permission } from "./types";
@@ -108,6 +112,104 @@ export const processAccessCode = async (code: string): Promise<Permission> => {
     await saveData(response.data);
 
     return response.data.permission;
+  } catch (error) {
+    if (error.response?.status === 404) {
+      throw new Error("not-found");
+    }
+
+    throw new Error("network");
+  }
+};
+
+/**
+ * Sincroniza a lista local de execuções de atividades com o servidor.
+ *
+ * Se a sincronização for bem sucedida, as execuções locais são deletadas; se a
+ * instituição de saúde não existir mais no sistema, todos os dados locais são
+ * deletados (execuções não sincronizadas, execuções em andamento, ...) e um
+ * erro com mensagem `"institution-not-found"` é lançado; se algum erro de rede
+ * ocorrer, a operação falha com um erro com mensagem `"network"`.
+ */
+export const syncExecutions = async () => {
+  try {
+    await uploadExecutions();
+    await resetFinishedExecutions();
+  } catch (error) {
+    if (error.message === "auth") {
+      try {
+        await authenticate();
+      } catch (authError) {
+        if (authError.message === "not-found") {
+          await clear();
+          throw new Error("institution-not-found");
+        }
+
+        // other errors should be handled by callers (network); rethrow
+        throw authError;
+      }
+
+      await syncExecutions();
+    }
+
+    // other errors should be handled by callers (network); rethrow
+    throw error;
+  }
+};
+
+/**
+ * Faz o upload de uma lista local de execuções para a API.
+ *
+ * Erros lançados:
+ * - `auth`: token inválido;
+ * - `network`: erro de rede.
+ */
+const uploadExecutions = async (): Promise<void> => {
+  const executions = (await getFinishedExecutions()).map((execution) => {
+    return {
+      activityId: execution.activity,
+      roleId: execution.role,
+      timestamp: execution.date,
+      duration: execution.duration,
+    };
+  });
+
+  if (executions.length === 0) {
+    return;
+  }
+
+  try {
+    const token = getUniqueId();
+
+    await api.post("/executions", {
+      deviceToken: token,
+      executions,
+    });
+  } catch (error) {
+    // invalid token
+    if (error.response?.status === 401) {
+      throw new Error("auth");
+    }
+
+    // network error
+    throw new Error("network");
+  }
+};
+
+/**
+ * Faz a autenticação usando o código de acesso salvo local, atualizando os
+ * dados locais.
+ *
+ * Erros lançados:
+ * - `not-found`: instituição não encontrada (não existe ou deletada);
+ * - `network`: erro de rede.
+ */
+const authenticate = async () => {
+  const { code } = await getAuth();
+
+  try {
+    const result = await api.post("/auth", { code });
+    axios.defaults.headers.commons.Authorization = `Bearer ${result.data.accessToken}`;
+    await saveData(result.data);
   } catch (error) {
     if (error.response?.status === 404) {
       throw new Error("not-found");
