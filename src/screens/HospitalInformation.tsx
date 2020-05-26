@@ -94,12 +94,6 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               onPress={() => "nothingyet"}
             />
           </View>
-          <View style={styles.iniciateButton}>
-            <ButtonPrimary
-              title="EmptyScreen"
-              onPress={() => navigation.navigate("EmptyScreen")}
-            />
-          </View>
           <View>
             <TouchableOpacity style={styles.outButton} onPress={handleBack}>
               <Text style={styles.outButton}>Sair</Text>

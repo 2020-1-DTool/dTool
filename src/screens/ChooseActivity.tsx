@@ -65,12 +65,6 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
             data={activities.map((activity) => activity.name)}
             onPress={handleListPress}
           />
-          <ButtonPrimary
-            title="Início"
-            onPress={() => {
-              return navigation.navigate("Home");
-            }} // TODO: remover modificação futuramente, apenas para testes
-          />
         </View>
       </ScrollView>
     </SafeAreaView>
