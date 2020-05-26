@@ -73,7 +73,7 @@ export const ifIdExists = async (key: string, id: string) => {
  * @param newItem Objeto a ser adicionado, neste caso Patient
  */
 export const addPatientItem = async (key: string, newItem: Patient) => {
-  let list: string | string[] | null = await getItem(key);
+  let list: string | any[] | null = await getItem(key);
 
   if (list) list = JSON.parse(list ?? "");
   if (!Array.isArray(list) || !list?.length) list = [];
@@ -81,19 +81,9 @@ export const addPatientItem = async (key: string, newItem: Patient) => {
     console.log("⚠️  ID already exists: ", await getItem(key));
     return false;
   }
-  let array: Patient[] = list.map(function parser(value) {
-    return (value as unknown) as Patient;
-  });
+  let array = list as Patient[];
   array.push(newItem);
-  array = array.sort(function order(a, b) {
-    if (a.name < b.name) {
-      return -1;
-    }
-    if (a.name > b.name) {
-      return 1;
-    }
-    return 0;
-  });
+  array = array.sort((a, b) => a.name.localeCompare(b.name));
   await setItem(key, JSON.stringify(array));
 
   return true;

@@ -78,45 +78,17 @@ export const saveData = async (remoteData: any) => {
   ) {
     const { institution, roles, technologies } = remoteData;
 
-    let orderedRoles: Role[] = roles.map(function parser(value: unknown) {
-      return (value as unknown) as Role;
-    });
-    let orderedTechnologies: Technology[] = technologies.map(function parser(
-      value: unknown
-    ) {
-      return (value as unknown) as Technology;
-    });
-    orderedRoles = orderedRoles.sort(function order(a, b) {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    });
+    let orderedRoles = roles as Role[];
+    let orderedTechnologies = technologies as Technology[];
+    orderedRoles = orderedRoles.sort((a, b) => a.name.localeCompare(b.name));
     for (let i = 0; i < orderedRoles.length; i++) {
-      orderedRoles[i].activities = orderedRoles[i].activities.sort(
-        function order(a, b) {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        }
+      orderedRoles[i].activities = orderedRoles[i].activities.sort((a, b) =>
+        a.name.localeCompare(b.name)
       );
     }
-    orderedTechnologies = orderedTechnologies.sort(function order(a, b) {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    });
+    orderedTechnologies = orderedTechnologies.sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
     const obj = {
       institution,
       roles: orderedRoles,
