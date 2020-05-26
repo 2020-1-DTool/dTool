@@ -20,7 +20,9 @@ import {
   OngoingExecution,
   Patient,
   Preferences,
+  Role,
   Session,
+  Technology,
 } from "./types";
 
 /**
@@ -76,8 +78,26 @@ export const saveData = async (remoteData: any) => {
   ) {
     const { institution, roles, technologies } = remoteData;
 
+    let orderedRoles = roles as Role[];
+    let orderedTechnologies = technologies as Technology[];
+    orderedRoles = orderedRoles.sort((a, b) =>
+      a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+    );
+    for (let i = 0; i < orderedRoles.length; i++) {
+      orderedRoles[i].activities = orderedRoles[i].activities.sort((a, b) =>
+        a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+      );
+    }
+    orderedTechnologies = orderedTechnologies.sort((a, b) =>
+      a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+    );
+    const obj = {
+      institution,
+      roles: orderedRoles,
+      technologies: orderedTechnologies,
+    };
     // salvar dados locais
-    await setObject("@data", { institution, roles, technologies });
+    await setObject("@data", obj);
 
     // validar se a tecnologia e ocupação previamente selecionadas ainda existem
     const preferences = await getPreferences();
