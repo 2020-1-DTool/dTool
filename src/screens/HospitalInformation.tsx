@@ -8,13 +8,14 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-
 import * as localStorage from "../services/localStorage";
 import colors from "../utils/colors";
 import { WarningBox } from "../containers";
 import { ButtonPrimary, ButtonSecundary } from "../components";
+import { syncExecutions } from "../services/appService";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -41,10 +42,43 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
     })();
   }, []);
 
-  const handleBack = () => {
-    console.log("Tentando enviar agora...");
+  const showMessage = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      Alert.alert(
+        "Sem conexão",
+        "Não foi possível conectar a internet, tente novamente mais tarde.",
+        [
+          {
+            text: "Ok",
+            style: "destructive",
+            onPress: () => {
+              resolve(true);
+            },
+          },
+        ],
+        {
+          cancelable: true,
+          onDismiss: () => {
+            resolve(true);
+          },
+        }
+      );
+    });
+  };
 
+  const handleBack = () => {
     if (pendingExecs) {
+      console.log("Tentando enviar agora...");
+      try {
+        syncExecutions();
+      } catch (error) {
+        if (error.message === "network") {
+          console.log("Sem conexao com a internet, envio falhou!");
+          showMessage();
+        } else {
+          throw error;
+        }
+      }
       return;
     }
     localStorage.clear();
@@ -106,9 +140,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               onPress={() => "nothingyet"}
             />
           </View>
-          {/* pendingExecs && <WarningBox handleBack={handleBack} /> */}
-          <WarningBox handleBack={handleBack} />
-          {/* TODO: só aparecer quando tiver execuções pendentes */}
+          {pendingExecs && <WarningBox handleBack={handleBack} />}
           <View>
             <TouchableOpacity
               style={
