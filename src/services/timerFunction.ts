@@ -189,7 +189,7 @@ export const updateAll = async () => {
     if (execution.currentState === ExecutionStatus.Initialized) {
       execution = addElapsedTime(execution);
       isOneRunning = true;
-      setOngoingExecution(execution, i);
+      await setOngoingExecution(execution, i);
     }
   }
   return isOneRunning;
@@ -242,6 +242,7 @@ const addElapsedTime = (execution: OngoingExecution) => {
     newElapsedTime
   );
   execution.elapsedTime = newElapsedTime;
+  execution.latestStartTime = pauseTime;
   return execution;
 };
 

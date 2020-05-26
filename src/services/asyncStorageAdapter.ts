@@ -120,7 +120,7 @@ export const addObjectItem = async (
   if (list) list = JSON.parse(list ?? "");
   if (!Array.isArray(list) || !list?.length) list = [];
 
-  list.push(newItem);
+  list.unshift(newItem);
   await setItem(key, JSON.stringify(list));
 
   return true;
