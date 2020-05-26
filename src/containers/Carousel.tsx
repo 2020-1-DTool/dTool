@@ -1,70 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { CardRow, ButtonPlus } from "../components";
+import { CardRow } from "../components";
+import { Card } from "../services/types";
 import colors from "../utils/colors";
 
-let initialData = [
-  {
-    id: 1,
-    patient: "RVRS",
-    title: "Medir pressão ",
-    time: "00:15:37",
-  },
-  {
-    id: 2,
-    patient: "Iniciais",
-    title: "Conferir dados cadastrais ",
-    time: "00:15:37",
-  },
-  {
-    id: 3,
-    patient: "Iniciais",
-    title: "Trocar roupa de cama ",
-    time: "00:15:37",
-  },
-  {
-    id: 4,
-    patient: "Iniciais",
-    title: "Conferir dados cadastrais ",
-    time: "00:15:37",
-  },
-  {
-    id: 5,
-    patient: "Iniciais",
-    title: "Conferir dados cadastrais ",
-    time: "00:15:37",
-  },
-  {
-    id: 6,
-    patient: "Iniciais",
-    title: "Conferir dados cadastrais ",
-    time: "00:15:37",
-  },
-];
+export type Props = {
+  data: Card[] | undefined;
+  onPress: (card: Card, index: number) => void;
+};
 
-const Carousel: React.FC = () => {
-  const [data, setData] = useState(initialData);
-
-  const handleChange = () => {
-    let currentData = [...data];
-
-    let newData = {
-      id: currentData.length + 1,
-      patient: "BCM",
-      title: `Consulta ${currentData.length + 1}`,
-      time: "00:15:31",
-    };
-
-    currentData.unshift(newData);
-    return setData(currentData);
-  };
-
+const Carousel: React.FC<Props> = ({ data, onPress }) => {
   return (
     <View style={styles.carouselStyle}>
-      <ButtonPlus style={styles.buttonPlus} onPress={() => handleChange()} />
       <ScrollView>
         <View>
-          <CardRow data={data} />
+          <CardRow data={data} onPress={onPress} />
         </View>
       </ScrollView>
     </View>
@@ -72,7 +22,6 @@ const Carousel: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  buttonPlus: { bottom: 0, position: "relative", right: 0 },
   carouselStyle: {
     alignItems: "center",
     backgroundColor: colors.basic.backgroundHighlight,

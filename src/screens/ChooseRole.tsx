@@ -38,7 +38,7 @@ const ChooseRole: React.FC<ScreenProps> = ({ navigation }) => {
   };
 
   const handleListPress = async (index: number) => {
-    await localStorage.saveRole(roles[index].id, isChecked);
+    await localStorage.saveRole(roles[index].id, roles[index].name, isChecked);
     navigation.navigate("SelectPatient");
   };
 

@@ -9,28 +9,27 @@ import {
 } from "react-native";
 
 import { Card } from "react-native-elements";
+import { Card as CardType } from "../services/types";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 
-export type itemType = {
-  id: number;
-  patient: string;
-  title: string;
-  time: string;
-};
-
 export interface ScreenProps {
-  data?: itemType[];
+  data?: CardType[] | undefined;
+  onPress: (card: CardType, index: number) => void;
 }
 
-const CardRow: React.FC<ScreenProps> = ({ data }) => {
+const CardRow: React.FC<ScreenProps> = ({ data, onPress }) => {
   const [selectedCard, setSelectedCard] = useState(0);
 
-  const setBorder = (title: string, key: number) => {
-    console.log(title);
+  const setBorder = (index: number) => {
     console.log(`Previous sected card ${selectedCard}`);
-    setSelectedCard(key);
-    console.log(`Current selected card ${key}`);
+    setSelectedCard(index);
+    console.log(`Current selected card ${index}`);
+  };
+
+  const handlePress = (item: CardType, key: number) => {
+    setBorder(key);
+    onPress(item, key);
   };
 
   return (
@@ -40,26 +39,26 @@ const CardRow: React.FC<ScreenProps> = ({ data }) => {
         <View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {data?.map((item, key) => (
-              <View key={item.id}>
+              <View key={key}>
                 <TouchableOpacity
-                  key={item.id}
+                  key={item.patient.id + item.activity}
                   style={[
                     styles.viewGeral,
                     selectedCard === key
                       ? styles.borderGreen
                       : styles.borderWhite,
                   ]}
-                  onPress={() => setBorder(item.title, key)}
+                  onPress={() => handlePress(item, key)}
                 >
                   <View style={styles.cardTitle}>
-                    <Text style={styles.boldText}>{item.title}</Text>
+                    <Text style={styles.boldText}>{item.activity}</Text>
                   </View>
                   <View style={styles.cardInfo}>
                     <Image
                       style={styles.imagePadding}
                       source={require("../assets/profile-carousel.png")}
                     />
-                    <Text style={styles.normalText}>{item.patient}</Text>
+                    <Text style={styles.normalText}>{item.patient.name}</Text>
                   </View>
                   <View style={styles.cardInfo}>
                     <Image

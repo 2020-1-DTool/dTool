@@ -1,25 +1,28 @@
 import {
+  addCardItem,
+  addObjectItem,
   addPatientItem,
-  ifIdExists,
+  getArray,
   getObject,
-  setObject,
+  ifIdExists,
   mergeObject,
-  removeObjectItem,
-  addFinishedExecutionItem,
-  addOngoingExecutionItem,
-  setOngoingExecutionItem,
-  removeOngoingExecutionItem,
-  getItem,
   removeItem,
+  removeObjectItem,
+  removeObjectItemV2,
+  setObject,
+  setObjectItem,
 } from "./asyncStorageAdapter";
 import {
-  LocalData,
-  Preferences,
-  Session,
   Auth,
-  Patient,
+  Card,
   FinishedExecution,
+  LocalData,
   OngoingExecution,
+  Patient,
+  Preferences,
+  Role,
+  Session,
+  Technology,
 } from "./types";
 
 /**
@@ -51,15 +54,17 @@ import {
 
 /** Funções auxiliares */
 export {
-  clear,
-  ifIdExists,
-  getItem,
-  setItem,
-  removeItem,
+  addCardItem,
+  addObjectItem,
   addPatientItem,
-  addFinishedExecutionItem,
-  addOngoingExecutionItem,
+  clear,
+  getArray,
+  getItem,
+  ifIdExists,
+  removeItem,
   removeObjectItem,
+  removeObjectItemV2,
+  setItem,
 } from "./asyncStorageAdapter";
 
 /** Salva os dados retornados na rota de autenticação localmente, para uso pelo app. */
@@ -73,8 +78,26 @@ export const saveData = async (remoteData: any) => {
   ) {
     const { institution, roles, technologies } = remoteData;
 
+    let orderedRoles = roles as Role[];
+    let orderedTechnologies = technologies as Technology[];
+    orderedRoles = orderedRoles.sort((a, b) =>
+      a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+    );
+    for (let i = 0; i < orderedRoles.length; i++) {
+      orderedRoles[i].activities = orderedRoles[i].activities.sort((a, b) =>
+        a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+      );
+    }
+    orderedTechnologies = orderedTechnologies.sort((a, b) =>
+      a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+    );
+    const obj = {
+      institution,
+      roles: orderedRoles,
+      technologies: orderedTechnologies,
+    };
     // salvar dados locais
-    await setObject("@data", { institution, roles, technologies });
+    await setObject("@data", obj);
 
     // validar se a tecnologia e ocupação previamente selecionadas ainda existem
     const preferences = await getPreferences();
@@ -131,30 +154,49 @@ export const getPatient = (id: string) => ifIdExists("@patient", id);
 export const removePatient = (index: number) =>
   removeObjectItem("@patient", index);
 
+/** Adiciona a lista de cards salva localmente */
+export const addCard = (newCard: Card) => addCardItem("@Card", newCard);
+
+/** Retorna toda a lista de cards salva localmente */
+export const getCards = () => getArray<Card>("@Card");
+
+/** Altera um objeto em dado index na lista de execucoes em andamento salva localmente */
+export const setCard = (newItem: Card, index: number) =>
+  setObjectItem("@Card", newItem, index);
+
+/** Remove um objeto em dado index na lista de execucoes em andamento salva localmente */
+export const removeCard = (index: number) => removeObjectItemV2("@Card", index);
+
 /** Adiciona a lista de execucoes concluidas salva localmente */
 export const addFinishedExecution = (newExecution: FinishedExecution) =>
-  addFinishedExecutionItem("@finishedExecution", newExecution);
+  addObjectItem("@finishedExecution", newExecution);
 
 /** Retorna toda a lista de execucoes concluidas salva localmente */
-export const getFinishedExecutions = () => getItem("@finishedExecution");
+export const getFinishedExecutions = () =>
+  getArray<FinishedExecution>("@finishedExecution");
 
 /** Reseta toda a lista de execucoes concluidas salva localmente */
 export const resetFinishedExecutions = () => removeItem("@finishedExecution");
 
 /** Adiciona a lista de execucoes em andamento salva localmente */
 export const addOngoingExecution = (newExecution: OngoingExecution) =>
-  addOngoingExecutionItem("@ongoingExecution", newExecution);
+  addObjectItem("@ongoingExecution", newExecution);
 
 /** Retorna toda a lista de execucoes em andamento salva localmente */
-export const getOngoingExecutions = () => getItem("@ongoingExecution");
+export const getOngoingExecutions = () =>
+  getArray<OngoingExecution>("@ongoingExecution");
 
 /** Altera um objeto em dado index na lista de execucoes em andamento salva localmente */
 export const setOngoingExecution = (newItem: OngoingExecution, index: number) =>
-  setOngoingExecutionItem("@ongoingExecution", newItem, index);
+  setObjectItem("@ongoingExecution", newItem, index);
 
 /** Remove um objeto em dado index na lista de execucoes em andamento salva localmente */
 export const removeOngoingExecution = (index: number) =>
-  removeOngoingExecutionItem("@ongoingExecution", index);
+  removeObjectItemV2("@ongoingExecution", index);
+
+/** Remove tecnologia da lista salva localmente a partir de seu índice no array */
+export const removeTechnology = (index: number) =>
+  removeObjectItem("@technology", index);
 
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.
@@ -173,11 +215,15 @@ export const saveTechnology = async (
   }
 };
 
-export const saveRole = async (role: number, permanent: boolean) => {
+export const saveRole = async (
+  role: number,
+  name: string,
+  permanent: boolean
+) => {
   if (permanent) {
-    await mergeObject("@preferences", { role });
+    await mergeObject("@preferences", { role, roleName: name });
   } else {
-    await mergeObject("@session", { role });
+    await mergeObject("@session", { role, roleName: name });
   }
 };
 

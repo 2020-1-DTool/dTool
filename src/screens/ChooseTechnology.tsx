@@ -15,6 +15,7 @@ import { RememberOption } from "../containers";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
+  route: any;
 }
 
 interface Technology {
@@ -22,9 +23,8 @@ interface Technology {
   name: string;
 }
 
-const ChooseTechnology: React.FC<ScreenProps> = ({ navigation }) => {
+const ChooseTechnology: React.FC<ScreenProps> = ({ route, navigation }) => {
   const [technologies, setTechnologies] = useState([] as Technology[]);
-
   useEffect(() => {
     (async () => {
       const data = await localStorage.getData();
@@ -39,7 +39,11 @@ const ChooseTechnology: React.FC<ScreenProps> = ({ navigation }) => {
 
   const handleListPress = async (index: number) => {
     await localStorage.saveTechnology(technologies[index].id, isChecked);
-    navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+    if (route.params?.running) {
+      navigation.navigate("ChooseRole");
+    } else {
+      navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+    }
   };
 
   return (

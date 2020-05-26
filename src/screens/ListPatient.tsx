@@ -44,7 +44,6 @@ const ListPatient: React.FC<ScreenProps> = ({ navigation }) => {
   };
 
   const handleListPress = async (item: Patient) => {
-    console.log("selecionado: ", item);
     navigation.navigate("ChooseActivity", { pacient: item });
   };
 

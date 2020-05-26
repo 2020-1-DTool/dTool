@@ -1,36 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View, Text } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { getItem, removeItem } from "../services/localStorage";
-import { ButtonPrimary, GenderSelect, InputText } from "../components";
+import {
+  createExecution,
+  timeToString,
+  initializeExecution,
+  cancelExecution,
+  pauseExecution,
+  finishExecution,
+  updateAll,
+} from "../services/timerFunction";
+import { ButtonPrimary, InputText, ButtonExecutions } from "../components";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
 }
 
-const EmptyScreen: React.FC<ScreenProps> = ({ navigation }) => {
-  const eraseRole = async () => {
-    await removeItem("@role");
+const EmptyScreen: React.FC<ScreenProps> = () => {
+  // TODO: na tela apropriada, pegar dados do paciente atual do AsyncStorage
+  const cardInfo = {
+    idPatient: "1234",
+    role: 1,
+    activity: 42,
   };
 
-  const eraseTech = async () => {
-    await removeItem("@tech");
-  };
-
-  const retrieveData = () => {
-    retrieveRole();
-    retrieveTech();
-  };
-
-  const retrieveRole = async () => {
-    const savedRole = await getItem("@role");
-    if (savedRole) console.warn(savedRole);
-  };
-
-  const retrieveTech = async () => {
-    const savedTech = await getItem("@tech");
-    if (savedTech) console.warn(savedTech);
-  };
+  const testTime = 100;
+  const [position, setPosition] = useState("0");
 
   return (
     <SafeAreaView>
@@ -41,25 +36,65 @@ const EmptyScreen: React.FC<ScreenProps> = ({ navigation }) => {
           apague ela, mais alguém pode precisar. Quando estiver acabando o
           projeto, removeremos
         </Text>
-        <ButtonPrimary title="Ver valores salvos" onPress={retrieveData} />
-        <ButtonPrimary title="Apagar função armazenada" onPress={eraseRole} />
-        <ButtonPrimary
-          title="Apagar tecnologia armazenada"
-          onPress={eraseTech}
+        <InputText
+          autoFocus
+          title="Posição Array"
+          onChangeText={(key) => setPosition(key)}
+          value={position}
         />
-        <GenderSelect label="Sexo" onChange={(index) => console.log(index)} />
-        <InputText title="Iniciais" placeholder="ABC" />
         <ButtonPrimary
-          title="Ir a próxima tela"
+          title="Adiciona execução"
           onPress={() => {
-            return navigation.navigate("ChooseActivity");
+            createExecution(cardInfo);
           }} // remover modificação futuramente, apenas para testes
         />
         <ButtonPrimary
-          title="Carousel"
+          title="UpdateAll"
           onPress={() => {
-            return navigation.navigate("CarouselScreen");
+            updateAll();
           }} // remover modificação futuramente, apenas para testes
+        />
+        <ButtonPrimary
+          title="TimeToStringTest"
+          onPress={() => {
+            timeToString(testTime);
+          }} // remover modificação futuramente, apenas para testes
+        />
+        {/* TODO: botões de execução estão aqui somente para teste */}
+        <ButtonExecutions
+          onPress={() => {
+            initializeExecution(Number(position));
+          }} // remover modificação futuramente, apenas para testes
+          action="start"
+          text="INICIAR"
+        />
+        <ButtonExecutions
+          onPress={() => {
+            pauseExecution(Number(position));
+          }} // remover modificação futuramente, apenas para testes
+          action="stop"
+          text="PARAR"
+        />
+        <ButtonExecutions
+          onPress={() => {
+            finishExecution(Number(position));
+          }} // remover modificação futuramente, apenas para testes
+          action="finish"
+          text="CONCLUIR E SALVAR"
+        />
+        <ButtonExecutions
+          onPress={() => {
+            initializeExecution(Number(position));
+          }} // remover modificação futuramente, apenas para testes
+          action="restart"
+          text="RETOMAR CONTAGEM"
+        />
+        <ButtonExecutions
+          onPress={() => {
+            cancelExecution(Number(position));
+          }} // remover modificação futuramente, apenas para testes
+          action="cancel"
+          text="CANCELAR"
         />
       </View>
     </SafeAreaView>
