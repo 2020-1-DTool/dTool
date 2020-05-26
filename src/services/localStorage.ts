@@ -80,14 +80,16 @@ export const saveData = async (remoteData: any) => {
 
     let orderedRoles = roles as Role[];
     let orderedTechnologies = technologies as Technology[];
-    orderedRoles = orderedRoles.sort((a, b) => a.name.localeCompare(b.name));
+    orderedRoles = orderedRoles.sort((a, b) =>
+      a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+    );
     for (let i = 0; i < orderedRoles.length; i++) {
       orderedRoles[i].activities = orderedRoles[i].activities.sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.name.toUpperCase().localeCompare(b.name.toUpperCase())
       );
     }
     orderedTechnologies = orderedTechnologies.sort((a, b) =>
-      a.name.localeCompare(b.name)
+      a.name.toUpperCase().localeCompare(b.name.toUpperCase())
     );
     const obj = {
       institution,
