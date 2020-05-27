@@ -242,6 +242,7 @@ const addElapsedTime = (execution: OngoingExecution) => {
     newElapsedTime
   );
   execution.elapsedTime = newElapsedTime;
+  execution.latestStartTime = pauseTime;
   return execution;
 };
 

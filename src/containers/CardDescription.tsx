@@ -5,11 +5,11 @@ import { Card } from "react-native-elements";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 import { ButtonExecutions } from "../components";
-import { Card as CardType } from "../services/types";
+import { Card as CardType, ExecutionStatus } from "../services/types";
 
 export interface ScreenProps {
   data?: CardType;
-  state: "uninitialized" | "initialized" | "finished";
+  state: ExecutionStatus;
   onPress1: () => void;
   onPress2: () => void;
   onPress3?: () => void;
@@ -30,19 +30,19 @@ const CardDescription: React.FC<ScreenProps> = ({
   let buttonText3 = "";
 
   switch (state) {
-    case "uninitialized":
+    case ExecutionStatus.Uninitialized:
       button1 = "start";
       button2 = "cancel";
       buttonText1 = "INICIAR";
       buttonText2 = "REMOVER";
       break;
-    case "initialized":
+    case ExecutionStatus.Initialized:
       button1 = "stop";
       button2 = "cancel";
       buttonText1 = "PARAR";
       buttonText2 = "CANCELAR";
       break;
-    case "finished":
+    case ExecutionStatus.Paused:
       button1 = "finish";
       button2 = "restart";
       button3 = "cancel";

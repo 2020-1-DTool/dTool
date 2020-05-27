@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { BasicList, ButtonPrimary, PatientHeader } from "../components";
+import { BasicList, PatientHeader } from "../components";
 
 import colors from "../utils/colors";
 import * as localStorage from "../services/localStorage";
@@ -40,6 +40,7 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
             params: {
               patientId: patient?.id,
               activityName: activity?.name,
+              activityId: activity?.id,
             },
           },
         ],

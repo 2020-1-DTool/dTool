@@ -9,19 +9,34 @@ import {
 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Carousel, CardDescription } from "../containers";
+import {
+  createExecution,
+  timeToString,
+  initializeExecution,
+  cancelExecution,
+  pauseExecution,
+  finishExecution,
+  updateAll,
+  getExecutionStatus,
+} from "../services/timerFunction";
 import * as localStorage from "../services/localStorage";
-import { Card } from "../services/types";
+import { Card, ExecutionStatus, CardExecutionType } from "../services/types";
 import colors from "../utils/colors";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
-  route?: { params: { patientId: string; activityName: string } };
+  route?: {
+    params: { patientId: string; activityName: string; activityId: number };
+  };
 }
 
-const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
+const CarouselScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
+  const [cardState, setCardState] = useState(ExecutionStatus.Uninitialized);
   const [data, setData] = useState([] as Card[]);
   const [selectedCard, setSelectedCard] = useState(data[0] as Card);
+  const [selectedCardIndex, setSelectedCardIndex] = useState(0);
   const activity = route?.params?.activityName;
+  const activityId = route?.params?.activityId;
   const patientId = route?.params?.patientId;
 
   useEffect(() => {
@@ -30,6 +45,8 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
       const preferencesCardResponse = await localStorage.getPreferences();
       const currentRole =
         sessionCardResponse?.roleName || preferencesCardResponse?.roleName;
+      const currentRoleIndex =
+        sessionCardResponse?.role || preferencesCardResponse?.role;
 
       // Só exibe tecnologia se ela não for a padrão/salva como default
       const currentTech = sessionCardResponse?.technology?.toString();
@@ -51,16 +68,19 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
 
       if (strComplete !== null) {
         complete = strComplete;
-        const { length } = complete;
 
         // Evitar que insira duas vezes a mesma execução, em sequência
-        if (
-          (complete[length - 1]?.patient !== patient ||
-            complete[length - 1]?.activity !== activity) &&
-          dataCard.patient
-        ) {
+        if (dataCard.patient) {
           complete.unshift(dataCard);
           await localStorage.addCard(dataCard);
+
+          const dataCardInfo: CardExecutionType = {
+            idPatient: dataCard.patient.id,
+            activity: activityId || 0,
+            role: currentRoleIndex || 0,
+          };
+
+          await createExecution(dataCardInfo);
         }
       } else {
         complete = [dataCard];
@@ -70,10 +90,68 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
     })();
   }, []);
 
-  const handlePress = (item: Card, index: number) => {
+  const handlePress = async (item: Card, index: number) => {
     setSelectedCard(item);
+    setSelectedCardIndex(index);
     console.log(`Selected card ${index}`);
+    await handleCardStateChange();
   };
+
+  const handleCardStateChange = async () => {
+    const nextStatus = await getExecutionStatus(data.indexOf(selectedCard));
+    if (nextStatus) setCardState(nextStatus);
+  };
+
+  const updateCarousel = async () => {
+    const complete = await localStorage.getCards();
+    if (complete.length) {
+      setSelectedCard(complete[0]);
+      setData(complete);
+      setSelectedCardIndex(0);
+      await handleCardStateChange();
+    } else
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: "Home",
+          },
+        ],
+      });
+  };
+
+  const handlePress1 = async () => {
+    switch (cardState) {
+      case ExecutionStatus.Uninitialized:
+        await initializeExecution(selectedCardIndex);
+        setCardState(ExecutionStatus.Initialized);
+        break;
+      case ExecutionStatus.Initialized:
+        await pauseExecution(selectedCardIndex);
+        setCardState(ExecutionStatus.Paused);
+        break;
+      case ExecutionStatus.Paused:
+        // TODO: no momento só conseguimos remover os cards do início
+        await finishExecution(selectedCardIndex);
+        setCardState(ExecutionStatus.Finished);
+        await localStorage.removeCard(selectedCardIndex);
+        await updateCarousel();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handlePress2 = async () => {
+    /* if (cardState !== ExecutionStatus.Paused) {
+      await cancelExecution(selectedCardIndex);
+    } else {
+      await initializeExecution(selectedCardIndex);
+      setCardState(ExecutionStatus.Initialized);
+      // setCardState(ExecutionStatus.Initialized);
+    } */
+  };
+
   return (
     <SafeAreaView>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -84,11 +162,11 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
           />
           <CardDescription
             data={selectedCard || data[0]}
-            state="finished" /* TODO: essa info deve vir do @ongoingExecution na integração, para alternar de estado */
+            state={cardState}
             onPress1={() =>
-              console.warn("onPress1")
+              handlePress1()
             } /* TODO: cada callback destes, deve chamar as ações apropriadas */
-            onPress2={() => console.warn("onPress2")}
+            onPress2={() => handlePress2()}
             onPress3={() => console.warn("onPress3")}
           />
         </View>
