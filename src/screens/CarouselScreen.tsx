@@ -143,13 +143,16 @@ const CarouselScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
   };
 
   const handlePress2 = async () => {
-    /* if (cardState !== ExecutionStatus.Paused) {
-      await cancelExecution(selectedCardIndex);
+    if (cardState !== ExecutionStatus.Paused) {
+      const removed = await cancelExecution(selectedCardIndex);
+      if (removed) {
+        await localStorage.removeCard(selectedCardIndex);
+        await updateCarousel();
+      }
     } else {
       await initializeExecution(selectedCardIndex);
       setCardState(ExecutionStatus.Initialized);
-      // setCardState(ExecutionStatus.Initialized);
-    } */
+    }
   };
 
   return (

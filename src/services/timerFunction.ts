@@ -129,12 +129,15 @@ const showExecutionAlert = (type: "remove" | "cancel"): Promise<boolean> => {
 
 /** Função responsável por cancelar uma execução
  * @param index, índice da execução a ser removida do array
+ * Retorna true se removeu e false se não removeu
  */
 export const cancelExecution = async (index: number) => {
   const confirmed = await showExecutionAlert("remove");
   if (confirmed) {
     await removeOngoingExecution(index);
+    return true;
   }
+  return false;
 };
 
 /** Função responsável por finalisar uma execução, removendo-a da lista de
