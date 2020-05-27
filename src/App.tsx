@@ -79,7 +79,6 @@ const App = () => (
           component={EmptyScreen}
           options={{
             ...baseHeaderStyle,
-            headerShown: false,
           }}
         />
         <Stack.Screen
