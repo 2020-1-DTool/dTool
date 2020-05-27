@@ -84,6 +84,13 @@ const CarouselScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
         }
       } else {
         complete = [dataCard];
+        const dataCardInfo: CardExecutionType = {
+          idPatient: dataCard.patient.id,
+          activity: activityId || 0,
+          role: currentRoleIndex || 0,
+        };
+
+        await createExecution(dataCardInfo);
         await localStorage.addCard(dataCard);
       }
       setData(complete);
@@ -155,6 +162,14 @@ const CarouselScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
     }
   };
 
+  const handlePress3 = async () => {
+    const removed = await cancelExecution(selectedCardIndex);
+    if (removed) {
+      await localStorage.removeCard(selectedCardIndex);
+      await updateCarousel();
+    }
+  };
+
   return (
     <SafeAreaView>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -166,11 +181,9 @@ const CarouselScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
           <CardDescription
             data={selectedCard || data[0]}
             state={cardState}
-            onPress1={() =>
-              handlePress1()
-            } /* TODO: cada callback destes, deve chamar as ações apropriadas */
+            onPress1={() => handlePress1()}
             onPress2={() => handlePress2()}
-            onPress3={() => console.warn("onPress3")}
+            onPress3={() => handlePress3()}
           />
         </View>
       </ScrollView>
