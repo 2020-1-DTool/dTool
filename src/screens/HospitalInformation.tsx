@@ -35,7 +35,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
       const auth = await localStorage.getAuth();
       setPermission(auth.permission);
 
-      const list = localStorage.getFinishedExecutions();
+      const list = await localStorage.getFinishedExecutions();
       if (Array.isArray(list) && list.length > 0) {
         setPendingExecs(true);
       }
@@ -75,7 +75,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
       } catch (error) {
         if (error.message === "network") {
           console.log("Sem conexao com a internet, envio falhou!");
-          showMessage();
+          await showMessage();
         } else {
           throw error;
         }
