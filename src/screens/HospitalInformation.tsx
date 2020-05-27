@@ -50,7 +50,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
         [
           {
             text: "Ok",
-            style: "destructive",
+            style: "default",
             onPress: () => {
               resolve(true);
             },
@@ -66,11 +66,12 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
     });
   };
 
-  const handleBack = () => {
+  const handleBack = async () => {
     if (pendingExecs) {
       console.log("Tentando enviar agora...");
       try {
-        syncExecutions();
+        await syncExecutions();
+        setPendingExecs(false);
       } catch (error) {
         if (error.message === "network") {
           console.log("Sem conexao com a internet, envio falhou!");
@@ -147,6 +148,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
                 pendingExecs === true ? styles.fadedButton : styles.outButton
               }
               onPress={handleBack}
+              disabled={pendingExecs}
             >
               <Text
                 style={
