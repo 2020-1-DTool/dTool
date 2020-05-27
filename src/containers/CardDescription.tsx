@@ -1,10 +1,11 @@
 import React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
 
+import { useNavigation } from "@react-navigation/native";
 import { Card } from "react-native-elements";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
-import { ButtonExecutions } from "../components";
+import { ButtonExecutions, ButtonPrimary } from "../components";
 import { Card as CardType } from "../services/types";
 
 export interface ScreenProps {
@@ -54,6 +55,8 @@ const CardDescription: React.FC<ScreenProps> = ({
       break;
   }
 
+  const navigation = useNavigation();
+
   return (
     <Card containerStyle={styles.cardStyle}>
       <View style={styles.container}>
@@ -88,6 +91,12 @@ const CardDescription: React.FC<ScreenProps> = ({
         </View>
       </View>
       <View style={styles.buttonsWrap}>
+        <View style={styles.buttonsCardDescription}>
+          <ButtonPrimary
+            title="EmptyScreen"
+            onPress={() => navigation.navigate("EmptyScreen")}
+          />
+        </View>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
             onPress={onPress1}

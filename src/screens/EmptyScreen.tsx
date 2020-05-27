@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View, Text } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
 import {
   createExecution,
   timeToString,
@@ -26,7 +27,7 @@ const EmptyScreen: React.FC<ScreenProps> = () => {
 
   const testTime = 100;
   const [position, setPosition] = useState("0");
-
+  const navigation = useNavigation();
   return (
     <SafeAreaView>
       <View style={styles.body}>
@@ -95,6 +96,10 @@ const EmptyScreen: React.FC<ScreenProps> = () => {
           }} // remover modificação futuramente, apenas para testes
           action="cancel"
           text="CANCELAR"
+        />
+        <ButtonPrimary
+          title="Inicio"
+          onPress={() => navigation.navigate("Home")}
         />
       </View>
     </SafeAreaView>

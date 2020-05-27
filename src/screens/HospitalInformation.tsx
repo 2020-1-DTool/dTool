@@ -8,12 +8,14 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-
 import * as localStorage from "../services/localStorage";
 import colors from "../utils/colors";
+import { WarningBox } from "../containers";
 import { ButtonPrimary, ButtonSecundary } from "../components";
+import { syncExecutions } from "../services/appService";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -23,6 +25,7 @@ export interface ScreenProps {
 const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
   const [hospitalName, setHospitalName] = useState("Hospital não nomeado");
   const [permission, setPermission] = useState("");
+  const [pendingExecs, setPendingExecs] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -31,10 +34,54 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 
       const auth = await localStorage.getAuth();
       setPermission(auth.permission);
+
+      const list = await localStorage.getFinishedExecutions();
+      if (Array.isArray(list) && list.length > 0) {
+        setPendingExecs(true);
+      }
     })();
   }, []);
 
-  const handleBack = () => {
+  const showMessage = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      Alert.alert(
+        "Sem conexão",
+        "Não foi possível conectar a internet, tente novamente mais tarde.",
+        [
+          {
+            text: "Ok",
+            style: "default",
+            onPress: () => {
+              resolve(true);
+            },
+          },
+        ],
+        {
+          cancelable: true,
+          onDismiss: () => {
+            resolve(true);
+          },
+        }
+      );
+    });
+  };
+
+  const handleBack = async () => {
+    if (pendingExecs) {
+      console.log("Tentando enviar agora...");
+      try {
+        await syncExecutions();
+        setPendingExecs(false);
+      } catch (error) {
+        if (error.message === "network") {
+          console.log("Sem conexao com a internet, envio falhou!");
+          await showMessage();
+        } else {
+          throw error;
+        }
+      }
+      return;
+    }
     localStorage.clear();
     navigation.reset({ index: 0, routes: [{ name: "HospitalCode" }] });
   };
@@ -83,9 +130,19 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               onPress={mainButtonAction}
             />
           </View>
-          <View style={styles.variableButton}>
+          <View
+            style={
+              pendingExecs === true
+                ? styles.variableButtonNoPad
+                : styles.variableButton
+            }
+          >
             <ButtonSecundary
-              style={styles.variableButton}
+              style={
+                pendingExecs === true
+                  ? styles.variableButtonNoPad
+                  : styles.variableButton
+              }
               title={
                 permission === "time-tracking"
                   ? "Consultar Relatórios"
@@ -94,9 +151,22 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               onPress={() => "nothingyet"}
             />
           </View>
+          {pendingExecs && <WarningBox handleBack={handleBack} />}
           <View>
-            <TouchableOpacity style={styles.outButton} onPress={handleBack}>
-              <Text style={styles.outButton}>Sair</Text>
+            <TouchableOpacity
+              style={
+                pendingExecs === true ? styles.fadedButton : styles.outButton
+              }
+              onPress={handleBack}
+              disabled={pendingExecs}
+            >
+              <Text
+                style={
+                  pendingExecs === true ? styles.fadedButton : styles.outButton
+                }
+              >
+                Sair
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -106,6 +176,15 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  fadedButton: {
+    alignContent: "center",
+    alignItems: "center",
+    color: colors.text.secondary,
+    fontSize: 16,
+    justifyContent: "center",
+    paddingBottom: 20,
+    paddingTop: 40,
+  },
   headerContainer: {
     elevation: 20,
   },
@@ -166,6 +245,11 @@ const styles = StyleSheet.create({
   variableButton: {
     alignContent: "center",
     paddingBottom: 60,
+    paddingHorizontal: 16,
+  },
+  variableButtonNoPad: {
+    alignContent: "center",
+    // paddingBottom: 60,
     paddingHorizontal: 16,
   },
 });
