@@ -130,9 +130,19 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               onPress={mainButtonAction}
             />
           </View>
-          <View style={styles.variableButton}>
+          <View
+            style={
+              pendingExecs === true
+                ? styles.variableButtonNoPad
+                : styles.variableButton
+            }
+          >
             <ButtonSecundary
-              style={styles.variableButton}
+              style={
+                pendingExecs === true
+                  ? styles.variableButtonNoPad
+                  : styles.variableButton
+              }
               title={
                 permission === "time-tracking"
                   ? "Consultar Relatórios"
@@ -173,6 +183,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     justifyContent: "center",
     paddingBottom: 20,
+    paddingTop: 40,
   },
   headerContainer: {
     elevation: 20,
@@ -234,6 +245,11 @@ const styles = StyleSheet.create({
   variableButton: {
     alignContent: "center",
     paddingBottom: 60,
+    paddingHorizontal: 16,
+  },
+  variableButtonNoPad: {
+    alignContent: "center",
+    // paddingBottom: 60,
     paddingHorizontal: 16,
   },
 });
