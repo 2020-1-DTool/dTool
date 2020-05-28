@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
-} from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-import * as localStorage from '../services/localStorage';
-import colors from '../utils/colors';
-import { BasicList } from '../components';
-import { RememberOption } from '../containers';
+import * as localStorage from "../services/localStorage";
+import colors from "../utils/colors";
+import { BasicList } from "../components";
+import { RememberOption } from "../containers";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
+  route: any;
 }
 
 interface Technology {
@@ -22,9 +23,8 @@ interface Technology {
   name: string;
 }
 
-const ChooseTechnology: React.FC<ScreenProps> = ({ navigation }) => {
+const ChooseTechnology: React.FC<ScreenProps> = ({ route, navigation }) => {
   const [technologies, setTechnologies] = useState([] as Technology[]);
-
   useEffect(() => {
     (async () => {
       const data = await localStorage.getData();
@@ -39,14 +39,19 @@ const ChooseTechnology: React.FC<ScreenProps> = ({ navigation }) => {
 
   const handleListPress = async (index: number) => {
     await localStorage.saveTechnology(technologies[index].id, isChecked);
-    navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+    if (route.params?.running) {
+      navigation.navigate("ChooseRole");
+    } else {
+      navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+    }
   };
 
   return (
     <SafeAreaView>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollView}>
+        style={styles.scrollView}
+      >
         <View style={styles.body}>
           <View style={styles.main}>
             <RememberOption
@@ -67,11 +72,11 @@ const ChooseTechnology: React.FC<ScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   body: {
-    alignItems: 'center',
-    minHeight: Dimensions.get('window').height,
+    alignItems: "center",
+    minHeight: Dimensions.get("window").height,
   },
   main: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 6,
     marginVertical: 50,
   },

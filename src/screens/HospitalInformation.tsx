@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   SafeAreaView,
@@ -8,12 +8,14 @@ import {
   View,
   Image,
   TouchableOpacity,
-} from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-
-import * as localStorage from '../services/localStorage';
-import colors from '../utils/colors';
-import { ButtonPrimary, ButtonSecundary } from '../components';
+  Alert,
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import * as localStorage from "../services/localStorage";
+import colors from "../utils/colors";
+import { WarningBox } from "../containers";
+import { ButtonPrimary, ButtonSecundary } from "../components";
+import { syncExecutions } from "../services/appService";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -21,80 +23,150 @@ export interface ScreenProps {
 }
 
 const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
-  const [hospitalName, setHospitalName] = useState('Hospital não nomeado');
-  const [permission, setPermission] = useState('');
+  const [hospitalName, setHospitalName] = useState("Hospital não nomeado");
+  const [permission, setPermission] = useState("");
+  const [pendingExecs, setPendingExecs] = useState(false);
 
   useEffect(() => {
     (async () => {
       const { institution } = await localStorage.getData();
-      setHospitalName(institution?.name ?? 'Hospital não nomeado');
+      setHospitalName(institution?.name ?? "Hospital não nomeado");
 
       const auth = await localStorage.getAuth();
       setPermission(auth.permission);
+
+      const list = await localStorage.getFinishedExecutions();
+      if (Array.isArray(list) && list.length > 0) {
+        setPendingExecs(true);
+      }
     })();
   }, []);
 
-  const handleBack = () => {
+  const showMessage = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      Alert.alert(
+        "Sem conexão",
+        "Não foi possível conectar a internet, tente novamente mais tarde.",
+        [
+          {
+            text: "Ok",
+            style: "default",
+            onPress: () => {
+              resolve(true);
+            },
+          },
+        ],
+        {
+          cancelable: true,
+          onDismiss: () => {
+            resolve(true);
+          },
+        }
+      );
+    });
+  };
+
+  const handleBack = async () => {
+    if (pendingExecs) {
+      console.log("Tentando enviar agora...");
+      try {
+        await syncExecutions();
+        setPendingExecs(false);
+      } catch (error) {
+        if (error.message === "network") {
+          console.log("Sem conexao com a internet, envio falhou!");
+          await showMessage();
+        } else {
+          throw error;
+        }
+      }
+      return;
+    }
     localStorage.clear();
-    navigation.reset({ index: 0, routes: [{ name: 'HospitalCode' }] });
+    navigation.reset({ index: 0, routes: [{ name: "HospitalCode" }] });
   };
 
   const mainButtonAction = async () => {
-    if (permission === 'time-tracking') {
+    if (permission === "time-tracking") {
       const { role } = await localStorage.getPreferences();
       if (role) {
-        navigation.navigate('SelectPatient');
+        navigation.navigate("SelectPatient");
       } else {
-        navigation.navigate('ChooseRole');
+        navigation.navigate("ChooseRole");
       }
-    } else {
-      // TODO: ir para tela apropriada de acordo com permissão (listagem de tecnologias ou de hospitais)
-      console.warn(`permissão ${permission}`);
-    }
+    } else navigation.navigate("ListTechnology");
   };
 
   return (
     <SafeAreaView>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={styles.main}>
+        style={styles.main}
+      >
         <View style={styles.main}>
-          <View style={styles.image}>
+          <View style={[styles.image, styles.headerContainer]}>
             <Image
               style={styles.image}
-              source={require('../assets/logo-SVG.png')}
+              source={require("../assets/logo-SVG.png")}
             />
           </View>
           <View style={styles.imageTime}>
             <Image
               style={styles.imageTime}
-              source={require('../assets/time-SVG.png')}
+              source={require("../assets/time-SVG.png")}
             />
           </View>
-          <View style={styles.textHospital}>
-            <Text style={styles.textHospital}>{hospitalName}</Text>
-          </View>
-          <View style={styles.text}>
-            <Text style={styles.text}>
-              Coleta de tempo de atividades hospitalares
-            </Text>
-          </View>
+          <Text style={styles.textHospital}>{hospitalName}</Text>
+          <Text style={styles.text}>
+            Coleta de tempo de atividades hospitalares
+          </Text>
           <View style={styles.iniciateButton}>
             <ButtonPrimary
-              title="Iniciar Contagem"
+              title={
+                permission === "time-tracking"
+                  ? "Iniciar Contagem"
+                  : "Tecnologias"
+              }
               onPress={mainButtonAction}
             />
           </View>
-          <View style={styles.variableButton}>
+          <View
+            style={
+              pendingExecs === true
+                ? styles.variableButtonNoPad
+                : styles.variableButton
+            }
+          >
             <ButtonSecundary
-              style={styles.variableButton}
-              title="Consultar Relatórios"
-              onPress={() => 'nothingyet'}
+              style={
+                pendingExecs === true
+                  ? styles.variableButtonNoPad
+                  : styles.variableButton
+              }
+              title={
+                permission === "time-tracking"
+                  ? "Consultar Relatórios"
+                  : "Exportar Relatório"
+              }
+              onPress={() => "nothingyet"}
             />
           </View>
+          {pendingExecs && <WarningBox handleBack={handleBack} />}
           <View>
-            <TouchableOpacity style={styles.outButton} onPress={handleBack}>
-              <Text style={styles.outButton}>Sair</Text>
+            <TouchableOpacity
+              style={
+                pendingExecs === true ? styles.fadedButton : styles.outButton
+              }
+              onPress={handleBack}
+              disabled={pendingExecs}
+            >
+              <Text
+                style={
+                  pendingExecs === true ? styles.fadedButton : styles.outButton
+                }
+              >
+                Sair
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -104,68 +176,81 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  fadedButton: {
+    alignContent: "center",
+    alignItems: "center",
+    color: colors.text.secondary,
+    fontSize: 16,
+    justifyContent: "center",
+    paddingBottom: 20,
+    paddingTop: 40,
+  },
+  headerContainer: {
+    elevation: 20,
+  },
   image: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     backgroundColor: colors.theme.primary,
-    justifyContent: 'center',
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    justifyContent: "center",
     marginBottom: 20,
     paddingLeft: 20,
   },
   imageTime: {
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+    alignItems: "flex-end",
+    elevation: 20,
+    justifyContent: "center",
     marginBottom: 15,
     marginTop: -35,
     paddingRight: 15,
-    position: 'relative',
+    position: "relative",
   },
   iniciateButton: {
-    alignContent: 'center',
-    justifyContent: 'center',
+    alignContent: "center",
+    justifyContent: "center",
     paddingBottom: 10,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingHorizontal: 16,
     paddingTop: 40,
   },
   main: {
     backgroundColor: colors.basic.background,
-    flexDirection: 'column',
+    flexDirection: "column",
     flex: 6,
-    minHeight: Dimensions.get('window').height,
-    minWidth: Dimensions.get('window').width,
+    minHeight: Dimensions.get("window").height,
+    minWidth: Dimensions.get("window").width,
   },
   outButton: {
-    alignContent: 'center',
-    alignItems: 'center',
+    alignContent: "center",
+    alignItems: "center",
     color: colors.theme.primary,
     fontSize: 16,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingBottom: 20,
   },
   text: {
-    alignContent: 'flex-start',
-    alignItems: 'flex-start',
     color: colors.text.secondary,
     fontSize: 15,
-    justifyContent: 'center',
-    paddingLeft: 20,
+    paddingHorizontal: 16,
+    textAlign: "center",
   },
   textHospital: {
-    alignContent: 'center',
-    alignItems: 'flex-start',
     color: colors.text.primary,
     fontSize: 20,
-    fontWeight: 'bold',
-    justifyContent: 'center',
+    fontWeight: "bold",
     paddingBottom: 1,
-    paddingLeft: 20,
-    textAlign: 'center',
+    paddingHorizontal: 16,
+    textAlign: "center",
   },
   variableButton: {
-    alignContent: 'center',
+    alignContent: "center",
     paddingBottom: 60,
-    paddingLeft: 40,
-    paddingRight: 40,
+    paddingHorizontal: 16,
+  },
+  variableButtonNoPad: {
+    alignContent: "center",
+    // paddingBottom: 60,
+    paddingHorizontal: 16,
   },
 });
 

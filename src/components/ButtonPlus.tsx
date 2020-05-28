@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
-} from 'react-native';
-import colors from '../utils/colors';
+} from "react-native";
+import colors from "../utils/colors";
 
 export type Props = TouchableOpacityProps;
 
@@ -15,7 +15,8 @@ const ButtonPlus: React.FC<Props> = ({ style, ...props }) => {
     <TouchableOpacity
       {...props}
       activeOpacity={0.5}
-      style={[styles.container, style]}>
+      style={[styles.container, style]}
+    >
       <View>
         <Text style={styles.text}>+</Text>
       </View>
@@ -30,8 +31,8 @@ const styles = StyleSheet.create({
     bottom: 90,
     elevation: 5,
     height: 70,
-    justifyContent: 'center',
-    position: 'absolute',
+    justifyContent: "center",
+    position: "absolute",
     right: 20,
     shadowColor: colors.text.primary,
     shadowOffset: {
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.text.navigation,
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

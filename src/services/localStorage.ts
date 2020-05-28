@@ -1,12 +1,29 @@
 import {
+  addCardItem,
   addObjectItem,
-  ifIdExists,
+  addPatientItem,
+  getArray,
   getObject,
-  setObject,
+  ifIdExists,
   mergeObject,
+  removeItem,
   removeObjectItem,
-} from './asyncStorageAdapter';
-import { LocalData, Preferences, Session, Auth, Patient } from './types';
+  removeObjectItemV2,
+  setObject,
+  setObjectItem,
+} from "./asyncStorageAdapter";
+import {
+  Auth,
+  Card,
+  FinishedExecution,
+  LocalData,
+  OngoingExecution,
+  Patient,
+  Preferences,
+  Role,
+  Session,
+  Technology,
+} from "./types";
 
 /**
  * Coordena o armazenamento de informações locais, usando o AsyncStorage.
@@ -37,32 +54,57 @@ import { LocalData, Preferences, Session, Auth, Patient } from './types';
 
 /** Funções auxiliares */
 export {
-  clear,
-  ifIdExists,
-  getItem,
-  setItem,
-  removeItem,
+  addCardItem,
   addObjectItem,
+  addPatientItem,
+  clear,
+  getArray,
+  getItem,
+  ifIdExists,
+  removeItem,
   removeObjectItem,
-} from './asyncStorageAdapter';
+  removeObjectItemV2,
+  setItem,
+} from "./asyncStorageAdapter";
 
 /** Salva os dados retornados na rota de autenticação localmente, para uso pelo app. */
 export const saveData = async (remoteData: any) => {
   const { accessToken, permission } = remoteData;
-  await mergeObject('@auth', { token: accessToken, permission });
+  await mergeObject("@auth", { token: accessToken, permission });
 
-  if (remoteData.permission === 'time-tracking') {
+  if (
+    remoteData.permission === "time-tracking" ||
+    remoteData.permission === "administration-hospital"
+  ) {
     const { institution, roles, technologies } = remoteData;
 
+    let orderedRoles = roles as Role[];
+    let orderedTechnologies = technologies as Technology[];
+    orderedRoles = orderedRoles.sort((a, b) =>
+      a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+    );
+    for (let i = 0; i < orderedRoles.length; i++) {
+      orderedRoles[i].activities = orderedRoles[i].activities.sort((a, b) =>
+        a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+      );
+    }
+    orderedTechnologies = orderedTechnologies.sort((a, b) =>
+      a.name.toUpperCase().localeCompare(b.name.toUpperCase())
+    );
+    const obj = {
+      institution,
+      roles: orderedRoles,
+      technologies: orderedTechnologies,
+    };
     // salvar dados locais
-    await setObject('@data', { institution, roles, technologies });
+    await setObject("@data", obj);
 
     // validar se a tecnologia e ocupação previamente selecionadas ainda existem
     const preferences = await getPreferences();
 
     if (preferences.technology) {
       const stillExists = technologies.some(
-        (tech: { id: number }) => tech.id === preferences.technology,
+        (tech: { id: number }) => tech.id === preferences.technology
       );
 
       if (!stillExists) {
@@ -72,7 +114,7 @@ export const saveData = async (remoteData: any) => {
 
     if (preferences.role) {
       const stillExists = roles.some(
-        (role: { id: number }) => role.id === preferences.role,
+        (role: { id: number }) => role.id === preferences.role
       );
 
       if (!stillExists) {
@@ -80,37 +122,81 @@ export const saveData = async (remoteData: any) => {
       }
     }
 
-    await setObject('@preferences', preferences);
+    await setObject("@preferences", preferences);
   } else {
     // TODO: implementar para demais perfis
   }
 };
 
 /** Retorna os dados locais de acordo com a permissão do código de acesso usado. */
-export const getData = () => getObject<LocalData>('@data');
+export const getData = () => getObject<LocalData>("@data");
 
 /** Retorna os dados de autenticação. */
-export const getAuth = () => getObject<Auth>('@auth');
+export const getAuth = () => getObject<Auth>("@auth");
 
 /** Atualiza os dados de autenticação com o novo código de acesso. */
-export const setAccessCode = (code: string) => mergeObject('@auth', { code });
+export const setAccessCode = (code: string) => mergeObject("@auth", { code });
 
 /** Retorna as 'preferências' do usuário. */
-export const getPreferences = () => getObject<Preferences>('@preferences');
+export const getPreferences = () => getObject<Preferences>("@preferences");
 
 /** Retorna as informações da sessão de uso do app. */
-export const getSession = () => getObject<Session>('@session');
+export const getSession = () => getObject<Session>("@session");
 
-/** Retorna lista de pacientes salva localmente, se existir */
+/** Adiciona a lista de pacientes salva localmente, se ja nao existir */
 export const addPatient = (newPatient: Patient) =>
-  addObjectItem('@patient', newPatient);
+  addPatientItem("@patient", newPatient);
 
 /** Retorna paciente da lista salva localmente a partir de seu id, se existir */
-export const getPatient = (id: string) => ifIdExists('@patient', id);
+export const getPatient = (id: string) => ifIdExists("@patient", id);
 
 /** Remove paciente da lista salva localmente a partir de seu índice no array */
 export const removePatient = (index: number) =>
-  removeObjectItem('@patient', index);
+  removeObjectItem("@patient", index);
+
+/** Adiciona a lista de cards salva localmente */
+export const addCard = (newCard: Card) => addCardItem("@Card", newCard);
+
+/** Retorna toda a lista de cards salva localmente */
+export const getCards = () => getArray<Card>("@Card");
+
+/** Altera um objeto em dado index na lista de execucoes em andamento salva localmente */
+export const setCard = (newItem: Card, index: number) =>
+  setObjectItem("@Card", newItem, index);
+
+/** Remove um objeto em dado index na lista de execucoes em andamento salva localmente */
+export const removeCard = (index: number) => removeObjectItemV2("@Card", index);
+
+/** Adiciona a lista de execucoes concluidas salva localmente */
+export const addFinishedExecution = (newExecution: FinishedExecution) =>
+  addObjectItem("@finishedExecution", newExecution);
+
+/** Retorna toda a lista de execucoes concluidas salva localmente */
+export const getFinishedExecutions = () =>
+  getArray<FinishedExecution>("@finishedExecution");
+
+/** Reseta toda a lista de execucoes concluidas salva localmente */
+export const resetFinishedExecutions = () => removeItem("@finishedExecution");
+
+/** Adiciona a lista de execucoes em andamento salva localmente */
+export const addOngoingExecution = (newExecution: OngoingExecution) =>
+  addObjectItem("@ongoingExecution", newExecution);
+
+/** Retorna toda a lista de execucoes em andamento salva localmente */
+export const getOngoingExecutions = () =>
+  getArray<OngoingExecution>("@ongoingExecution");
+
+/** Altera um objeto em dado index na lista de execucoes em andamento salva localmente */
+export const setOngoingExecution = (newItem: OngoingExecution, index: number) =>
+  setObjectItem("@ongoingExecution", newItem, index);
+
+/** Remove um objeto em dado index na lista de execucoes em andamento salva localmente */
+export const removeOngoingExecution = (index: number) =>
+  removeObjectItemV2("@ongoingExecution", index);
+
+/** Remove tecnologia da lista salva localmente a partir de seu índice no array */
+export const removeTechnology = (index: number) =>
+  removeObjectItem("@technology", index);
 
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.
@@ -120,20 +206,24 @@ export const removePatient = (index: number) =>
  */
 export const saveTechnology = async (
   technology: number,
-  permanent: boolean,
+  permanent: boolean
 ) => {
   if (permanent) {
-    await mergeObject('@preferences', { technology });
+    await mergeObject("@preferences", { technology });
   } else {
-    await mergeObject('@session', { technology });
+    await mergeObject("@session", { technology });
   }
 };
 
-export const saveRole = async (role: number, permanent: boolean) => {
+export const saveRole = async (
+  role: number,
+  name: string,
+  permanent: boolean
+) => {
   if (permanent) {
-    await mergeObject('@preferences', { role });
+    await mergeObject("@preferences", { role, roleName: name });
   } else {
-    await mergeObject('@session', { role });
+    await mergeObject("@session", { role, roleName: name });
   }
 };
 
@@ -164,6 +254,6 @@ export const getActivities = async () => {
 
   // filtrar as atividades considerando apenas as que estão presentes também na tecnologia que foi selecionada
   return roleActivities.filter((activity) =>
-    techActivities.some((id) => id === activity.id),
+    techActivities.some((id) => id === activity.id)
   );
 };

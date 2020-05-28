@@ -1,12 +1,17 @@
+import { getUniqueId } from "react-native-device-info";
+import axios from "axios";
 import {
   clear,
   getPreferences,
   getAuth,
   setAccessCode,
   saveData,
-} from './localStorage';
-import api from './API';
-import { Permission } from './types';
+  getCards,
+  getFinishedExecutions,
+  resetFinishedExecutions,
+} from "./localStorage";
+import api from "./API";
+import { Permission } from "./types";
 
 /**
  * Coordena operações complexas da aplicação (principalmente aquelas relacionadas
@@ -22,8 +27,9 @@ import { Permission } from './types';
  * - `home`: tela de início;
  * - `readCode`: tela para informar código de acesso;
  * - `technology`: tela para selecionar tecnologia.
+ * - `CarouselScreen`: tela de execuções de atividades.
  */
-type Screen = 'home' | 'readCode' | 'technology';
+type Screen = "home" | "readCode" | "technology" | "execution";
 
 /**
  * Faz as verificações necessárias ao iniciar o app e retorna um código
@@ -39,12 +45,12 @@ export const startupScreen = async (): Promise<Screen> => {
 
   // se não tiver código de acesso salvo, redirecionar para leitura de código
   if (code === null || code === undefined) {
-    return 'readCode';
+    return "readCode";
   }
 
   // se tiver código de acesso, tentar atualizar informações locais
   try {
-    const result = await api.post('/auth', { code });
+    const result = await api.post("/auth", { code });
 
     // se o request foi feito com sucesso, atualizar dados locais
     await saveData(result.data);
@@ -56,7 +62,7 @@ export const startupScreen = async (): Promise<Screen> => {
     if (error.result?.status === 404) {
       // limpar dados locais e continuar com leitura de código
       await clear();
-      return 'readCode';
+      return "readCode";
     }
 
     // se for um erro de conexão, usar dados locais
@@ -73,16 +79,20 @@ export const startupScreen = async (): Promise<Screen> => {
 const firstScreenAfterAppStartup = async (): Promise<Screen> => {
   const { permission } = await getAuth();
   if (
-    permission === 'administration-app' ||
-    permission === 'administration-hospital'
+    permission === "administration-app" ||
+    permission === "administration-hospital"
   ) {
-    return 'home';
+    return "home";
   }
 
   const { technology } = await getPreferences();
   const hasTechnology = technology !== null && technology !== undefined;
+  const cards = await getCards();
 
-  return hasTechnology ? 'home' : 'technology';
+  if (cards) return "execution";
+  if (hasTechnology) return "home";
+
+  return "technology";
 };
 
 /**
@@ -96,7 +106,7 @@ const firstScreenAfterAppStartup = async (): Promise<Screen> => {
  */
 export const processAccessCode = async (code: string): Promise<Permission> => {
   try {
-    const response = await api.post('/auth', { code });
+    const response = await api.post("/auth", { code });
 
     await setAccessCode(code);
     await saveData(response.data);
@@ -104,9 +114,107 @@ export const processAccessCode = async (code: string): Promise<Permission> => {
     return response.data.permission;
   } catch (error) {
     if (error.response?.status === 404) {
-      throw new Error('not-found');
+      throw new Error("not-found");
     }
 
-    throw new Error('network');
+    throw new Error("network");
+  }
+};
+
+/**
+ * Sincroniza a lista local de execuções de atividades com o servidor.
+ *
+ * Se a sincronização for bem sucedida, as execuções locais são deletadas; se a
+ * instituição de saúde não existir mais no sistema, todos os dados locais são
+ * deletados (execuções não sincronizadas, execuções em andamento, ...) e um
+ * erro com mensagem `"institution-not-found"` é lançado; se algum erro de rede
+ * ocorrer, a operação falha com um erro com mensagem `"network"`.
+ */
+export const syncExecutions = async () => {
+  try {
+    await uploadExecutions();
+    await resetFinishedExecutions();
+  } catch (error) {
+    if (error.message === "auth") {
+      try {
+        await authenticate();
+      } catch (authError) {
+        if (authError.message === "not-found") {
+          await clear();
+          throw new Error("institution-not-found");
+        }
+
+        // other errors should be handled by callers (network); rethrow
+        throw authError;
+      }
+
+      await syncExecutions();
+    }
+
+    // other errors should be handled by callers (network); rethrow
+    throw error;
+  }
+};
+
+/**
+ * Faz o upload de uma lista local de execuções para a API.
+ *
+ * Erros lançados:
+ * - `auth`: token inválido;
+ * - `network`: erro de rede.
+ */
+const uploadExecutions = async (): Promise<void> => {
+  const executions = (await getFinishedExecutions()).map((execution) => {
+    return {
+      activityId: execution.activity,
+      roleId: execution.role,
+      timestamp: execution.date,
+      duration: execution.duration,
+    };
+  });
+
+  if (executions.length === 0) {
+    return;
+  }
+
+  try {
+    const token = getUniqueId();
+
+    await api.post("/executions", {
+      deviceToken: token,
+      executions,
+    });
+  } catch (error) {
+    // invalid token
+    if (error.response?.status === 401) {
+      throw new Error("auth");
+    }
+
+    // network error
+    throw new Error("network");
+  }
+};
+
+/**
+ * Faz a autenticação usando o código de acesso salvo local, atualizando os
+ * dados locais.
+ *
+ * Erros lançados:
+ * - `not-found`: instituição não encontrada (não existe ou deletada);
+ * - `network`: erro de rede.
+ */
+const authenticate = async () => {
+  const { code } = await getAuth();
+
+  try {
+    const result = await api.post("/auth", { code });
+    axios.defaults.headers.commons.Authorization = `Bearer ${result.data.accessToken}`;
+    await saveData(result.data);
+  } catch (error) {
+    if (error.response?.status === 404) {
+      throw new Error("not-found");
+    }
+
+    throw new Error("network");
   }
 };

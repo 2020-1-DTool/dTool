@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
-} from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { getItem, removePatient } from '../services/localStorage';
-import colors from '../utils/colors';
-import { PacientList } from '../containers';
-import { ButtonPlus } from '../components';
-import { Patient } from '../services/types';
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { getItem, removePatient } from "../services/localStorage";
+import colors from "../utils/colors";
+import { PacientList } from "../containers";
+import { ButtonPlus } from "../components";
+import { Patient } from "../services/types";
 
 export interface ScreenProps {
   storageResult: Array<Record<string, any>>;
@@ -23,7 +23,7 @@ const ListPatient: React.FC<ScreenProps> = ({ navigation }) => {
 
   useEffect(() => {
     async function getStorage() {
-      let pacientData = await getItem('@patient');
+      let pacientData = await getItem("@patient");
       if (pacientData) {
         pacientData = JSON.parse(pacientData);
         if (Array.isArray(pacientData)) setData(pacientData);
@@ -44,15 +44,15 @@ const ListPatient: React.FC<ScreenProps> = ({ navigation }) => {
   };
 
   const handleListPress = async (item: Patient) => {
-    console.log('selecionado: ', item);
-    navigation.navigate('ChooseActivity', { pacient: item });
+    navigation.navigate("ChooseActivity", { pacient: item });
   };
 
   return (
     <SafeAreaView>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollView}>
+        style={styles.scrollView}
+      >
         <View style={styles.body}>
           <View style={styles.main}>
             <PacientList
@@ -65,7 +65,7 @@ const ListPatient: React.FC<ScreenProps> = ({ navigation }) => {
       </ScrollView>
       <View style={styles.buttonPlus}>
         <ButtonPlus
-          onPress={() => navigation.navigate('AddPatient')}
+          onPress={() => navigation.navigate("AddPatient")}
           style={styles.iconPlus}
         />
       </View>
@@ -75,21 +75,21 @@ const ListPatient: React.FC<ScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   body: {
-    alignItems: 'center',
-    minHeight: Dimensions.get('window').height,
+    alignItems: "center",
+    minHeight: Dimensions.get("window").height,
   },
   buttonPlus: {
     bottom: -70,
-    position: 'absolute',
+    position: "absolute",
     right: 50,
   },
   iconPlus: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   main: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   scrollView: {
     backgroundColor: colors.basic.background,

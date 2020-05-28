@@ -1,27 +1,46 @@
-import 'react-native-gesture-handler';
-import React from 'react';
-import { StatusBar, YellowBox } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { HeaderButton, HeaderSearch } from './components';
+import "react-native-gesture-handler";
+import React from "react";
+import { StatusBar, YellowBox } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from "@react-navigation/stack";
+import { HeaderButton, HeaderSearch } from "./components";
 import {
   AddPatient,
+  AddTechnology,
   CarouselScreen,
   ChooseActivity,
   ChooseRole,
   ChooseTechnology,
+  DocList,
   HospitalCode,
   HospitalInformation,
   StartScreen,
   SelectPatient,
   ListPatient,
-} from './screens';
-import colors from './utils/colors';
-import sizes from './utils/sizes';
+  ListTechnology,
+} from "./screens";
+import colors from "./utils/colors";
+import sizes from "./utils/sizes";
+import EmptyScreen from "./screens/EmptyScreen"; // TODO eventualmente remover
+import * as localStorage from "./services/localStorage";
 
-YellowBox.ignoreWarnings(['AsyncStorage has been extracted']);
+YellowBox.ignoreWarnings(["AsyncStorage has been extracted"]);
 
 const Stack = createStackNavigator();
+
+const addNewProcedure = async (navigation: StackNavigationProp<any, any>) => {
+  const { technology, role } = await localStorage.getPreferences();
+  if (!technology) {
+    navigation.navigate("ChooseTechnology", { running: "AaddActivity" });
+  } else if (!role) {
+    navigation.navigate("ChooseRole");
+  } else {
+    navigation.navigate("SelectPatient");
+  }
+};
 
 const baseHeaderStyle = {
   headerStyle: {
@@ -29,9 +48,14 @@ const baseHeaderStyle = {
   },
   headerTintColor: colors.text.navigation,
   headerTitleStyle: {
-    fontWeight: 'normal',
+    fontWeight: "normal",
     fontSize: sizes.headline.h1,
   },
+  icon: {
+    color: colors.text.navigation,
+    fontSize: sizes.headline.h1,
+  },
+  buttonPlus: { bottom: 0, position: "relative", right: 0 },
 };
 
 const App = () => (
@@ -51,10 +75,17 @@ const App = () => (
           }}
         />
         <Stack.Screen
+          name="EmptyScreen"
+          component={EmptyScreen}
+          options={{
+            ...baseHeaderStyle,
+          }}
+        />
+        <Stack.Screen
           name="HospitalCode"
           component={HospitalCode}
           options={{
-            title: 'Hospital',
+            title: "Hospital",
             ...baseHeaderStyle,
           }}
         />
@@ -62,7 +93,7 @@ const App = () => (
           name="AddPatient"
           component={AddPatient}
           options={{
-            title: 'Novo paciente',
+            title: "Novo paciente",
             ...baseHeaderStyle,
           }}
         />
@@ -70,7 +101,7 @@ const App = () => (
           name="ChooseActivity"
           component={ChooseActivity}
           options={{
-            title: 'Atividade',
+            title: "Atividade",
             ...baseHeaderStyle,
           }}
         />
@@ -86,7 +117,7 @@ const App = () => (
           name="ChooseTechnology"
           component={ChooseTechnology}
           options={{
-            title: 'Tecnologia',
+            title: "Tecnologia",
             headerTitle: () => (
               <HeaderSearch
                 title="Tecnologia"
@@ -110,28 +141,52 @@ const App = () => (
           }}
         />
         <Stack.Screen
+          name="DocList"
+          component={DocList}
+          options={() => ({
+            title: "Tecnologia Padrão",
+            ...baseHeaderStyle,
+          })}
+        />
+        <Stack.Screen
           name="ListPatient"
           component={ListPatient}
           options={({ navigation }) => ({
-            title: 'Paciente',
+            title: "Paciente",
             headerRight: () => (
               <HeaderButton
                 iconName="ios-camera"
-                onPress={() => navigation.navigate('SelectPatient')}
+                onPress={() => navigation.navigate("SelectPatient")}
               />
             ),
             ...baseHeaderStyle,
           })}
         />
         <Stack.Screen
+          name="ListTechnology"
+          component={ListTechnology}
+          options={() => ({
+            title: "Tecnologia",
+            ...baseHeaderStyle,
+          })}
+        />
+        <Stack.Screen
+          name="NewTechnology"
+          component={AddTechnology}
+          options={{
+            ...baseHeaderStyle,
+            title: "Nova tecnologia",
+          }}
+        />
+        <Stack.Screen
           name="SelectPatient"
           component={SelectPatient}
           options={({ navigation }) => ({
-            title: 'Paciente',
+            title: "Paciente",
             headerRight: () => (
               <HeaderButton
                 iconName="ios-list"
-                onPress={() => navigation.navigate('ListPatient')}
+                onPress={() => navigation.navigate("ListPatient")}
               />
             ),
             ...baseHeaderStyle,
@@ -140,15 +195,21 @@ const App = () => (
         <Stack.Screen
           name="CarouselScreen"
           component={CarouselScreen}
-          options={{
+          options={({ navigation }) => ({
             headerTitle: () => (
               <HeaderSearch
-                title="Carrosel"
+                title="Em execução"
                 style={baseHeaderStyle.headerTitleStyle}
               />
             ),
+            headerRight: () => (
+              <HeaderButton
+                iconName="ios-add-circle-outline"
+                onPress={() => addNewProcedure(navigation)}
+              />
+            ),
             ...baseHeaderStyle,
-          }}
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>

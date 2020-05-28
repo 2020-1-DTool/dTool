@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
   StyleSheet,
-} from 'react-native';
-import colors from '../utils/colors';
-import sizes from '../utils/sizes';
+} from "react-native";
+import colors from "../utils/colors";
+import sizes from "../utils/sizes";
 
 export interface Props extends TouchableOpacityProps {
   disabled?: boolean;
@@ -19,7 +19,8 @@ const ButtonSecundary: React.FC<Props> = ({ disabled, title, ...props }) => {
     <TouchableOpacity
       {...props}
       activeOpacity={0.8}
-      style={[styles.base, buttonStyle]}>
+      style={[styles.base, buttonStyle]}
+    >
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
@@ -29,10 +30,9 @@ const styles = StyleSheet.create({
   base: {
     borderColor: colors.theme.primary,
     borderRadius: 8,
-    borderWidth: 3,
-    justifyContent: 'center',
+    borderWidth: 2,
+    justifyContent: "center",
     minHeight: 45,
-    minWidth: 328,
   },
   button: {
     backgroundColor: colors.basic.background,
@@ -41,10 +41,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.basic.background,
   },
   text: {
-    alignSelf: 'center',
+    alignSelf: "center",
     color: colors.theme.primary,
     fontSize: sizes.buttonText.main,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

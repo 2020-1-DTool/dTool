@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
   Text,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import colors from '../utils/colors';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import colors from "../utils/colors";
 
 export type Props = TouchableOpacityProps;
 
@@ -22,10 +22,10 @@ const ButtonDelete: React.FC<Props> = ({ ...props }) => {
 
 const styles = StyleSheet.create({
   ButtonDelete: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     color: colors.theme.failure,
     fontSize: 30,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     marginHorizontal: 10,
   },
 });

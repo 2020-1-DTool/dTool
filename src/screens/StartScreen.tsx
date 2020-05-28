@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
   ActivityIndicator,
   StatusBar,
-} from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-import * as appService from '../services/appService';
+import * as appService from "../services/appService";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -18,14 +18,17 @@ const StartScreen: React.FC<ScreenProps> = ({ navigation }) => {
     const firstScreen = await appService.startupScreen();
 
     switch (firstScreen) {
-      case 'home':
-        navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+      case "execution":
+        navigation.reset({ index: 0, routes: [{ name: "CarouselScreen" }] });
         break;
-      case 'readCode':
-        navigation.reset({ index: 0, routes: [{ name: 'HospitalCode' }] });
+      case "home":
+        navigation.reset({ index: 0, routes: [{ name: "Home" }] });
         break;
-      case 'technology':
-        navigation.reset({ index: 0, routes: [{ name: 'ChooseTechnology' }] });
+      case "readCode":
+        navigation.reset({ index: 0, routes: [{ name: "HospitalCode" }] });
+        break;
+      case "technology":
+        navigation.reset({ index: 0, routes: [{ name: "ChooseTechnology" }] });
         break;
       default:
         break;
@@ -46,9 +49,9 @@ const StartScreen: React.FC<ScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Alert,
   Dimensions,
@@ -6,15 +6,15 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-} from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { addPatient } from '../services/localStorage';
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { addPatient } from "../services/localStorage";
 import {
   PatientHeader,
   GenderSelect,
   InputText,
   ButtonPrimary,
-} from '../components';
+} from "../components";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -22,16 +22,16 @@ export interface ScreenProps {
 }
 
 const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
-  const [id, setId] = useState(route?.params?.id || '');
-  const [name, setName] = useState('');
-  const [sex, setSex] = useState('');
+  const [id, setId] = useState(route?.params?.id || "");
+  const [name, setName] = useState("");
+  const [sex, setSex] = useState("");
 
   const savePatientInfos = async () => {
     const patientInfos = { id, name, sex };
     if (!(await addPatient(patientInfos))) {
-      Alert.alert('Este paciente já possui cadastro.');
+      Alert.alert("Este paciente já possui cadastro.");
     }
-    navigation.navigate('ChooseActivity', { pacient: patientInfos });
+    navigation.navigate("ChooseActivity", { pacient: patientInfos });
   };
 
   const disabled =
@@ -84,22 +84,23 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    height: Dimensions.get('screen').height,
-    justifyContent: 'space-between',
-    minWidth: Dimensions.get('screen').width,
-    paddingTop: '15%',
+    height: Dimensions.get("screen").height,
+    justifyContent: "space-between",
+    minWidth: Dimensions.get("screen").width,
+    paddingTop: "15%",
   },
   buttonContainer: {
     flex: 2 / 8,
-    padding: '5%',
+    paddingHorizontal: 16,
+    paddingVertical: 20,
   },
   input: {
-    paddingBottom: '10%',
+    paddingBottom: "10%",
   },
   inputContainer: {
-    alignItems: 'center',
-    paddingTop: '10%',
-    width: '100%',
+    alignItems: "center",
+    paddingTop: "10%",
+    width: "100%",
   },
   topContainer: { flex: 6 / 8 },
 });

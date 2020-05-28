@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Text, StyleSheet, Switch, View } from 'react-native';
-import colors from '../utils/colors';
-import sizes from '../utils/sizes';
-import { TooltipIcon } from '../components';
+import React, { useState } from "react";
+import { Text, StyleSheet, Switch, View } from "react-native";
+import colors from "../utils/colors";
+import sizes from "../utils/sizes";
+import { TooltipIcon } from "../components";
 
 export interface Props {
   onValueChange?: (value: boolean) => void;
@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
     paddingLeft: 200,
   },
   rememberOptionView: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingHorizontal: '2%',
-    width: '100%',
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingHorizontal: "2%",
+    width: "100%",
   },
   text: {
     color: colors.text.primary,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   tooltip: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 });
 

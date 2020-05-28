@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, Dimensions, StyleSheet, SafeAreaView } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { BarcodeCamera } from '../containers';
-import colors from '../utils/colors';
-import { ButtonPlus } from '../components';
-import { getPatient } from '../services/localStorage';
+import React from "react";
+import { View, Dimensions, StyleSheet, SafeAreaView } from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { BarcodeCamera } from "../containers";
+import colors from "../utils/colors";
+import { ButtonPlus } from "../components";
+import { getPatient } from "../services/localStorage";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -12,18 +12,18 @@ export interface ScreenProps {
 
 const handleChange = async (
   barcode: string,
-  navigation: StackNavigationProp<any, any>,
+  navigation: StackNavigationProp<any, any>
 ) => {
   const item = await getPatient(barcode);
-  if (item) navigation.navigate('ChooseActivity', { pacient: item });
-  else navigation.navigate('AddPatient', { id: barcode });
+  if (item) navigation.navigate("ChooseActivity", { pacient: item });
+  else navigation.navigate("AddPatient", { id: barcode });
 };
 
 const SelectPatient: React.FC<ScreenProps> = ({ navigation }) => (
   <SafeAreaView>
     <View style={styles.body}>
       <BarcodeCamera onChange={(barcode) => handleChange(barcode, navigation)}>
-        <ButtonPlus onPress={() => navigation.navigate('AddPatient')} />
+        <ButtonPlus onPress={() => navigation.navigate("AddPatient")} />
       </BarcodeCamera>
     </View>
   </SafeAreaView>
@@ -31,9 +31,9 @@ const SelectPatient: React.FC<ScreenProps> = ({ navigation }) => (
 
 const styles = StyleSheet.create({
   body: {
-    alignItems: 'center',
+    alignItems: "center",
     color: colors.text.navigation,
-    minHeight: Dimensions.get('window').height,
+    minHeight: Dimensions.get("window").height,
   },
 });
 
