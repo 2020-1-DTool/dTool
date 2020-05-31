@@ -97,6 +97,17 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
     } else navigation.navigate("ListTechnology");
   };
 
+  const secondaryButtonAction = async () => {
+    if (permission === "time-tracking") {
+      const { role } = await localStorage.getPreferences();
+      if (role) {
+        navigation.navigate("ReportsScreen");
+      } else {
+        navigation.navigate("ChooseRole"); // vai ter que ser melhorado isso aqui
+      }
+    } else "nothingyet"; // exportar relatorio xlsx
+  };
+
   return (
     <SafeAreaView>
       <ScrollView
@@ -148,7 +159,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
                   ? "Consultar Relatórios"
                   : "Exportar Relatório"
               }
-              onPress={() => "nothingyet"}
+              onPress={secondaryButtonAction}
             />
           </View>
           {pendingExecs && <WarningBox handleBack={handleBack} />}
