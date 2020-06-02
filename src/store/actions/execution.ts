@@ -1,7 +1,7 @@
 import { Card as CardType } from "../../services/types";
 
 /**
- * Subrescreve os cards do state, pelo novo array com um card novo
+ * Sobrescreve os cards do state, pelo novo array com um card novo
  * @param cards Array de cards, com o novo card adicionado
  */
 export function addCard(cards: CardType[]) {
@@ -11,6 +11,22 @@ export function addCard(cards: CardType[]) {
   };
 }
 
+/**
+ * Remove card do carrosel, a partir do índice informado
+ * @param index Índice do card a ser removido
+ */
+export function removeCard(index: number) {
+  return {
+    type: "REMOVE_CARD",
+    index,
+  };
+}
+
+/**
+ * Seta o estado de execução do card, a partir do índice informado
+ * @param newExecState Novo estado de execução do card
+ * @param index Índice do card a ser alterado
+ */
 export function setCardExecutionSate(newExecState: string, index: number) {
   return {
     type: "SET_CARD_EXECUTION_STATE",

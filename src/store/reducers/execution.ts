@@ -20,6 +20,7 @@ const initialState = {
 };
 
 export default function execution(prevState = initialState, action: any) {
+  let updatedData;
   switch (action.type) {
     case "ADD_CARD":
       return {
@@ -28,8 +29,17 @@ export default function execution(prevState = initialState, action: any) {
         selectedCard: action.cards[0],
         selectedCardIndex: 0,
       };
+    case "REMOVE_CARD":
+      updatedData = prevState.data;
+      updatedData.splice(action.index, 1);
+      console.warn("AHAAM", updatedData);
+      return {
+        data: updatedData,
+        selectedCard: updatedData[0],
+        selectedCardIndex: 0,
+      };
     case "SET_CARD_EXECUTION_STATE": {
-      let updatedData = { ...prevState };
+      updatedData = { ...prevState };
       console.warn("AQUI ", updatedData.data[action.index]);
       updatedData.data[action.index].executionState = action.newExecState;
       console.warn("AQUI ", updatedData);

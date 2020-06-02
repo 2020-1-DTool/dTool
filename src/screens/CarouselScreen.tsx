@@ -36,6 +36,7 @@ export interface ScreenProps {
   addCard: (item: CardType[]) => void;
   data: CardType[];
   navigation: StackNavigationProp<any, any>;
+  removeCard: (index: number) => void;
   selectedCardIndex: number;
   setCardExecutionSate: (newCardExec: string, index: number) => void;
   route?: {
@@ -50,6 +51,7 @@ export interface ScreenProps {
 const CarouselScreen: React.FC<ScreenProps> = ({
   addCard,
   data,
+  removeCard,
   setCardExecutionSate,
   selectedCardIndex,
   route,
@@ -130,21 +132,17 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   const handlePress1 = async () => {
     switch (data[selectedCardIndex].executionState) {
       case "uninitialized":
-        console.log("1111111");
         await initializeExecution(selectedCardIndex);
-        console.log("22222222222");
         setCardExecutionSate("initialized", selectedCardIndex);
-        console.log("33333333333");
         break;
       case "initialized":
         await pauseExecution(selectedCardIndex);
         setCardExecutionSate("paused", selectedCardIndex);
         break;
       case "paused":
-        // TODO: no momento só conseguimos remover os cards do início
         await finishExecution(selectedCardIndex);
         await localStorage.removeCard(selectedCardIndex);
-        // TODO action para remover card
+        removeCard(selectedCardIndex);
         break;
       default:
         break;
@@ -156,7 +154,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
       const removed = await cancelExecution(selectedCardIndex);
       if (removed) {
         await localStorage.removeCard(selectedCardIndex);
-        // TODO action para remover card
+        removeCard(selectedCardIndex);
       }
     } else {
       await initializeExecution(selectedCardIndex);
@@ -168,7 +166,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
     const removed = await cancelExecution(selectedCardIndex);
     if (removed) {
       await localStorage.removeCard(selectedCardIndex);
-      // TODO action para remover card
+      removeCard(selectedCardIndex);
     }
   };
 
@@ -212,6 +210,7 @@ const mapDispatchToProps = (
   }) => any
 ) => ({
   addCard: (items: CardType[]) => dispatch(executionActions.addCard(items)),
+  removeCard: (index: number) => dispatch(executionActions.removeCard(index)),
   setCardExecutionSate: (newExecState: string, index: number) =>
     dispatch(executionActions.setCardExecutionSate(newExecState, index)),
 });
