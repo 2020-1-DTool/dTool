@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -7,29 +7,35 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import { connect } from "react-redux";
 
 import { Card } from "react-native-elements";
+
+import * as executionActions from "../store/actions/execution";
 import { Card as CardType } from "../services/types";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 
 export interface ScreenProps {
   data?: CardType[] | undefined;
-  onPress: (card: CardType, index: number) => void;
+  selectedCardIndex: number;
+  toggleCard: (card: CardType, index: number) => void;
 }
 
-const CardRow: React.FC<ScreenProps> = ({ data, onPress }) => {
-  const [selectedCard, setSelectedCard] = useState(0);
-
+const CardRow: React.FC<ScreenProps> = ({
+  data,
+  selectedCardIndex,
+  toggleCard,
+}) => {
   const setBorder = (index: number) => {
-    console.log(`Previous sected card ${selectedCard}`);
-    setSelectedCard(index);
+    console.log(`Previous sected card ${selectedCardIndex}`);
+    // setSelectedCard(index);
     console.log(`Current selected card ${index}`);
   };
 
-  const handlePress = (item: CardType, key: number) => {
-    setBorder(key);
-    onPress(item, key);
+  const handlePress = (item: CardType, index: number) => {
+    setBorder(index);
+    toggleCard(item, index);
   };
 
   return (
@@ -41,10 +47,10 @@ const CardRow: React.FC<ScreenProps> = ({ data, onPress }) => {
             {data?.map((item, key) => (
               <View key={key}>
                 <TouchableOpacity
-                  key={item.patient.id + item.activity}
+                  key={item?.patient?.id! + item.activity}
                   style={[
                     styles.viewGeral,
-                    selectedCard === key
+                    selectedCardIndex === key
                       ? styles.borderGreen
                       : styles.borderWhite,
                   ]}
@@ -58,14 +64,14 @@ const CardRow: React.FC<ScreenProps> = ({ data, onPress }) => {
                       style={styles.imagePadding}
                       source={require("../assets/profile-carousel.png")}
                     />
-                    <Text style={styles.normalText}>{item.patient.name}</Text>
+                    <Text style={styles.normalText}>{item?.patient?.name}</Text>
                   </View>
                   <View style={styles.cardInfo}>
                     <Image
                       style={styles.imagePadding}
                       source={require("../assets/clock-carousel.png")}
                     />
-                    <Text style={styles.normalText}>{item.time}</Text>
+                    <Text style={styles.normalText}>{item.executionState}</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -130,4 +136,18 @@ let styles = StyleSheet.create({
   },
 });
 
-export default CardRow;
+const mapStateToProps = (state: {
+  execution: { data: CardType[]; selectedCardIndex: number };
+}) => ({
+  data: state.execution.data,
+  selectedCardIndex: state.execution.selectedCardIndex,
+});
+
+const mapDispatchToProps = (
+  dispatch: (arg0: { type: string; card: CardType; index: number }) => any
+) => ({
+  toggleCard: (item: CardType, index: number) =>
+    dispatch(executionActions.toggleCard(item, index)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CardRow);

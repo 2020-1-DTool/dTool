@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import {
   Dimensions,
   SafeAreaView,
@@ -7,89 +7,180 @@ import {
   View,
 } from "react-native";
 
+import { connect } from "react-redux";
+
 import { StackNavigationProp } from "@react-navigation/stack";
+
+import {
+  createExecution,
+  timeToString,
+  initializeExecution,
+  cancelExecution,
+  pauseExecution,
+  finishExecution,
+  updateAll,
+  getExecutionStatus,
+} from "../services/timerFunction";
+
+import * as executionActions from "../store/actions/execution";
 import { Carousel, CardDescription } from "../containers";
 import * as localStorage from "../services/localStorage";
-import { Card } from "../services/types";
+import {
+  Card as CardType,
+  ExecutionStatus,
+  CardExecutionType,
+} from "../services/types";
 import colors from "../utils/colors";
 
 export interface ScreenProps {
+  addCard: (item: CardType[]) => void;
+  data: CardType[];
   navigation: StackNavigationProp<any, any>;
-  route?: { params: { patientId: string; activityName: string } };
+  selectedCardIndex: number;
+  setCardExecutionSate: (newCardExec: string, index: number) => void;
+  route?: {
+    params: {
+      patientId: string;
+      activityName: string;
+      activityId: number;
+    };
+  };
 }
 
-const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
-  const [data, setData] = useState([] as Card[]);
-  const [selectedCard, setSelectedCard] = useState(data[0] as Card);
+const CarouselScreen: React.FC<ScreenProps> = ({
+  addCard,
+  data,
+  setCardExecutionSate,
+  selectedCardIndex,
+  route,
+}) => {
   const activity = route?.params?.activityName;
-  const patientId = route?.params?.patientId;
+  const { activityId, patientId } = route?.params!;
+  // const patientId = route?.params?.patientId;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     (async () => {
       const sessionCardResponse = await localStorage.getSession();
       const preferencesCardResponse = await localStorage.getPreferences();
-      const currentRole =
-        sessionCardResponse?.roleName || preferencesCardResponse?.roleName;
+      const { roleName, role } =
+        sessionCardResponse! || preferencesCardResponse!;
 
       // Só exibe tecnologia se ela não for a padrão/salva como default
       const currentTech = sessionCardResponse?.technology?.toString();
 
       let strComplete = await localStorage.getCards();
-      let complete: Card[];
-      let dataCard: Card;
+      let complete: CardType[];
+      let newCard: CardType;
       let patient: any;
 
-      if (patientId) patient = await localStorage.getPatient(patientId);
+      if (patientId)
+        patient = (await localStorage.getPatient(patientId)) || {
+          id: "",
+          name: "",
+          sex: "",
+        };
 
-      dataCard = {
-        patient: patient || "",
-        activity: activity || "",
-        role: currentRole,
-        technology: currentTech || "",
+      newCard = {
+        patient,
+        activity,
+        role: roleName,
+        technology: currentTech,
         time: "00:00:00",
+        // ao inserir uma atividade nova, ela é sempre `uninitialized`
+        executionState: "uninitialized",
       };
 
-      if (strComplete !== null) {
+      if (strComplete) {
         complete = strComplete;
-        const { length } = complete;
+        // complete = data;
+        // const { length } = complete;
+
+        if (patientId) {
+          const dataCardInfo: CardExecutionType = {
+            idPatient: newCard?.patient?.id,
+            activity: activityId,
+            role,
+          };
+
+          complete.unshift(newCard);
+          await createExecution(dataCardInfo);
+        }
+
+        await localStorage.addCard(newCard);
+        addCard(complete);
 
         // Evitar que insira duas vezes a mesma execução, em sequência
-        if (
+        /* if (
           (complete[length - 1]?.patient !== patient ||
             complete[length - 1]?.activity !== activity) &&
-          dataCard.patient
+          patient
         ) {
-          complete.unshift(dataCard);
-          await localStorage.addCard(dataCard);
-        }
-      } else {
+          complete.unshift(newCard);
+          addCard(complete);
+          // await localStorage.addCard(dataCard);
+        } */
+      } /* else {
         complete = [dataCard];
         await localStorage.addCard(dataCard);
-      }
-      setData(complete);
+      } */
+      // setData(complete);
     })();
   }, []);
 
-  const handlePress = (item: Card, index: number) => {
-    setSelectedCard(item);
-    console.log(`Selected card ${index}`);
+  const handlePress1 = async () => {
+    switch (data[selectedCardIndex].executionState) {
+      case "uninitialized":
+        console.log("1111111");
+        await initializeExecution(selectedCardIndex);
+        console.log("22222222222");
+        setCardExecutionSate("initialized", selectedCardIndex);
+        console.log("33333333333");
+        break;
+      case "initialized":
+        await pauseExecution(selectedCardIndex);
+        setCardExecutionSate("paused", selectedCardIndex);
+        break;
+      case "paused":
+        // TODO: no momento só conseguimos remover os cards do início
+        await finishExecution(selectedCardIndex);
+        await localStorage.removeCard(selectedCardIndex);
+        // TODO action para remover card
+        break;
+      default:
+        break;
+    }
   };
+
+  const handlePress2 = async () => {
+    if (data[selectedCardIndex].executionState !== "paused") {
+      const removed = await cancelExecution(selectedCardIndex);
+      if (removed) {
+        await localStorage.removeCard(selectedCardIndex);
+        // TODO action para remover card
+      }
+    } else {
+      await initializeExecution(selectedCardIndex);
+      setCardExecutionSate("initialized", selectedCardIndex);
+    }
+  };
+
+  const handlePress3 = async () => {
+    const removed = await cancelExecution(selectedCardIndex);
+    if (removed) {
+      await localStorage.removeCard(selectedCardIndex);
+      // TODO action para remover card
+    }
+  };
+
   return (
     <SafeAreaView>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={styles.body}>
-          <Carousel
-            data={data}
-            onPress={(item, index) => handlePress(item, index)}
-          />
+          <Carousel />
           <CardDescription
-            data={selectedCard || data[0]}
-            state="finished" /* TODO: essa info deve vir do @ongoingExecution na integração, para alternar de estado */
-            onPress1={() =>
-              console.warn("onPress1")
-            } /* TODO: cada callback destes, deve chamar as ações apropriadas */
-            onPress2={() => console.warn("onPress2")}
-            onPress3={() => console.warn("onPress3")}
+            onPress1={() => handlePress1()}
+            onPress2={() => handlePress2()}
+            onPress3={() => handlePress3()}
           />
         </View>
       </ScrollView>
@@ -105,4 +196,24 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CarouselScreen;
+const mapStateToProps = (state: {
+  execution: { data: CardType[]; selectedCardIndex: number };
+}) => ({
+  data: state.execution.data,
+  selectedCardIndex: state.execution.selectedCardIndex,
+});
+
+const mapDispatchToProps = (
+  dispatch: (arg0: {
+    type: string;
+    cards?: CardType[];
+    newExecState?: string;
+    index?: number;
+  }) => any
+) => ({
+  addCard: (items: CardType[]) => dispatch(executionActions.addCard(items)),
+  setCardExecutionSate: (newExecState: string, index: number) =>
+    dispatch(executionActions.setCardExecutionSate(newExecState, index)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CarouselScreen);

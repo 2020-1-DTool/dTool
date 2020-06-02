@@ -40,6 +40,7 @@ const PatientScreen: React.FC<ScreenProps> = ({ navigation, route }) => {
             params: {
               patientId: patient?.id,
               activityName: activity?.name,
+              activityId: activity?.id,
             },
           },
         ],
