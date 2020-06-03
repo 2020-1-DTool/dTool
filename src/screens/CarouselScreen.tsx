@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  AppState,
   Dimensions,
   SafeAreaView,
   ScrollView,
@@ -23,6 +24,17 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
   const [selectedCard, setSelectedCard] = useState(data[0] as Card);
   const activity = route?.params?.activityName;
   const patientId = route?.params?.patientId;
+
+  useEffect(() => {
+    console.warn("Teste");
+    AppState.addEventListener("change", handleAppstate); // Focus e blur só funcionam em Android
+
+    return () => {
+      AppState.removeEventListener("change", handleAppstate);
+    };
+  }, []);
+
+  const handleAppstate = () => console.warn(AppState.currentState);
 
   useEffect(() => {
     (async () => {
