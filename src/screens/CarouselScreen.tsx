@@ -57,7 +57,8 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   route,
 }) => {
   const activity = route?.params?.activityName;
-  const { activityId, patientId } = route?.params!;
+  const activityId = route?.params?.activityId;
+  const patientId = route?.params?.patientId;
   // const patientId = route?.params?.patientId;
 
   useLayoutEffect(() => {
