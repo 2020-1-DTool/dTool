@@ -4,19 +4,18 @@
  * que participam da execução de atividades.
  */
 
-const initialState = {
-  selectedCard: {},
+import { Card as CardType } from "src/services/types";
+
+const initialState: CarouselType = {
+  selectedCard: undefined,
   selectedCardIndex: 0,
-  data: [
-    {
-      patient: { id: "", name: "", sex: "" },
-      activity: "",
-      role: "",
-      technology: "",
-      time: "00:00:00",
-      executionState: "unitialized",
-    },
-  ],
+  data: [],
+};
+
+export type CarouselType = {
+  data: CardType[];
+  selectedCard: CardType | undefined;
+  selectedCardIndex: number;
 };
 
 export default function execution(prevState = initialState, action: any) {
@@ -35,7 +34,7 @@ export default function execution(prevState = initialState, action: any) {
       console.warn("AHAAM", updatedData);
       return {
         data: updatedData,
-        selectedCard: updatedData[0],
+        selectedCard: undefined,
         selectedCardIndex: 0,
       };
     case "SET_CARD_EXECUTION_STATE": {

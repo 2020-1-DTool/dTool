@@ -130,6 +130,8 @@ const CarouselScreen: React.FC<ScreenProps> = ({
     })();
   }, []);
 
+  // TODO: redirecionar pra home quando os cards do carrosel forem todos removidos
+
   const handlePress1 = async () => {
     switch (data[selectedCardIndex].executionState) {
       case "uninitialized":
