@@ -22,7 +22,7 @@ export type Card = {
   role?: string;
   technology?: string;
   time: string;
-  executionState: "uninitialized" | "initialized" | "paused";
+  executionState: ExecutionStatus;
 };
 
 export type CardExecutionType = {

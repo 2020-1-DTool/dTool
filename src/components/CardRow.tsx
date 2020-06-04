@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Text,
   View,
@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import { Card } from "react-native-elements";
 
 import * as executionActions from "../store/actions/execution";
-import { Card as CardType } from "../services/types";
+import { Card as CardType, ExecutionStatus } from "../services/types";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 
@@ -29,13 +29,26 @@ const CardRow: React.FC<ScreenProps> = ({
 }) => {
   const setBorder = (index: number) => {
     console.log(`Previous sected card ${selectedCardIndex}`);
-    // setSelectedCard(index);
     console.log(`Current selected card ${index}`);
   };
 
   const handlePress = (item: CardType, index: number) => {
     setBorder(index);
     toggleCard(item, index);
+  };
+
+  // TODO: manter consistência do estado quando adiciona nova atividade ou fecha o app
+  const getExecutionState = (state: ExecutionStatus) => {
+    switch (state) {
+      case ExecutionStatus.Uninitialized:
+        return "Não iniciado";
+      case ExecutionStatus.Initialized:
+        return "Cronometrando";
+      case ExecutionStatus.Paused:
+        return "Pausado";
+      default:
+        return "Inválido";
+    }
   };
 
   return (
@@ -71,7 +84,9 @@ const CardRow: React.FC<ScreenProps> = ({
                       style={styles.imagePadding}
                       source={require("../assets/clock-carousel.png")}
                     />
-                    <Text style={styles.normalText}>{item.executionState}</Text>
+                    <Text style={styles.normalText}>
+                      {getExecutionState(item.executionState)}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               </View>

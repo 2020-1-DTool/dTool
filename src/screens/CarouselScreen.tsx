@@ -38,7 +38,7 @@ export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
   removeCard: (index: number) => void;
   selectedCardIndex: number;
-  setCardExecutionSate: (newCardExec: string, index: number) => void;
+  setCardExecutionSate: (newCardExec: ExecutionStatus, index: number) => void;
   route?: {
     params: {
       patientId: string;
@@ -60,7 +60,6 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   const activity = route?.params?.activityName;
   const activityId = route?.params?.activityId;
   const patientId = route?.params?.patientId;
-  // const patientId = route?.params?.patientId;
 
   useLayoutEffect(() => {
     (async () => {
@@ -90,7 +89,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         technology: currentTech,
         time: "00:00:00",
         // ao inserir uma atividade nova, ela é sempre `uninitialized`
-        executionState: "uninitialized",
+        executionState: ExecutionStatus.Uninitialized,
       };
 
       if (strComplete) {
@@ -123,15 +122,15 @@ const CarouselScreen: React.FC<ScreenProps> = ({
 
   const handlePress1 = async () => {
     switch (data[selectedCardIndex].executionState) {
-      case "uninitialized":
+      case ExecutionStatus.Uninitialized:
         await initializeExecution(selectedCardIndex);
-        setCardExecutionSate("initialized", selectedCardIndex);
+        setCardExecutionSate(ExecutionStatus.Initialized, selectedCardIndex);
         break;
-      case "initialized":
+      case ExecutionStatus.Initialized:
         await pauseExecution(selectedCardIndex);
-        setCardExecutionSate("paused", selectedCardIndex);
+        setCardExecutionSate(ExecutionStatus.Paused, selectedCardIndex);
         break;
-      case "paused":
+      case ExecutionStatus.Paused:
         await finishExecution(selectedCardIndex);
         await localStorage.removeCard(selectedCardIndex);
         removeCard(selectedCardIndex);
@@ -142,7 +141,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   };
 
   const handlePress2 = async () => {
-    if (data[selectedCardIndex].executionState !== "paused") {
+    if (data[selectedCardIndex].executionState !== ExecutionStatus.Paused) {
       const removed = await cancelExecution(selectedCardIndex);
       if (removed) {
         await localStorage.removeCard(selectedCardIndex);
@@ -150,7 +149,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
       }
     } else {
       await initializeExecution(selectedCardIndex);
-      setCardExecutionSate("initialized", selectedCardIndex);
+      setCardExecutionSate(ExecutionStatus.Initialized, selectedCardIndex);
     }
   };
 
@@ -197,13 +196,13 @@ const mapDispatchToProps = (
   dispatch: (arg0: {
     type: string;
     cards?: CardType[];
-    newExecState?: string;
+    newExecState?: ExecutionStatus;
     index?: number;
   }) => any
 ) => ({
   addCard: (items: CardType[]) => dispatch(executionActions.addCard(items)),
   removeCard: (index: number) => dispatch(executionActions.removeCard(index)),
-  setCardExecutionSate: (newExecState: string, index: number) =>
+  setCardExecutionSate: (newExecState: ExecutionStatus, index: number) =>
     dispatch(executionActions.setCardExecutionSate(newExecState, index)),
 });
 

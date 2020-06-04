@@ -1,4 +1,4 @@
-import { Card as CardType } from "../../services/types";
+import { Card as CardType, ExecutionStatus } from "../../services/types";
 
 /**
  * Sobrescreve os cards do state, pelo novo array com um card novo
@@ -27,7 +27,10 @@ export function removeCard(index: number) {
  * @param newExecState Novo estado de execução do card
  * @param index Índice do card a ser alterado
  */
-export function setCardExecutionSate(newExecState: string, index: number) {
+export function setCardExecutionSate(
+  newExecState: ExecutionStatus,
+  index: number
+) {
   return {
     type: "SET_CARD_EXECUTION_STATE",
     newExecState,
