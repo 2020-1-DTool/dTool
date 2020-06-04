@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useEffect } from "react";
 import {
   Dimensions,
   SafeAreaView,
@@ -51,6 +51,7 @@ export interface ScreenProps {
 const CarouselScreen: React.FC<ScreenProps> = ({
   addCard,
   data,
+  navigation,
   removeCard,
   setCardExecutionSate,
   selectedCardIndex,
@@ -68,7 +69,6 @@ const CarouselScreen: React.FC<ScreenProps> = ({
       const { roleName, role } =
         sessionCardResponse! || preferencesCardResponse!;
 
-      // Só exibe tecnologia se ela não for a padrão/salva como default
       const currentTech = sessionCardResponse?.technology?.toString();
 
       let strComplete = await localStorage.getCards();
@@ -95,9 +95,8 @@ const CarouselScreen: React.FC<ScreenProps> = ({
 
       if (strComplete) {
         complete = strComplete;
-        // complete = data;
-        // const { length } = complete;
 
+        // se é uma nova execução (recebeu patientId por parâmetro), deve inserir no local storage e no carrosel
         if (patientId) {
           const dataCardInfo: CardExecutionType = {
             idPatient: newCard?.patient?.id,
@@ -107,30 +106,20 @@ const CarouselScreen: React.FC<ScreenProps> = ({
 
           complete.unshift(newCard);
           await createExecution(dataCardInfo);
-        }
-
-        await localStorage.addCard(newCard);
-        addCard(complete);
-
-        // Evitar que insira duas vezes a mesma execução, em sequência
-        /* if (
-          (complete[length - 1]?.patient !== patient ||
-            complete[length - 1]?.activity !== activity) &&
-          patient
-        ) {
-          complete.unshift(newCard);
+          await localStorage.addCard(newCard);
           addCard(complete);
-          // await localStorage.addCard(dataCard);
-        } */
-      } /* else {
-        complete = [dataCard];
-        await localStorage.addCard(dataCard);
-      } */
-      // setData(complete);
+        } else if (complete.length) {
+          // se são somente os dados do local storage, deve adicionar somente ao carrosel
+          addCard(complete);
+        }
+      }
     })();
   }, []);
 
   // TODO: redirecionar pra home quando os cards do carrosel forem todos removidos
+  // navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+
+  // TODO: Manter consistência dos estados, quando fechar o app com alguma execução em andamento
 
   const handlePress1 = async () => {
     switch (data[selectedCardIndex].executionState) {

@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /**
  * Aqui fica o estado global da tela de execuções, ou seja,
  * todas as informações que são compartilhadas entre os componentes
@@ -19,36 +20,37 @@ export type CarouselType = {
 };
 
 export default function execution(prevState = initialState, action: any) {
-  let updatedData;
   switch (action.type) {
     case "ADD_CARD":
       return {
-        ...prevState,
         data: action.cards,
         selectedCard: action.cards[0],
         selectedCardIndex: 0,
       };
     case "REMOVE_CARD":
-      updatedData = prevState.data;
-      updatedData.splice(action.index, 1);
-      console.warn("AHAAM", updatedData);
-      return {
-        data: updatedData,
-        selectedCard: undefined,
-        selectedCardIndex: 0,
-      };
-    case "SET_CARD_EXECUTION_STATE": {
-      updatedData = { ...prevState };
-      console.warn("AQUI ", updatedData.data[action.index]);
-      updatedData.data[action.index].executionState = action.newExecState;
-      console.warn("AQUI ", updatedData);
+      const nextCard = prevState.data.length > 0 && action.index === 0 ? 1 : 0;
       return {
         ...prevState,
-        data: updatedData.data,
-        selectedCard: updatedData.data[action.index],
+        data: prevState.data.filter((item, index) => index !== action.index),
+        selectedCard: prevState.data[nextCard],
+        selectedCardIndex: 0,
+      };
+    case "SET_CARD_EXECUTION_STATE":
+      const data = prevState.data.map((item, index) => {
+        if (index !== action.index) {
+          return item;
+        }
+        return {
+          ...item,
+          executionState: action.newExecState,
+        };
+      });
+
+      return {
+        data,
+        selectedCard: data[action.index],
         selectedCardIndex: action.index,
       };
-    }
     case "SET_SELECTED_CARD":
       return {
         ...prevState,
