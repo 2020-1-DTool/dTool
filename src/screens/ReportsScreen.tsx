@@ -58,28 +58,33 @@ const ReportsScreen: React.FC = () => {
             showBarTops
           />
         </View>
-        <ButtonNavigation
-          title="Próximo"
-          iconName="ios-arrow-forward"
-          style={styles.icon}
-        />
-        <ButtonNavigation
-          title="Anterior"
-          iconName="ios-arrow-back"
-          style={styles.iconAnterior}
-        />
+        <View style={styles.base}>
+          <ButtonNavigation
+            title="Próximo"
+            iconName="ios-arrow-forward"
+            style={styles.icon}
+            onPress={() => console.warn("onPress1")}
+          />
+          <ButtonNavigation
+            title="Anterior"
+            iconName="ios-arrow-back"
+            style={styles.iconPrevious}
+            onPress={() => console.warn("onPress2")}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  base: {},
   icon: {
     alignSelf: "flex-end",
     color: colors.text.primary,
     fontSize: sizes.headline.h1,
   },
-  iconAnterior: {
+  iconPrevious: {
     alignSelf: "flex-start",
     color: colors.text.primary,
     fontSize: sizes.headline.h1,
