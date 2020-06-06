@@ -82,6 +82,12 @@ const CardDescription: React.FC<ScreenProps> = ({
     onPress1();
   };
 
+  const handlePress2 = () => {
+    if (isActive) toggle();
+    setTime(0);
+    onPress2();
+  };
+
   return (
     <Card containerStyle={styles.cardStyle}>
       <View style={styles.container}>
@@ -131,7 +137,7 @@ const CardDescription: React.FC<ScreenProps> = ({
         </View>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={onPress2}
+            onPress={handlePress2}
             action={button2}
             text={buttonText2}
           />
