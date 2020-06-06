@@ -24,7 +24,6 @@ const CardDescription: React.FC<ScreenProps> = ({
   onPress2,
   onPress3,
 }) => {
-  const [timestamp, setTimestamp] = useState("00:00:00");
   const [time, setTime] = useState(0);
   const [isActive, setIsActive] = useState(false);
   let button1 = "";
@@ -77,6 +76,16 @@ const CardDescription: React.FC<ScreenProps> = ({
 
   const navigation = useNavigation();
 
+  const getTime = () => {
+    const min = (time % 3600) / 60;
+    const hour = time / 3600;
+    const sec = time % 60;
+    const formatHour = Math.floor(hour).toString().padStart(2, "0");
+    const formatMin = Math.floor(min).toString().padStart(2, "0");
+    const formatSec = sec.toString().padStart(2, "0");
+    return `${formatHour}:${formatMin}:${formatSec}`;
+  };
+
   const handlePress1 = () => {
     toggle();
     onPress1();
@@ -110,7 +119,7 @@ const CardDescription: React.FC<ScreenProps> = ({
               style={styles.imagePadding}
               source={require("../assets/clock-carousel.png")}
             />
-            <Text style={styles.normalText}>{time}</Text>
+            <Text style={styles.normalText}>{getTime()}</Text>
           </View>
           <View style={styles.cardInfo}>
             <Image
