@@ -74,6 +74,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
     setSelectedCard(item);
     console.log(`Selected card ${index}`);
   };
+
   return (
     <SafeAreaView>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -84,7 +85,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
           />
           <CardDescription
             data={selectedCard || data[0]}
-            state="finished" /* TODO: essa info deve vir do @ongoingExecution na integração, para alternar de estado */
+            state="uninitialized" /* TODO: essa info deve vir do @ongoingExecution na integração, para alternar de estado */
             onPress1={() =>
               console.warn("onPress1")
             } /* TODO: cada callback destes, deve chamar as ações apropriadas */
