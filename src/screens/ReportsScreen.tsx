@@ -1,7 +1,9 @@
 import React from "react";
 import { BarChart } from "react-native-chart-kit";
 import { SafeAreaView, View, Text, Dimensions, StyleSheet } from "react-native";
+import { ButtonNavigation } from "../components";
 import colors from "../utils/colors";
+import sizes from "../utils/sizes";
 
 const ReportsScreen: React.FC = () => {
   const data = {
@@ -56,12 +58,32 @@ const ReportsScreen: React.FC = () => {
             showBarTops
           />
         </View>
+        <ButtonNavigation
+          title="Próximo"
+          iconName="ios-arrow-forward"
+          style={styles.icon}
+        />
+        <ButtonNavigation
+          title="Anterior"
+          iconName="ios-arrow-back"
+          style={styles.iconAnterior}
+        />
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  icon: {
+    alignSelf: "flex-end",
+    color: colors.text.primary,
+    fontSize: sizes.headline.h1,
+  },
+  iconAnterior: {
+    alignSelf: "flex-start",
+    color: colors.text.primary,
+    fontSize: sizes.headline.h1,
+  },
   text: {
     color: colors.text.primary,
     fontSize: 16,

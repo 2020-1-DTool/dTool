@@ -4,6 +4,7 @@ export { default as ButtonExecutions } from "./ButtonExecutions";
 export { default as ButtonPlus } from "./ButtonPlus";
 export { default as ButtonPrimary } from "./ButtonPrimary";
 export { default as ButtonSecundary } from "./ButtonSecundary";
+export { default as ButtonNavigation } from "./ButtonNavigation";
 export { default as ErrorText } from "./ErrorText";
 export { default as GenderSelect } from "./GenderSelect";
 export { default as HeaderButton } from "./HeaderButton";
