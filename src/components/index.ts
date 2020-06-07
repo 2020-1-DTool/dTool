@@ -14,3 +14,4 @@ export { default as InputText } from "./InputText";
 export { default as PatientHeader } from "./PatientHeader";
 export { default as TooltipIcon } from "./TooltipIcon";
 export { default as CardRow } from "./CardRow";
+export { default as Report } from "./Report";
