@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import {
   AppState,
   Dimensions,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   View,
+  AppStateEvent,
 } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -25,16 +27,27 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
   const activity = route?.params?.activityName;
   const patientId = route?.params?.patientId;
 
+  const handleAppstateFocus = () => console.warn("FOCUS");
+  const handleAppstateBlur = () => console.warn("BLUR");
+
   useEffect(() => {
-    console.warn("Teste");
-    AppState.addEventListener("change", handleAppstate); // Focus e blur só funcionam em Android
-
-    return () => {
-      AppState.removeEventListener("change", handleAppstate);
-    };
+    if (Platform.OS === "android") {
+      console.warn("Teste");
+      AppState.addEventListener("focus" as AppStateEvent, handleAppstateFocus); // Focus e blur só funcionam em Android
+      AppState.addEventListener("blur" as AppStateEvent, handleAppstateBlur);
+      return () => {
+        AppState.removeEventListener(
+          "focus" as AppStateEvent,
+          handleAppstateFocus
+        );
+        AppState.removeEventListener(
+          "blur" as AppStateEvent,
+          handleAppstateBlur
+        );
+      };
+    }
+    return undefined;
   }, []);
-
-  const handleAppstate = () => console.warn(AppState.currentState);
 
   useEffect(() => {
     (async () => {
