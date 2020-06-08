@@ -6,7 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   View,
-  AppStateEvent,
 } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -49,10 +48,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
     AppState.addEventListener("change", handleAppstateChange);
 
     return () => {
-      AppState.removeEventListener(
-        "change" as AppStateEvent,
-        handleAppstateChange
-      );
+      AppState.removeEventListener("change", handleAppstateChange);
     };
   }, []);
 
