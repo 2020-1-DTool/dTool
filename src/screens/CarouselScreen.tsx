@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   AppState,
   Dimensions,
-  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -31,38 +30,30 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
 
   // TODO: atualizar cronômetro visual ao voltar para o app
   // TODO: conferir se as funções de timerFunctions estão incrementando os segundos corretamente
-  const handleAppstateFocus = () => {
-    console.warn(
-      `Voltou ao app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
-    ); // TODO: remover após integração, apenas para teste
+  const handleAppstateChange = () => {
+    if (AppState.currentState === "active") {
+      console.warn(
+        `Voltou ao app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
+      ); // TODO: remover após integração, apenas para teste
 
-    // atualiza todos os tempos de execuções que estão em andamento
-    updateAllTimers();
+      // atualiza todos os tempos de execuções que estão em andamento
+      updateAllTimers();
+    } else if (AppState.currentState === "background")
+      console.warn(
+        `Saiu do app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
+      ); // TODO: remover após integração, apenas para teste
   };
-
-  const handleAppstateBlur = () =>
-    console.warn(
-      `Saiu do app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
-    ); // TODO: remover após integração, apenas para teste
 
   useEffect(() => {
     // Eventos de focus e blur só funcionam para Android
-    if (Platform.OS === "android") {
-      AppState.addEventListener("focus" as AppStateEvent, handleAppstateFocus);
-      AppState.addEventListener("blur" as AppStateEvent, handleAppstateBlur);
+    AppState.addEventListener("change", handleAppstateChange);
 
-      return () => {
-        AppState.removeEventListener(
-          "focus" as AppStateEvent,
-          handleAppstateFocus
-        );
-        AppState.removeEventListener(
-          "blur" as AppStateEvent,
-          handleAppstateBlur
-        );
-      };
-    }
-    return undefined;
+    return () => {
+      AppState.removeEventListener(
+        "change" as AppStateEvent,
+        handleAppstateChange
+      );
+    };
   }, []);
 
   useEffect(() => {
