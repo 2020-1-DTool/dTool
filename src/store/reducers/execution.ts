@@ -30,7 +30,6 @@ export default function execution(prevState = initialState, action: any) {
     case "REMOVE_CARD":
       const nextCard = prevState.data.length > 0 && action.index === 0 ? 1 : 0;
       return {
-        ...prevState,
         data: prevState.data.filter((item, index) => index !== action.index),
         selectedCard: prevState.data[nextCard],
         selectedCardIndex: 0,

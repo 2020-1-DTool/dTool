@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import {
   Dimensions,
   SafeAreaView,
@@ -13,13 +13,10 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import {
   createExecution,
-  timeToString,
   initializeExecution,
   cancelExecution,
   pauseExecution,
   finishExecution,
-  updateAll,
-  getExecutionStatus,
 } from "../services/timerFunction";
 
 import * as executionActions from "../store/actions/execution";
@@ -71,7 +68,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
       const currentTech = sessionCardResponse?.technology?.toString();
 
       let strComplete = await localStorage.getCards();
-      let complete: CardType[];
+      let complete: CardType[] | undefined;
       let newCard: CardType;
       let patient: any;
 
@@ -112,13 +109,29 @@ const CarouselScreen: React.FC<ScreenProps> = ({
           addCard(complete);
         }
       }
+
+      console.warn("COMPLETE", complete);
+      if (!complete) {
+        console.warn(`aquiiiii ${complete}`);
+        navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+      }
     })();
   }, []);
 
-  // TODO: redirecionar pra home quando os cards do carrosel forem todos removidos
-  // navigation.reset({ index: 0, routes: [{ name: "Home" }] });
-
   // TODO: Manter consistência dos estados, quando fechar o app com alguma execução em andamento
+
+  const removeCardActions = async () => {
+    // removendo os cards da lista do carrosel e do redux
+    await localStorage.removeCard(selectedCardIndex);
+    removeCard(selectedCardIndex);
+
+    // navega para home, se todos os cards em execução foram removidos ou finalizados
+    const cards = await localStorage.getCards();
+
+    if (cards.length === 0) {
+      navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+    }
+  };
 
   const handlePress1 = async () => {
     switch (data[selectedCardIndex].executionState) {
@@ -132,8 +145,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         break;
       case ExecutionStatus.Paused:
         await finishExecution(selectedCardIndex);
-        await localStorage.removeCard(selectedCardIndex);
-        removeCard(selectedCardIndex);
+        await removeCardActions();
         break;
       default:
         break;
@@ -144,8 +156,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
     if (data[selectedCardIndex].executionState !== ExecutionStatus.Paused) {
       const removed = await cancelExecution(selectedCardIndex);
       if (removed) {
-        await localStorage.removeCard(selectedCardIndex);
-        removeCard(selectedCardIndex);
+        await removeCardActions();
       }
     } else {
       await initializeExecution(selectedCardIndex);
@@ -156,8 +167,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   const handlePress3 = async () => {
     const removed = await cancelExecution(selectedCardIndex);
     if (removed) {
-      await localStorage.removeCard(selectedCardIndex);
-      removeCard(selectedCardIndex);
+      await removeCardActions();
     }
   };
 
