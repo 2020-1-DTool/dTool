@@ -14,6 +14,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import moment from "moment";
 import { Carousel, CardDescription } from "../containers";
 import * as localStorage from "../services/localStorage";
+import { updateAllTimers } from "../services/timerFunction";
 import { Card } from "../services/types";
 import colors from "../utils/colors";
 
@@ -28,15 +29,21 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
   const activity = route?.params?.activityName;
   const patientId = route?.params?.patientId;
 
-  // TODO: usar estes tempos para incrementar nos cronômetros já iniciados
-  const handleAppstateFocus = () =>
+  // TODO: atualizar cronômetro visual ao voltar para o app
+  // TODO: conferir se as funções de timerFunctions estão incrementando os segundos corretamente
+  const handleAppstateFocus = () => {
     console.warn(
       `Voltou ao app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
-    );
+    ); // TODO: remover após integração, apenas para teste
+
+    // atualiza todos os tempos de execuções que estão em andamento
+    updateAllTimers();
+  };
+
   const handleAppstateBlur = () =>
     console.warn(
       `Saiu do app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
-    );
+    ); // TODO: remover após integração, apenas para teste
 
   useEffect(() => {
     // Eventos de focus e blur só funcionam para Android
