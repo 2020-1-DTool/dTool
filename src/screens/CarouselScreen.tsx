@@ -44,7 +44,6 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
   };
 
   useEffect(() => {
-    // Eventos de focus e blur só funcionam para Android
     AppState.addEventListener("change", handleAppstateChange);
 
     return () => {
