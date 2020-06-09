@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import { Text, View, StyleSheet, Image } from "react-native";
 import { connect } from "react-redux";
 
@@ -22,6 +23,8 @@ const CardDescription: React.FC<ScreenProps> = ({
   onPress2,
   onPress3,
 }) => {
+  const [time, setTime] = useState(0);
+  const [isActive, setIsActive] = useState(false);
   let button1 = "";
   let button2 = "";
   let button3 = "";
@@ -54,7 +57,44 @@ const CardDescription: React.FC<ScreenProps> = ({
       break;
   }
 
+  useEffect(() => {
+    let interval: any = null;
+    if (isActive) {
+      interval = setInterval(() => {
+        setTime(() => time + 1);
+      }, 1000);
+    } else if (!isActive && time !== 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isActive, time]);
+
+  const toggle = () => {
+    setIsActive(!isActive);
+  };
+
   const navigation = useNavigation();
+
+  const getTime = () => {
+    const min = (time % 3600) / 60;
+    const hour = time / 3600;
+    const sec = time % 60;
+    const formatHour = Math.floor(hour).toString().padStart(2, "0");
+    const formatMin = Math.floor(min).toString().padStart(2, "0");
+    const formatSec = sec.toString().padStart(2, "0");
+    return `${formatHour}:${formatMin}:${formatSec}`;
+  };
+
+  const handlePress1 = () => {
+    toggle();
+    onPress1();
+  };
+
+  const handlePress2 = () => {
+    if (isActive) toggle();
+    setTime(0);
+    onPress2();
+  };
 
   return (
     <Card containerStyle={styles.cardStyle}>
@@ -78,7 +118,7 @@ const CardDescription: React.FC<ScreenProps> = ({
               style={styles.imagePadding}
               source={require("../assets/clock-carousel.png")}
             />
-            <Text style={styles.normalText}>{data?.time}</Text>
+            <Text style={styles.normalText}>{getTime()}</Text>
           </View>
           <View style={styles.cardInfo}>
             <Image
@@ -98,14 +138,14 @@ const CardDescription: React.FC<ScreenProps> = ({
         </View>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={onPress1}
+            onPress={handlePress1}
             action={button1}
             text={buttonText1}
           />
         </View>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={onPress2}
+            onPress={handlePress2}
             action={button2}
             text={buttonText2}
           />
