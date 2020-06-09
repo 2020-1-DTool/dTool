@@ -59,10 +59,6 @@ const Report: React.FC<Props> = ({ title }) => {
 };
 
 const styles = StyleSheet.create({
-  // eslint-disable-next-line react-native/no-unused-styles
-  coitaner: {
-    minHeight: Dimensions.get("window").height,
-  },
   text: {
     fontSize: sizes.buttonText.main,
     textAlign: "center",

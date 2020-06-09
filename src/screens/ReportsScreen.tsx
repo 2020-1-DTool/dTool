@@ -18,7 +18,7 @@ const ReportsScreen: React.FC = () => {
           <Text style={styles.text}>Atividades mais frequentes:</Text>
         </View>
         <Report title="Medir pressão" />
-        <View style={styles.base}>
+        <View>
           <ButtonNavigation
             title="Próximo"
             iconName="ios-arrow-forward"
@@ -38,11 +38,11 @@ const ReportsScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  base: {},
   icon: {
     alignSelf: "flex-end",
     color: colors.text.primary,
     fontSize: sizes.headline.h1,
+    position: "absolute",
   },
   iconPrevious: {
     alignSelf: "flex-start",
