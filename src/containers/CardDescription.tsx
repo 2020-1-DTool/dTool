@@ -28,7 +28,7 @@ const CardDescription: React.FC<ScreenProps> = ({
   let buttonText1 = "";
   let buttonText2 = "";
   let buttonText3 = "";
-  console.warn("DESCRIPTION", data);
+
   switch (data?.executionState) {
     case ExecutionStatus.Uninitialized:
       button1 = "start";

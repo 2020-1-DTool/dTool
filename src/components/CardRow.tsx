@@ -37,7 +37,6 @@ const CardRow: React.FC<ScreenProps> = ({
     toggleCard(item, index);
   };
 
-  // TODO: manter consistência do estado quando adiciona nova atividade ou fecha o app
   const getExecutionState = (state: ExecutionStatus) => {
     switch (state) {
       case ExecutionStatus.Uninitialized:

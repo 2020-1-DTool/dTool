@@ -110,18 +110,22 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         }
       }
 
-      console.warn("COMPLETE", complete);
       if (!complete) {
-        console.warn(`aquiiiii ${complete}`);
         navigation.reset({ index: 0, routes: [{ name: "Home" }] });
       }
     })();
   }, []);
 
-  // TODO: Manter consistência dos estados, quando fechar o app com alguma execução em andamento
+  const updateCardExecutionState = async (
+    newExecutionState: ExecutionStatus
+  ) => {
+    const updatedCard = data[selectedCardIndex];
+    updatedCard.executionState = newExecutionState;
+    await localStorage.setCard(updatedCard, selectedCardIndex);
+  };
 
   const removeCardActions = async () => {
-    // removendo os cards da lista do carrosel e do redux
+    // removendo os cards da lista do carrosel e do redux state
     await localStorage.removeCard(selectedCardIndex);
     removeCard(selectedCardIndex);
 
@@ -137,10 +141,12 @@ const CarouselScreen: React.FC<ScreenProps> = ({
     switch (data[selectedCardIndex].executionState) {
       case ExecutionStatus.Uninitialized:
         await initializeExecution(selectedCardIndex);
+        await updateCardExecutionState(ExecutionStatus.Initialized);
         setCardExecutionSate(ExecutionStatus.Initialized, selectedCardIndex);
         break;
       case ExecutionStatus.Initialized:
         await pauseExecution(selectedCardIndex);
+        await updateCardExecutionState(ExecutionStatus.Paused);
         setCardExecutionSate(ExecutionStatus.Paused, selectedCardIndex);
         break;
       case ExecutionStatus.Paused:
@@ -155,20 +161,17 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   const handlePress2 = async () => {
     if (data[selectedCardIndex].executionState !== ExecutionStatus.Paused) {
       const removed = await cancelExecution(selectedCardIndex);
-      if (removed) {
-        await removeCardActions();
-      }
+      if (removed) await removeCardActions();
     } else {
       await initializeExecution(selectedCardIndex);
+      await updateCardExecutionState(ExecutionStatus.Initialized);
       setCardExecutionSate(ExecutionStatus.Initialized, selectedCardIndex);
     }
   };
 
   const handlePress3 = async () => {
     const removed = await cancelExecution(selectedCardIndex);
-    if (removed) {
-      await removeCardActions();
-    }
+    if (removed) await removeCardActions();
   };
 
   return (
