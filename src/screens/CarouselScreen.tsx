@@ -1,5 +1,6 @@
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import {
+  AppState,
   Dimensions,
   SafeAreaView,
   ScrollView,
@@ -10,6 +11,7 @@ import {
 import { connect } from "react-redux";
 
 import { StackNavigationProp } from "@react-navigation/stack";
+import moment from "moment";
 
 import {
   createExecution,
@@ -17,6 +19,7 @@ import {
   cancelExecution,
   pauseExecution,
   finishExecution,
+  updateAllTimers,
 } from "../services/timerFunction";
 
 import * as executionActions from "../store/actions/execution";
@@ -27,6 +30,7 @@ import {
   ExecutionStatus,
   CardExecutionType,
 } from "../services/types";
+
 import colors from "../utils/colors";
 
 export interface ScreenProps {
@@ -57,6 +61,30 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   const activity = route?.params?.activityName;
   const activityId = route?.params?.activityId;
   const patientId = route?.params?.patientId;
+
+  // TODO: atualizar cronômetro visual ao voltar para o app
+  // TODO: conferir se as funções de timerFunctions estão incrementando os segundos corretamente
+  const handleAppstateChange = () => {
+    if (AppState.currentState === "active") {
+      console.warn(
+        `Voltou ao app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
+      ); // TODO: remover após integração, apenas para teste
+
+      // atualiza todos os tempos de execuções que estão em andamento
+      updateAllTimers();
+    } else if (AppState.currentState === "background")
+      console.warn(
+        `Saiu do app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
+      ); // TODO: remover após integração, apenas para teste
+  };
+
+  useEffect(() => {
+    AppState.addEventListener("change", handleAppstateChange);
+
+    return () => {
+      AppState.removeEventListener("change", handleAppstateChange);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     (async () => {
