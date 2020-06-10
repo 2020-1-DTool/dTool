@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  AppState,
   Dimensions,
   SafeAreaView,
   ScrollView,
@@ -8,8 +9,10 @@ import {
 } from "react-native";
 
 import { StackNavigationProp } from "@react-navigation/stack";
+import moment from "moment";
 import { Carousel, CardDescription } from "../containers";
 import * as localStorage from "../services/localStorage";
+import { updateAllTimers } from "../services/timerFunction";
 import { Card } from "../services/types";
 import colors from "../utils/colors";
 
@@ -23,6 +26,30 @@ const CarouselScreen: React.FC<ScreenProps> = ({ route }) => {
   const [selectedCard, setSelectedCard] = useState(data[0] as Card);
   const activity = route?.params?.activityName;
   const patientId = route?.params?.patientId;
+
+  // TODO: atualizar cronômetro visual ao voltar para o app
+  // TODO: conferir se as funções de timerFunctions estão incrementando os segundos corretamente
+  const handleAppstateChange = () => {
+    if (AppState.currentState === "active") {
+      console.warn(
+        `Voltou ao app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
+      ); // TODO: remover após integração, apenas para teste
+
+      // atualiza todos os tempos de execuções que estão em andamento
+      updateAllTimers();
+    } else if (AppState.currentState === "background")
+      console.warn(
+        `Saiu do app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
+      ); // TODO: remover após integração, apenas para teste
+  };
+
+  useEffect(() => {
+    AppState.addEventListener("change", handleAppstateChange);
+
+    return () => {
+      AppState.removeEventListener("change", handleAppstateChange);
+    };
+  }, []);
 
   useEffect(() => {
     (async () => {
