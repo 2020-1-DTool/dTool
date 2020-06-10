@@ -9,7 +9,7 @@ import {
   cancelExecution,
   pauseExecution,
   finishExecution,
-  updateAll,
+  updateAllTimers,
 } from "../services/timerFunction";
 import { ButtonPrimary, InputText, ButtonExecutions } from "../components";
 
@@ -50,9 +50,9 @@ const EmptyScreen: React.FC<ScreenProps> = () => {
           }} // remover modificação futuramente, apenas para testes
         />
         <ButtonPrimary
-          title="UpdateAll"
+          title="updateAllTimers"
           onPress={() => {
-            updateAll();
+            updateAllTimers();
           }} // remover modificação futuramente, apenas para testes
         />
         <ButtonPrimary
