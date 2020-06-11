@@ -15,7 +15,7 @@ import * as localStorage from "../services/localStorage";
 import colors from "../utils/colors";
 import { WarningBox } from "../containers";
 import { ButtonPrimary, ButtonSecundary } from "../components";
-import { syncExecutions } from "../services/appService";
+import { downloadReport, syncExecutions } from "../services/appService";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -97,6 +97,12 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
     } else navigation.navigate("ListTechnology");
   };
 
+  const secondaryButtonAction = async () => {
+    if (permission === "time-tracking") {
+      console.log("Ir para tela de gráficos.");
+    } else await downloadReport();
+  };
+
   return (
     <SafeAreaView>
       <ScrollView
@@ -148,7 +154,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
                   ? "Consultar Relatórios"
                   : "Exportar Relatório"
               }
-              onPress={() => "nothingyet"}
+              onPress={secondaryButtonAction}
             />
           </View>
           {pendingExecs && <WarningBox handleBack={handleBack} />}
