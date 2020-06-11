@@ -4,6 +4,7 @@ import {
   clear,
   getPreferences,
   getAuth,
+  getSession,
   setAccessCode,
   saveData,
   getCards,
@@ -188,6 +189,28 @@ const uploadExecutions = async (): Promise<void> => {
     // invalid token
     if (error.response?.status === 401) {
       throw new Error("auth");
+    }
+
+    // network error
+    throw new Error("network");
+  }
+};
+/**
+ * Faz o download do arquivo Excel da tecnologia atual para o celular.
+ *
+ * Erros lançados:
+ * - `techID`: ID inválido;
+ * - `network`: erro de rede.
+ */
+export const downloadReport = async (): Promise<void> => {
+  try {
+    const session = await getSession();
+    const technologyId = session.technology;
+    const response = await api.post("/reports/complete", { technologyId });
+  } catch (error) {
+    // invalid ID
+    if (error.response?.status === 400) {
+      throw new Error("techID");
     }
 
     // network error
