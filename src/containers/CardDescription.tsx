@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from "react";
 
 import { Text, View, StyleSheet, Image } from "react-native";
+import { connect } from "react-redux";
 
 import { useNavigation } from "@react-navigation/native";
 import { Card } from "react-native-elements";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 import { ButtonExecutions, ButtonPrimary } from "../components";
-import { Card as CardType } from "../services/types";
+import { Card as CardType, ExecutionStatus } from "../services/types";
 
 export interface ScreenProps {
   data?: CardType;
-  state: "uninitialized" | "initialized" | "finished";
   onPress1: () => void;
   onPress2: () => void;
   onPress3?: () => void;
 }
 
 const CardDescription: React.FC<ScreenProps> = ({
-  state,
   data,
   onPress1,
   onPress2,
@@ -33,20 +32,20 @@ const CardDescription: React.FC<ScreenProps> = ({
   let buttonText2 = "";
   let buttonText3 = "";
 
-  switch (state) {
-    case "uninitialized":
+  switch (data?.executionState) {
+    case ExecutionStatus.Uninitialized:
       button1 = "start";
       button2 = "cancel";
       buttonText1 = "INICIAR";
       buttonText2 = "REMOVER";
       break;
-    case "initialized":
+    case ExecutionStatus.Initialized:
       button1 = "stop";
       button2 = "cancel";
       buttonText1 = "PARAR";
       buttonText2 = "CANCELAR";
       break;
-    case "finished":
+    case ExecutionStatus.Paused:
       button1 = "finish";
       button2 = "restart";
       button3 = "cancel";
@@ -109,10 +108,10 @@ const CardDescription: React.FC<ScreenProps> = ({
               style={styles.imagePadding}
               source={require("../assets/profile-carousel.png")}
             />
-            <Text style={styles.normalText}>{data?.patient.name}</Text>
+            <Text style={styles.normalText}>{data?.patient?.name}</Text>
             <Text
               style={styles.patientSubtitle}
-            >{` ${data?.patient.id} | ${data?.patient.sex}`}</Text>
+            >{` ${data?.patient?.id} | ${data?.patient?.sex}`}</Text>
           </View>
           <View style={styles.cardInfo}>
             <Image
@@ -215,4 +214,8 @@ let styles = StyleSheet.create({
   },
 });
 
-export default CardDescription;
+const mapStateToProps = (state: { execution: { selectedCard: CardType } }) => ({
+  data: state.execution.selectedCard,
+});
+
+export default connect(mapStateToProps)(CardDescription);
