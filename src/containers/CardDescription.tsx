@@ -91,8 +91,7 @@ const CardDescription: React.FC<ScreenProps> = ({
   };
 
   const handlePress2 = () => {
-    if (isActive) toggle();
-    setTime(0);
+    if (!isActive) toggle();
     onPress2();
   };
 
