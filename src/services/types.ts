@@ -103,3 +103,20 @@ export interface Technology {
   name: string;
   activities: Activity[];
 }
+
+export interface Reports {
+  activityId: number;
+  activity: string;
+  roleID: number;
+  role: string;
+  minimumDuration: number;
+  medianDuration: number;
+  maximumDuration: number;
+  lastUpdate: string;
+}
+
+export interface Metrics {
+  minimumDuration: number;
+  medianDuration: number;
+  maximumDuration: number;
+}

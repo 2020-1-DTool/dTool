@@ -218,3 +218,9 @@ const authenticate = async () => {
     throw new Error("network");
   }
 };
+
+// pegar as informações das metricas do backend
+// const getReports = async () => {
+// são os id
+//  const result = await api.post("/simple", { id_technology, id_professional });
+// }
