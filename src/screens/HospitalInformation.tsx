@@ -26,6 +26,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
   const [hospitalName, setHospitalName] = useState("Hospital não nomeado");
   const [permission, setPermission] = useState("");
   const [pendingExecs, setPendingExecs] = useState(false);
+  const [isLoadingReport, setIsLoadingReport] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -100,7 +101,19 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
   const secondaryButtonAction = async () => {
     if (permission === "time-tracking") {
       console.log("Ir para tela de gráficos.");
-    } else await downloadReport();
+    } else {
+      setIsLoadingReport(true);
+      try {
+        await downloadReport();
+      } catch (error) {
+        Alert.alert(
+          "Falha ao baixar relatório",
+          "Tente novamente mais tarde.",
+          [{ text: "OK", style: "default" }]
+        );
+      }
+      setIsLoadingReport(false);
+    }
   };
 
   return (
@@ -144,6 +157,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
             }
           >
             <ButtonSecundary
+              disabled={isLoadingReport}
               style={
                 pendingExecs === true
                   ? styles.variableButtonNoPad

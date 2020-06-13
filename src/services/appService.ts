@@ -6,7 +6,6 @@ import {
   clear,
   getPreferences,
   getAuth,
-  getSession,
   setAccessCode,
   saveData,
   getCards,
