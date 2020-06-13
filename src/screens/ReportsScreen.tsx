@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, StyleSheet } from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Dimensions } from "react-native";
 import { Metrics, Reports } from "src/services/types";
 import { ButtonNavigation, Report } from "../components";
 import colors from "../utils/colors";
@@ -7,6 +7,7 @@ import sizes from "../utils/sizes";
 
 const ReportsScreen: React.FC = () => {
   const [data, setData] = useState([] as Metrics[]);
+  const [index, setIndex] = useState(0 as number);
 
   useEffect(() => {
     (async () => {
@@ -52,6 +53,23 @@ const ReportsScreen: React.FC = () => {
       console.log(data);
     })();
   }, []);
+
+  const handlPressPrevious = () => {
+    if (index === 0) {
+      setIndex(data.length - 1);
+    } else {
+      setIndex(index - 1);
+    }
+  };
+
+  const handlPressNext = () => {
+    if (index === data.length - 1) {
+      setIndex(0);
+    } else {
+      setIndex(index + 1);
+    }
+  };
+
   return (
     <SafeAreaView>
       <View>
@@ -65,18 +83,18 @@ const ReportsScreen: React.FC = () => {
           <Text style={styles.text}>Atividades mais frequentes:</Text>
         </View>
         <Report title="Medir pressão" />
-        <View>
-          <ButtonNavigation
-            title="Próximo"
-            iconName="ios-arrow-forward"
-            style={styles.icon}
-            onPress={() => console.warn("onPress1")}
-          />
+        <View style={styles.body}>
           <ButtonNavigation
             title="Anterior"
             iconName="ios-arrow-back"
             style={styles.iconPrevious}
-            onPress={() => console.warn("onPress2")}
+            onPress={handlPressPrevious}
+          />
+          <ButtonNavigation
+            title="Próximo"
+            iconName="ios-arrow-forward"
+            style={styles.icon}
+            onPress={handlPressNext}
           />
         </View>
       </View>
@@ -85,11 +103,13 @@ const ReportsScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  body: {
+    minHeight: Dimensions.get("window").height,
+  },
   icon: {
     alignSelf: "flex-end",
     color: colors.text.primary,
     fontSize: sizes.headline.h1,
-    position: "absolute",
   },
   iconPrevious: {
     alignSelf: "flex-start",
