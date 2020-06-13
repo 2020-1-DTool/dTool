@@ -1,6 +1,7 @@
 import { getUniqueId } from "react-native-device-info";
 import axios from "axios";
 import RNFS from "react-native-fs";
+import Share from "react-native-share";
 import {
   clear,
   getPreferences,
@@ -209,7 +210,8 @@ export const downloadReport = async (): Promise<void> => {
   try {
     const { code, token } = await getAuth();
     const url = `${api.defaults.baseURL}/reports/complete`;
-    const localFile = `${RNFS.DocumentDirectoryPath}/Relatório dTool - ${code}.xlsx`;
+    const filename = `Relatório dTool - ${code}.xlsx`;
+    const localFile = `${RNFS.DocumentDirectoryPath}/${filename}`;
 
     const { promise } = RNFS.downloadFile({
       fromUrl: url,
@@ -218,6 +220,14 @@ export const downloadReport = async (): Promise<void> => {
     });
 
     await promise;
+
+    await Share.open({
+      url: `file://${localFile}`,
+      title: `Salvar relatório do hospital`,
+      failOnCancel: false,
+    });
+
+    await RNFS.unlink(localFile);
   } catch (error) {
     // invalid ID
     if (error.response?.status === 400) {
