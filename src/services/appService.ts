@@ -203,10 +203,10 @@ const uploadExecutions = async (): Promise<void> => {
  * - `network`: erro de rede.
  */
 export const downloadReport = async (): Promise<void> => {
+  await authenticate();
+
   try {
-    const session = await getSession();
-    const technologyId = session.technology;
-    const response = await api.post("/reports/complete", { technologyId });
+    const response = await api.get("/reports/complete");
   } catch (error) {
     // invalid ID
     if (error.response?.status === 400) {
@@ -231,7 +231,8 @@ const authenticate = async () => {
 
   try {
     const result = await api.post("/auth", { code });
-    axios.defaults.headers.commons.Authorization = `Bearer ${result.data.accessToken}`;
+    axios.defaults.headers.common.Authorization = `Bearer ${result.data.accessToken}`;
+    api.defaults.headers.common.Authorization = `Bearer ${result.data.accessToken}`;
     await saveData(result.data);
   } catch (error) {
     if (error.response?.status === 404) {
