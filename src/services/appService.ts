@@ -1,5 +1,6 @@
 import { getUniqueId } from "react-native-device-info";
 import axios from "axios";
+import RNFS from "react-native-fs";
 import {
   clear,
   getPreferences,
@@ -206,7 +207,17 @@ export const downloadReport = async (): Promise<void> => {
   await authenticate();
 
   try {
-    const response = await api.get("/reports/complete");
+    const { code, token } = await getAuth();
+    const url = `${api.defaults.baseURL}/reports/complete`;
+    const localFile = `${RNFS.DocumentDirectoryPath}/Relatório dTool - ${code}.xlsx`;
+
+    const { promise } = RNFS.downloadFile({
+      fromUrl: url,
+      toFile: localFile,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    await promise;
   } catch (error) {
     // invalid ID
     if (error.response?.status === 400) {
