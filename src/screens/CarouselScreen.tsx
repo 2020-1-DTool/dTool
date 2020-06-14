@@ -87,7 +87,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         activity,
         role: roleName,
         technology: currentTech,
-        time: 5,
+        time: 0,
         // ao inserir uma atividade nova, ela é sempre `uninitialized`
         executionState: ExecutionStatus.Uninitialized,
       };
@@ -120,28 +120,12 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   }, []);
 
   useEffect(() => {
-    let interval;
     console.warn("socorro");
-    interval = setInterval(() => {
-      setAllTimes();
-    }, 1000);
-
-    return clearInterval(interval);
+    const interval = setInterval(setAllTimes, 1000);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
-
-  /* useEffect(() => {
-    console.warn("socorro");
-    setInterval(
-      setTimeout(() => {
-        setAllTimes();
-      }, 50000)
-    );
-  }, []);
-
-  useEffect(() => {
-    clearTimeout(interval);
-    setInterval(0);
-  }, []); */
 
   const updateCardExecutionState = async (
     newExecutionState: ExecutionStatus
