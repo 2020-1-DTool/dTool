@@ -66,25 +66,6 @@ const CardDescription: React.FC<ScreenProps> = ({
       break;
   }
 
-  useEffect(() => {
-    let interval: any = null;
-    let currentTime = data?.time || 0;
-    if (isActive) {
-      if (data) {
-        currentTime = data?.time || 0;
-        const newTime = currentTime + 1;
-
-        interval = setInterval(() => {
-          setCardTime(newTime, selectedCardIndex);
-        }, 1000);
-      } else if (!isActive && currentTime !== 0) {
-        clearInterval(interval);
-      }
-    }
-
-    return () => clearInterval(interval);
-  }, [isActive, data?.time]);
-
   const toggle = () => {
     setActive(!isActive, selectedCardIndex);
     // setIsActive(!isActive);
@@ -94,7 +75,7 @@ const CardDescription: React.FC<ScreenProps> = ({
 
   const getTime = () => {
     let currentTime = data?.time || 0;
-    console.warn("DATA TIME", data?.time);
+    // console.log("DATA TIME", data?.time);
     const min = (currentTime % 3600) / 60;
     const hour = currentTime / 3600;
     const sec = currentTime % 60;
@@ -146,6 +127,9 @@ const CardDescription: React.FC<ScreenProps> = ({
               source={require("../assets/profile-carousel.png")}
             />
             <Text style={styles.normalText}>{data?.role}</Text>
+            <Text style={styles.normalText}>
+              {isActive && "isActive = TRUE"}
+            </Text>
           </View>
         </View>
       </View>
@@ -161,6 +145,7 @@ const CardDescription: React.FC<ScreenProps> = ({
             onPress={() => handlePress1()}
             action={button1}
             text={buttonText1}
+            disabled={data?.executionState === ExecutionStatus.Paused} // tirar isso depois
           />
         </View>
         <View style={styles.buttonsCardDescription}>

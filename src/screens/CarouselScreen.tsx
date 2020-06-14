@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   Dimensions,
   SafeAreaView,
@@ -36,7 +36,7 @@ export interface ScreenProps {
   removeCard: (index: number) => void;
   selectedCardIndex: number;
   setCardExecutionState: (newCardExec: ExecutionStatus, index: number) => void;
-  setCardTime: (time: number, index: number) => void;
+  setAllTimes: () => void;
   route?: {
     params: {
       patientId: string;
@@ -53,7 +53,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   removeCard,
   setCardExecutionState,
   selectedCardIndex,
-  setCardTime,
+  setAllTimes,
   route,
 }) => {
   const activity = route?.params?.activityName;
@@ -119,6 +119,30 @@ const CarouselScreen: React.FC<ScreenProps> = ({
     })();
   }, []);
 
+  useEffect(() => {
+    let interval;
+    console.warn("socorro");
+    interval = setInterval(() => {
+      setAllTimes();
+    }, 1000);
+
+    return clearInterval(interval);
+  }, []);
+
+  /* useEffect(() => {
+    console.warn("socorro");
+    setInterval(
+      setTimeout(() => {
+        setAllTimes();
+      }, 50000)
+    );
+  }, []);
+
+  useEffect(() => {
+    clearTimeout(interval);
+    setInterval(0);
+  }, []); */
+
   const updateCardExecutionState = async (
     newExecutionState: ExecutionStatus
   ) => {
@@ -152,12 +176,12 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         await pauseExecution(selectedCardIndex);
         await updateCardExecutionState(ExecutionStatus.Paused);
         setCardExecutionState(ExecutionStatus.Paused, selectedCardIndex);
-        setCardTime(time, selectedCardIndex);
+        // setCardTime(time, selectedCardIndex);
         console.warn("SELECTED CARD INDEX", selectedCardIndex);
         break;
       case ExecutionStatus.Paused:
         await finishExecution(selectedCardIndex);
-        setCardTime(time, selectedCardIndex);
+        // setCardTime(time, selectedCardIndex);
         await removeCardActions();
         break;
       default:
@@ -173,7 +197,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
       await initializeExecution(selectedCardIndex);
       await updateCardExecutionState(ExecutionStatus.Initialized);
       setCardExecutionState(ExecutionStatus.Initialized, selectedCardIndex);
-      setCardTime(time, selectedCardIndex);
+      // setCardTime(time, selectedCardIndex);
     }
   };
 
@@ -226,8 +250,7 @@ const mapDispatchToProps = (
   removeCard: (index: number) => dispatch(executionActions.removeCard(index)),
   setCardExecutionState: (newExecState: ExecutionStatus, index: number) =>
     dispatch(executionActions.setCardExecutionState(newExecState, index)),
-  setCardTime: (time: number, index: number) =>
-    dispatch(executionActions.setCardTime(time, index)),
+  setAllTimes: () => dispatch(executionActions.setAllTimes()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CarouselScreen);

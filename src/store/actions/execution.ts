@@ -11,16 +11,9 @@ export function addCard(cards: CardType[]) {
   };
 }
 
-/**
- * Seta o tempo percorrido no cronômetro visual
- * @param time Tempo atualizado do cronômetro
- * @param index Índice do card a ser alterado
- */
-export function setCardTime(time: number, index: number) {
+export function setAllTimes() {
   return {
-    type: "UPDATE_TIME",
-    time,
-    index,
+    type: "UPDATE_ALL_TIMES",
   };
 }
 

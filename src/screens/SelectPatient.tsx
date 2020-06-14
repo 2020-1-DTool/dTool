@@ -22,9 +22,7 @@ const handleChange = async (
 const SelectPatient: React.FC<ScreenProps> = ({ navigation }) => (
   <SafeAreaView>
     <View style={styles.body}>
-      <BarcodeCamera onChange={(barcode) => handleChange(barcode, navigation)}>
-        <ButtonPlus onPress={() => navigation.navigate("AddPatient")} />
-      </BarcodeCamera>
+      <ButtonPlus onPress={() => navigation.navigate("AddPatient")} />
     </View>
   </SafeAreaView>
 );

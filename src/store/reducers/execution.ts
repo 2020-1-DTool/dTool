@@ -5,7 +5,7 @@
  * que participam da execução de atividades.
  */
 
-import { CarouselType } from "src/services/types";
+import { CarouselType, ExecutionStatus } from "../../services/types";
 
 const initialState: CarouselType = {
   selectedCard: undefined,
@@ -22,22 +22,20 @@ export default function execution(prevState = initialState, action: any) {
         selectedCard: action.cards[0],
         selectedCardIndex: 0,
       };
-    case "UPDATE_TIME":
-      data = prevState.data.map((item, index) => {
-        console.log(`TIME ${action.time} - NO INDEX: ${index}`);
-        if (index !== action.index) {
-          return item;
+    case "UPDATE_ALL_TIMES":
+      const dataTime = prevState.data.map((item) => {
+        if (item.executionState === ExecutionStatus.Initialized) {
+          console.log("time", (item?.time || 0) + 1);
+          return { ...item, time: (item?.time || 0) + 1 };
         }
-        return {
-          ...item,
-          time: action.time,
-        };
+        return item;
       });
 
+      console.log("DATA", dataTime);
+
       return {
-        data,
-        selectedCard: data[action.index],
-        selectedCardIndex: action.index,
+        ...prevState,
+        data: dataTime,
       };
     case "REMOVE_CARD":
       const nextCard = prevState.data.length > 0 && action.index === 0 ? 1 : 0;
@@ -47,10 +45,11 @@ export default function execution(prevState = initialState, action: any) {
         selectedCardIndex: 0,
       };
     case "SET_ACTIVE":
-      data = prevState.data.map((item, index) => {
+      const dataActive = prevState.data.map((item, index) => {
         if (index !== action.index) {
           return item;
         }
+        console.log("isActive: atual - novo", item.isActive, action.isActive);
         return {
           ...item,
           isActive: action.isActive,
@@ -58,8 +57,8 @@ export default function execution(prevState = initialState, action: any) {
       });
 
       return {
-        data,
-        selectedCard: data[action.index],
+        data: dataActive,
+        selectedCard: dataActive[action.index],
         selectedCardIndex: action.index,
       };
     case "SET_CARD_EXECUTION_STATE":
