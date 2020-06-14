@@ -20,17 +20,17 @@ const ButtonNavigation: React.FC<Props> = ({ type, ...props }) => {
     <TouchableOpacity style={styles.container} {...props}>
       <View style={styles.content}>
         {type === "forward" && (
-          <Text style={styles.text}>
-            Próximo&nbsp;&nbsp;
+          <>
+            <Text style={styles.text}>Próximo</Text>
             <Icon style={styles.icon} name="ios-arrow-forward" />
-          </Text>
+          </>
         )}
 
         {type === "back" && (
-          <Text style={styles.text}>
+          <>
             <Icon style={styles.icon} name="ios-arrow-back" />
-            &nbsp;&nbsp;Anterior
-          </Text>
+            <Text style={styles.text}>Anterior</Text>
+          </>
         )}
       </View>
     </TouchableOpacity>
@@ -39,7 +39,7 @@ const ButtonNavigation: React.FC<Props> = ({ type, ...props }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 8,
+    paddingVertical: 8,
   },
   content: {
     flexDirection: "row",
@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
   icon: {
     color: colors.text.primary,
     fontSize: sizes.headline.h1,
+    paddingHorizontal: 8,
   },
   text: {
     color: colors.text.primary,
