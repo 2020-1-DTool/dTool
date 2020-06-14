@@ -8,17 +8,23 @@ import {
   Text,
 } from "react-native";
 import sizes from "../utils/sizes";
+import { Metrics } from "../services/types";
 
 export interface Props extends TouchableOpacityProps {
   title: string;
+  metrics: Metrics;
 }
 
-const Report: React.FC<Props> = ({ title }) => {
+const Report: React.FC<Props> = ({ title, metrics }) => {
   const data = {
     labels: ["Menor", "Mediana", "Maior"],
     datasets: [
       {
-        data: [10, 15, 20],
+        data: [
+          metrics.minimumDuration,
+          metrics.medianDuration,
+          metrics.maximumDuration,
+        ],
       },
     ],
   };

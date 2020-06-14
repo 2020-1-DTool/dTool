@@ -103,7 +103,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
       if (role) {
         navigation.navigate("ReportsScreen");
       } else {
-        navigation.navigate("ChooseRole"); // vai ter que ser melhorado isso aqui
+        navigation.navigate("ChooseRole");
       }
     } else "nothingyet"; // exportar relatorio xlsx
   };
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   imageTime: {
     alignItems: "flex-end",
-    elevation: 20,
+    // elevation: 20,
     justifyContent: "center",
     marginBottom: 15,
     marginTop: -35,

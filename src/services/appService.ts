@@ -11,7 +11,7 @@ import {
   resetFinishedExecutions,
 } from "./localStorage";
 import api from "./API";
-import { Permission } from "./types";
+import { Permission, Reports } from "./types";
 
 /**
  * Coordena operações complexas da aplicação (principalmente aquelas relacionadas
@@ -219,8 +219,21 @@ const authenticate = async () => {
   }
 };
 
-// pegar as informações das metricas do backend
-// const getReports = async () => {
-// são os id
-//  const result = await api.post("/simple", { id_technology, id_professional });
-// }
+/*
+ * Faz a requisição ao backend pelos dados para popular os gráficos da tela de Relatórios do App
+ */
+export const getReports = async (
+  technologyID: number,
+  roleID: number
+): Promise<Reports[]> => {
+  try {
+    return await api.post("/simple", { technologyID, roleID });
+  } catch (error) {
+    if (error.message === "auth") {
+      await authenticate();
+      return api.post("/simple", { technologyID, roleID });
+    }
+    // other errors should be handled by callers; rethrow
+    throw error;
+  }
+};

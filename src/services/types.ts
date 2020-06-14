@@ -105,7 +105,7 @@ export interface Technology {
 }
 
 export interface Reports {
-  activityId: number;
+  activityID: number;
   activity: string;
   roleID: number;
   role: string;
@@ -116,6 +116,7 @@ export interface Reports {
 }
 
 export interface Metrics {
+  activity: string;
   minimumDuration: number;
   medianDuration: number;
   maximumDuration: number;
