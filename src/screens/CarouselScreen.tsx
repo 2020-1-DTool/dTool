@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect } from "react";
 import {
+  AppState,
   Dimensions,
   SafeAreaView,
   ScrollView,
@@ -10,6 +11,7 @@ import {
 import { connect } from "react-redux";
 
 import { StackNavigationProp } from "@react-navigation/stack";
+import moment from "moment";
 
 import {
   createExecution,
@@ -17,6 +19,7 @@ import {
   cancelExecution,
   pauseExecution,
   finishExecution,
+  updateAllTimers,
 } from "../services/timerFunction";
 
 import * as executionActions from "../store/actions/execution";
@@ -59,6 +62,30 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   const activity = route?.params?.activityName;
   const activityId = route?.params?.activityId;
   const patientId = route?.params?.patientId;
+
+  // TODO: atualizar cronômetro visual ao voltar para o app
+  // TODO: conferir se as funções de timerFunctions estão incrementando os segundos corretamente
+  const handleAppstateChange = () => {
+    if (AppState.currentState === "active") {
+      console.warn(
+        `Voltou ao app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
+      ); // TODO: remover após integração, apenas para teste
+
+      // atualiza todos os tempos de execuções que estão em andamento
+      updateAllTimers();
+    } else if (AppState.currentState === "background")
+      console.warn(
+        `Saiu do app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
+      ); // TODO: remover após integração, apenas para teste
+  };
+
+  useEffect(() => {
+    AppState.addEventListener("change", handleAppstateChange);
+
+    return () => {
+      AppState.removeEventListener("change", handleAppstateChange);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     (async () => {
@@ -148,7 +175,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
     }
   };
 
-  const handlePress1 = async (time: number) => {
+  const handlePress1 = async () => {
     switch (data[selectedCardIndex].executionState) {
       case ExecutionStatus.Uninitialized:
         await initializeExecution(selectedCardIndex);
@@ -173,7 +200,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
     }
   };
 
-  const handlePress2 = async (time: number) => {
+  const handlePress2 = async () => {
     if (data[selectedCardIndex].executionState !== ExecutionStatus.Paused) {
       const removed = await cancelExecution(selectedCardIndex);
       if (removed) await removeCardActions();
@@ -196,9 +223,9 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         <View style={styles.body}>
           <Carousel />
           <CardDescription
-            onPress1={(time: number) => handlePress1(time)}
-            onPress2={(time: number) => handlePress2(time)}
-            onPress3={handlePress3}
+            onPress1={() => handlePress1()}
+            onPress2={() => handlePress2()}
+            onPress3={() => handlePress3()}
           />
         </View>
       </ScrollView>
@@ -227,7 +254,6 @@ const mapDispatchToProps = (
     cards?: CardType[];
     newExecState?: ExecutionStatus;
     index?: number;
-    time?: number;
   }) => any
 ) => ({
   addCard: (items: CardType[]) => dispatch(executionActions.addCard(items)),

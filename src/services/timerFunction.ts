@@ -173,28 +173,35 @@ export const finishExecution = async (index: number) => {
   return false;
 };
 
-/** Função responsável por atualizar contagem de toda a lista de execuções correntes.
- * Retorna false se não há execuções para serem atualizadas e true se há
+/** Função responsável por atualizar contagem de toda a lista de execuções em andamento.
+ *  Retorna `false` se não há execuções em andamento e `true` se há.
  */
-export const updateAll = async () => {
-  const strArray = await getOngoingExecutions();
-  if (!strArray || strArray.length === 0) {
+export const updateAllTimers = async () => {
+  let hasOngoingExecution = false;
+  let execution: OngoingExecution;
+
+  const executions: OngoingExecution[] = await getOngoingExecutions();
+  if (!executions || executions.length === 0) {
     console.warn("Não há execuções.");
-    return false;
+    return hasOngoingExecution;
   }
 
-  const arExecutions: OngoingExecution[] = strArray;
-  let execution: OngoingExecution;
-  let isOneRunning = false;
-  for (let i = 0; i < arExecutions.length; i++) {
-    execution = arExecutions[i];
-    if (execution.currentState === ExecutionStatus.Initialized) {
-      execution = addElapsedTime(execution);
-      isOneRunning = true;
+  executions.map((exec, i) => {
+    if (exec.currentState === ExecutionStatus.Initialized) {
+      hasOngoingExecution = true;
+
+      execution = addElapsedTime(exec);
       setOngoingExecution(execution, i);
+
+      // TODO: remover após a integração, só para teste
+      console.warn(
+        `✅ Index atualizado ${execution.elapsedTime} - index: ${i}`
+      );
     }
-  }
-  return isOneRunning;
+    return hasOngoingExecution;
+  });
+
+  return hasOngoingExecution;
 };
 
 /** Recebe tempo em segundos e devolve string formatada corretamente.

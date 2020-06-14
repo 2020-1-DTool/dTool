@@ -1,5 +1,7 @@
 import { getUniqueId } from "react-native-device-info";
 import axios from "axios";
+import RNFS from "react-native-fs";
+import Share from "react-native-share";
 import {
   clear,
   getPreferences,
@@ -194,6 +196,47 @@ const uploadExecutions = async (): Promise<void> => {
     throw new Error("network");
   }
 };
+/**
+ * Faz o download do arquivo Excel da tecnologia atual para o celular.
+ *
+ * Erros lançados:
+ * - `techID`: ID inválido;
+ * - `network`: erro de rede.
+ */
+export const downloadReport = async (): Promise<void> => {
+  await authenticate();
+
+  try {
+    const { code, token } = await getAuth();
+    const url = `${api.defaults.baseURL}/reports/complete`;
+    const filename = `Relatório dTool - ${code}.xlsx`;
+    const localFile = `${RNFS.DocumentDirectoryPath}/${filename}`;
+
+    const { promise } = RNFS.downloadFile({
+      fromUrl: url,
+      toFile: localFile,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    await promise;
+
+    await Share.open({
+      url: `file://${localFile}`,
+      title: `Salvar relatório do hospital`,
+      failOnCancel: false,
+    });
+
+    await RNFS.unlink(localFile);
+  } catch (error) {
+    // invalid ID
+    if (error.response?.status === 400) {
+      throw new Error("techID");
+    }
+
+    // network error
+    throw new Error("network");
+  }
+};
 
 /**
  * Faz a autenticação usando o código de acesso salvo local, atualizando os
@@ -208,7 +251,8 @@ const authenticate = async () => {
 
   try {
     const result = await api.post("/auth", { code });
-    axios.defaults.headers.commons.Authorization = `Bearer ${result.data.accessToken}`; // verificar se isso tá atualizado
+    axios.defaults.headers.common.Authorization = `Bearer ${result.data.accessToken}`;
+    api.defaults.headers.common.Authorization = `Bearer ${result.data.accessToken}`;
     await saveData(result.data);
   } catch (error) {
     if (error.response?.status === 404) {
