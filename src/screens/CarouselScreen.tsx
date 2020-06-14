@@ -35,7 +35,8 @@ export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
   removeCard: (index: number) => void;
   selectedCardIndex: number;
-  setCardExecutionSate: (newCardExec: ExecutionStatus, index: number) => void;
+  setCardExecutionState: (newCardExec: ExecutionStatus, index: number) => void;
+  setCardTime: (time: number, index: number) => void;
   route?: {
     params: {
       patientId: string;
@@ -50,8 +51,9 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   data,
   navigation,
   removeCard,
-  setCardExecutionSate,
+  setCardExecutionState,
   selectedCardIndex,
+  setCardTime,
   route,
 }) => {
   const activity = route?.params?.activityName;
@@ -80,11 +82,12 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         };
 
       newCard = {
+        isActive: false,
         patient,
         activity,
         role: roleName,
         technology: currentTech,
-        time: "00:00:00",
+        time: 5,
         // ao inserir uma atividade nova, ela é sempre `uninitialized`
         executionState: ExecutionStatus.Uninitialized,
       };
@@ -137,20 +140,24 @@ const CarouselScreen: React.FC<ScreenProps> = ({
     }
   };
 
-  const handlePress1 = async () => {
+  const handlePress1 = async (time: number) => {
     switch (data[selectedCardIndex].executionState) {
       case ExecutionStatus.Uninitialized:
         await initializeExecution(selectedCardIndex);
         await updateCardExecutionState(ExecutionStatus.Initialized);
-        setCardExecutionSate(ExecutionStatus.Initialized, selectedCardIndex);
+        setCardExecutionState(ExecutionStatus.Initialized, selectedCardIndex);
+        // o time já inicia zerado, então não é preciso fazer nada
         break;
       case ExecutionStatus.Initialized:
         await pauseExecution(selectedCardIndex);
         await updateCardExecutionState(ExecutionStatus.Paused);
-        setCardExecutionSate(ExecutionStatus.Paused, selectedCardIndex);
+        setCardExecutionState(ExecutionStatus.Paused, selectedCardIndex);
+        setCardTime(time, selectedCardIndex);
+        console.warn("SELECTED CARD INDEX", selectedCardIndex);
         break;
       case ExecutionStatus.Paused:
         await finishExecution(selectedCardIndex);
+        setCardTime(time, selectedCardIndex);
         await removeCardActions();
         break;
       default:
@@ -158,14 +165,15 @@ const CarouselScreen: React.FC<ScreenProps> = ({
     }
   };
 
-  const handlePress2 = async () => {
+  const handlePress2 = async (time: number) => {
     if (data[selectedCardIndex].executionState !== ExecutionStatus.Paused) {
       const removed = await cancelExecution(selectedCardIndex);
       if (removed) await removeCardActions();
     } else {
       await initializeExecution(selectedCardIndex);
       await updateCardExecutionState(ExecutionStatus.Initialized);
-      setCardExecutionSate(ExecutionStatus.Initialized, selectedCardIndex);
+      setCardExecutionState(ExecutionStatus.Initialized, selectedCardIndex);
+      setCardTime(time, selectedCardIndex);
     }
   };
 
@@ -180,9 +188,9 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         <View style={styles.body}>
           <Carousel />
           <CardDescription
-            onPress1={() => handlePress1()}
-            onPress2={() => handlePress2()}
-            onPress3={() => handlePress3()}
+            onPress1={(time: number) => handlePress1(time)}
+            onPress2={(time: number) => handlePress2(time)}
+            onPress3={handlePress3}
           />
         </View>
       </ScrollView>
@@ -211,12 +219,15 @@ const mapDispatchToProps = (
     cards?: CardType[];
     newExecState?: ExecutionStatus;
     index?: number;
+    time?: number;
   }) => any
 ) => ({
   addCard: (items: CardType[]) => dispatch(executionActions.addCard(items)),
   removeCard: (index: number) => dispatch(executionActions.removeCard(index)),
-  setCardExecutionSate: (newExecState: ExecutionStatus, index: number) =>
-    dispatch(executionActions.setCardExecutionSate(newExecState, index)),
+  setCardExecutionState: (newExecState: ExecutionStatus, index: number) =>
+    dispatch(executionActions.setCardExecutionState(newExecState, index)),
+  setCardTime: (time: number, index: number) =>
+    dispatch(executionActions.setCardTime(time, index)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CarouselScreen);

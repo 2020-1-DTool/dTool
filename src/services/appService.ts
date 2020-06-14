@@ -208,7 +208,7 @@ const authenticate = async () => {
 
   try {
     const result = await api.post("/auth", { code });
-    axios.defaults.headers.commons.Authorization = `Bearer ${result.data.accessToken}`;
+    axios.defaults.headers.commons.Authorization = `Bearer ${result.data.accessToken}`; // verificar se isso tá atualizado
     await saveData(result.data);
   } catch (error) {
     if (error.response?.status === 404) {

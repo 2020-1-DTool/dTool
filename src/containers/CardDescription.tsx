@@ -9,22 +9,31 @@ import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 import { ButtonExecutions, ButtonPrimary } from "../components";
 import { Card as CardType, ExecutionStatus } from "../services/types";
+import * as executionActions from "../store/actions/execution";
 
 export interface ScreenProps {
+  isActive?: boolean;
   data?: CardType;
-  onPress1: () => void;
-  onPress2: () => void;
+  onPress1: (time: number) => void;
+  onPress2: (time: number) => void;
   onPress3?: () => void;
+  setCardTime: (time: number, index: number) => void;
+  selectedCardIndex: number;
+  setActive: (isActive: boolean, index: number) => void;
 }
 
 const CardDescription: React.FC<ScreenProps> = ({
+  isActive,
   data,
   onPress1,
   onPress2,
   onPress3,
+  setCardTime,
+  selectedCardIndex,
+  setActive,
 }) => {
-  const [time, setTime] = useState(0);
-  const [isActive, setIsActive] = useState(false);
+  // const [time, setTime] = useState(data?.time || 0);
+  // const [isActive, setIsActive] = useState(false);
   let button1 = "";
   let button2 = "";
   let button3 = "";
@@ -59,26 +68,36 @@ const CardDescription: React.FC<ScreenProps> = ({
 
   useEffect(() => {
     let interval: any = null;
+    let currentTime = data?.time || 0;
     if (isActive) {
-      interval = setInterval(() => {
-        setTime(() => time + 1);
-      }, 1000);
-    } else if (!isActive && time !== 0) {
-      clearInterval(interval);
+      if (data) {
+        currentTime = data?.time || 0;
+        const newTime = currentTime + 1;
+
+        interval = setInterval(() => {
+          setCardTime(newTime, selectedCardIndex);
+        }, 1000);
+      } else if (!isActive && currentTime !== 0) {
+        clearInterval(interval);
+      }
     }
+
     return () => clearInterval(interval);
-  }, [isActive, time]);
+  }, [isActive, data?.time]);
 
   const toggle = () => {
-    setIsActive(!isActive);
+    setActive(!isActive, selectedCardIndex);
+    // setIsActive(!isActive);
   };
 
   const navigation = useNavigation();
 
   const getTime = () => {
-    const min = (time % 3600) / 60;
-    const hour = time / 3600;
-    const sec = time % 60;
+    let currentTime = data?.time || 0;
+    console.warn("DATA TIME", data?.time);
+    const min = (currentTime % 3600) / 60;
+    const hour = currentTime / 3600;
+    const sec = currentTime % 60;
     const formatHour = Math.floor(hour).toString().padStart(2, "0");
     const formatMin = Math.floor(min).toString().padStart(2, "0");
     const formatSec = sec.toString().padStart(2, "0");
@@ -86,14 +105,15 @@ const CardDescription: React.FC<ScreenProps> = ({
   };
 
   const handlePress1 = () => {
+    let currentTime = data?.time || 0;
     toggle();
-    onPress1();
+    onPress1(currentTime);
   };
 
   const handlePress2 = () => {
-    if (isActive) toggle();
-    setTime(0);
-    onPress2();
+    let currentTime = data?.time || 0;
+    if (!isActive && data?.executionState === ExecutionStatus.Paused) toggle();
+    onPress2(currentTime);
   };
 
   return (
@@ -138,14 +158,14 @@ const CardDescription: React.FC<ScreenProps> = ({
         </View>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={handlePress1}
+            onPress={() => handlePress1()}
             action={button1}
             text={buttonText1}
           />
         </View>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={handlePress2}
+            onPress={() => handlePress2()}
             action={button2}
             text={buttonText2}
           />
@@ -214,8 +234,30 @@ let styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state: { execution: { selectedCard: CardType } }) => ({
+const mapStateToProps = (state: {
+  execution: {
+    isActive: boolean;
+    selectedCard: CardType;
+    selectedCardIndex: number;
+  };
+}) => ({
   data: state.execution.selectedCard,
+  selectedCardIndex: state.execution.selectedCardIndex,
+  isActive: state.execution.selectedCard?.isActive,
 });
 
-export default connect(mapStateToProps)(CardDescription);
+const mapDispatchToProps = (
+  dispatch: (arg0: {
+    type: string;
+    isActive?: boolean;
+    index?: number;
+    time?: number;
+  }) => any
+) => ({
+  setActive: (isActive: boolean, index: number) =>
+    dispatch(executionActions.setActive(isActive, index)),
+  setCardTime: (time: number, index: number) =>
+    dispatch(executionActions.setCardTime(time, index)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CardDescription);
