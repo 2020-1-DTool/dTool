@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   imageTime: {
     alignItems: "flex-end",
-    // elevation: 20,
+    elevation: 20,
     justifyContent: "center",
     marginBottom: 15,
     marginTop: -35,

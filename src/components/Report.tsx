@@ -37,14 +37,8 @@ const Report: React.FC<Props> = ({ title, metrics }) => {
       <View>
         <BarChart
           data={data}
-          width={
-            Dimensions.get("window").width -
-            (Dimensions.get("window").width / 100) * 5
-          }
-          height={
-            Dimensions.get("window").height -
-            (Dimensions.get("window").height / 100) * 30
-          }
+          width={Dimensions.get("window").width}
+          height={Math.min(400, Dimensions.get("window").height * 0.7)}
           yAxisLabel=""
           yAxisSuffix="min"
           fromZero

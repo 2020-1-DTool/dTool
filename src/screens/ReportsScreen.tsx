@@ -79,69 +79,52 @@ const ReportsScreen: React.FC<ScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <View>
-          <View>
-            <Text style={styles.textSummary}>
-              Abaixo, é possível verificar algumas das métricas que já estão
-              sendo calculadas a partir das cronometragens efetuadas até o
-              momento.
-            </Text>
-          </View>
-          <View>
-            <Text style={styles.textTitle}>
-              Métricas de Tempo por Atividade:
-            </Text>
-            <Report
-              title={data ? data[index].activity : ""}
-              metrics={
-                data
-                  ? data[index]
-                  : {
-                      activity: "",
-                      minimumDuration: 1,
-                      medianDuration: 2,
-                      maximumDuration: 3,
-                    }
-              }
-            />
-            <ButtonNavigation
-              title="Anterior"
-              iconName="ios-arrow-back"
-              style={styles.iconPrevious}
-              onPress={handlePressPrevious}
-            />
-            <ButtonNavigation
-              title="Próximo"
-              iconName="ios-arrow-forward"
-              style={styles.icon}
-              onPress={handlePressNext}
-            />
-          </View>
-        </View>
-      </ScrollView>
+    <SafeAreaView style={styles.main}>
+      <Text style={styles.textSummary}>
+        Abaixo, é possível verificar algumas das métricas que já estão sendo
+        calculadas a partir das cronometragens efetuadas até o momento.
+      </Text>
+      <Text style={styles.textTitle}>Métricas de Tempo por Atividade:</Text>
+      <View style={styles.graph}>
+        <Report
+          title={data ? data[index].activity : ""}
+          metrics={
+            data
+              ? data[index]
+              : {
+                  activity: "",
+                  minimumDuration: 1,
+                  medianDuration: 2,
+                  maximumDuration: 3,
+                }
+          }
+        />
+      </View>
+      <View style={styles.navigation}>
+        <ButtonNavigation type="back" onPress={handlePressPrevious} />
+        <ButtonNavigation type="forward" onPress={handlePressNext} />
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  icon: {
-    alignSelf: "flex-end",
-    color: colors.text.primary,
-    fontSize: sizes.headline.h1,
-    paddingHorizontal: 8,
+  graph: {
+    flex: 1,
+    justifyContent: "space-around",
   },
-  iconPrevious: {
-    alignSelf: "flex-start",
-    color: colors.text.primary,
-    fontSize: sizes.headline.h1,
-    paddingHorizontal: 8,
+  main: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  navigation: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   textSummary: {
     color: colors.text.primary,
     fontSize: 16,
-    // fontWeight: "bold",
     paddingBottom: 10,
     paddingHorizontal: 8,
     paddingTop: 10,
