@@ -103,7 +103,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
       if (role) {
         navigation.navigate("ReportsScreen");
       } else {
-        navigation.navigate("ChooseRole");
+        navigation.navigate("ChooseRole", { isForReports: true });
       }
     } else "nothingyet"; // exportar relatorio xlsx
   };

@@ -233,6 +233,32 @@ export const getReports = async (
       await authenticate();
       return api.post("/simple", { technologyID, roleID });
     }
+    if (error.response?.status === 404) {
+      console.log("NAO TINHA METRICAS PRA CALCULAR");
+      const reports = [
+        {
+          activityID: 1,
+          activity: "Cirurgia",
+          roleID: 1,
+          role: "Medico",
+          minimumDuration: 2,
+          medianDuration: 5.666666666666667,
+          maximumDuration: 8,
+          lastUpdate: "2020-06-10T22:45:00.062Z",
+        },
+        {
+          activityID: 2,
+          activity: "RaioX",
+          roleID: 2,
+          role: "Medico",
+          minimumDuration: 3.3333333333333335,
+          medianDuration: 4.166666666666667,
+          maximumDuration: 5,
+          lastUpdate: "2020-06-10T22:45:00.053Z",
+        },
+      ] as Reports[];
+      return reports;
+    }
     // other errors should be handled by callers; rethrow
     throw error;
   }

@@ -41,8 +41,6 @@ const ChooseRole: React.FC<ScreenProps> = ({ navigation, route }) => {
 
   const handleListPress = async (index: number) => {
     await localStorage.saveRole(roles[index].id, roles[index].name, isChecked);
-    console.warn("route", route);
-    console.log(isForReports);
     if (isForReports) {
       navigation.navigate("ReportsScreen");
     } else {

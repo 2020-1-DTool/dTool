@@ -39,14 +39,15 @@ const Report: React.FC<Props> = ({ title, metrics }) => {
           data={data}
           width={
             Dimensions.get("window").width -
-            Dimensions.get("window").width / 100
+            (Dimensions.get("window").width / 100) * 5
           }
           height={
             Dimensions.get("window").height -
-            Dimensions.get("window").height / 3
+            (Dimensions.get("window").height / 100) * 30
           }
           yAxisLabel=""
           yAxisSuffix="min"
+          fromZero
           chartConfig={{
             backgroundColor: "#1CC910",
             backgroundGradientFrom: "#EFF3FF",
@@ -54,7 +55,8 @@ const Report: React.FC<Props> = ({ title, metrics }) => {
             color: (opacity = 1) => `rgba(0, 0, 156, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
             style: {
-              borderRadius: 16,
+              alignContent: "center",
+              alignItems: "center",
             },
           }}
           showBarTops

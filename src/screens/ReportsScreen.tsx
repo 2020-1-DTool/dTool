@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Metrics } from "../services/types";
 import { getSession, getPreferences } from "../services/localStorage";
@@ -13,7 +20,14 @@ export interface ScreenProps {
 }
 
 const ReportsScreen: React.FC<ScreenProps> = ({ navigation }) => {
-  const [data, setData] = useState([] as Metrics[]);
+  const [data, setData] = useState([
+    {
+      activity: "",
+      minimumDuration: 1,
+      medianDuration: 2,
+      maximumDuration: 3,
+    },
+  ] as Metrics[]);
   const [index, setIndex] = useState(0 as number);
 
   useEffect(() => {
@@ -24,22 +38,18 @@ const ReportsScreen: React.FC<ScreenProps> = ({ navigation }) => {
       if (!role || !technology) {
         const session = await getSession();
         if (!role) {
-          role = session.role;
+          let aux = session.role;
+          role = aux;
         }
         if (!technology) {
-          technology = session.technology;
+          let aux = session.technology;
+          technology = aux;
         }
         if (!role) {
           navigation.navigate("ChooseRole", { isForReports: true });
         }
-        if (!technology) {
-          navigation.navigate("ChooseTechnology");
-        }
       }
-      console.log(role); // TODO remover
-      console.log(technology); // TODO remover
       const reports = await getReports(technology, role);
-      console.log(reports); // TODO remover
       const metrics = reports.map((report) => {
         return {
           activity: report.activity,
@@ -47,7 +57,7 @@ const ReportsScreen: React.FC<ScreenProps> = ({ navigation }) => {
           medianDuration: report.medianDuration,
           maximumDuration: report.maximumDuration,
         };
-      });
+      }) as Metrics[];
       setData(metrics);
     })();
   }, []);
@@ -70,55 +80,80 @@ const ReportsScreen: React.FC<ScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView>
-      <View>
+      <ScrollView>
         <View>
-          <Text style={styles.text}>
-            Abaixo, é possível verificar algumas das métricas que já estão sendo
-            calculadas a partir das cronometragens efetuadas até o momento.
-          </Text>
+          <View>
+            <Text style={styles.textSummary}>
+              Abaixo, é possível verificar algumas das métricas que já estão
+              sendo calculadas a partir das cronometragens efetuadas até o
+              momento.
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.textTitle}>
+              Métricas de Tempo por Atividade:
+            </Text>
+            <Report
+              title={data ? data[index].activity : ""}
+              metrics={
+                data
+                  ? data[index]
+                  : {
+                      activity: "",
+                      minimumDuration: 1,
+                      medianDuration: 2,
+                      maximumDuration: 3,
+                    }
+              }
+            />
+            <ButtonNavigation
+              title="Anterior"
+              iconName="ios-arrow-back"
+              style={styles.iconPrevious}
+              onPress={handlePressPrevious}
+            />
+            <ButtonNavigation
+              title="Próximo"
+              iconName="ios-arrow-forward"
+              style={styles.icon}
+              onPress={handlePressNext}
+            />
+          </View>
         </View>
-        <View>
-          <Text style={styles.text}>Métricas por Atividade:</Text>
-        </View>
-        <Report title={data[index].activity} metrics={data[index]} />
-        <View style={styles.body}>
-          <ButtonNavigation
-            title="Anterior"
-            iconName="ios-arrow-back"
-            style={styles.iconPrevious}
-            onPress={handlePressPrevious}
-          />
-          <ButtonNavigation
-            title="Próximo"
-            iconName="ios-arrow-forward"
-            style={styles.icon}
-            onPress={handlePressNext}
-          />
-        </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  body: {
-    minHeight: Dimensions.get("window").height,
-  },
   icon: {
     alignSelf: "flex-end",
     color: colors.text.primary,
     fontSize: sizes.headline.h1,
+    paddingHorizontal: 8,
   },
   iconPrevious: {
     alignSelf: "flex-start",
     color: colors.text.primary,
     fontSize: sizes.headline.h1,
+    paddingHorizontal: 8,
   },
-  text: {
+  textSummary: {
+    color: colors.text.primary,
+    fontSize: 16,
+    // fontWeight: "bold",
+    paddingBottom: 10,
+    paddingHorizontal: 8,
+    paddingTop: 10,
+    textAlign: "justify",
+  },
+  textTitle: {
     color: colors.text.primary,
     fontSize: 16,
     fontWeight: "bold",
+    paddingBottom: 10,
     paddingHorizontal: 8,
+    paddingTop: 10,
     textAlign: "justify",
   },
 });
