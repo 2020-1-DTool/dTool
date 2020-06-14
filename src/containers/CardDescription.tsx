@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Text, View, StyleSheet, Image } from "react-native";
 import { connect } from "react-redux";
@@ -28,12 +28,8 @@ const CardDescription: React.FC<ScreenProps> = ({
   onPress1,
   onPress2,
   onPress3,
-  setCardTime,
   selectedCardIndex,
-  setActive,
 }) => {
-  // const [time, setTime] = useState(data?.time || 0);
-  // const [isActive, setIsActive] = useState(false);
   let button1 = "";
   let button2 = "";
   let button3 = "";
@@ -66,11 +62,6 @@ const CardDescription: React.FC<ScreenProps> = ({
       break;
   }
 
-  const toggle = () => {
-    setActive(!isActive, selectedCardIndex);
-    // setIsActive(!isActive);
-  };
-
   const navigation = useNavigation();
 
   const getTime = () => {
@@ -87,13 +78,11 @@ const CardDescription: React.FC<ScreenProps> = ({
 
   const handlePress1 = () => {
     let currentTime = data?.time || 0;
-    toggle();
     onPress1(currentTime);
   };
 
   const handlePress2 = () => {
     let currentTime = data?.time || 0;
-    if (!isActive && data?.executionState === ExecutionStatus.Paused) toggle();
     onPress2(currentTime);
   };
 
@@ -127,9 +116,6 @@ const CardDescription: React.FC<ScreenProps> = ({
               source={require("../assets/profile-carousel.png")}
             />
             <Text style={styles.normalText}>{data?.role}</Text>
-            <Text style={styles.normalText}>
-              {isActive && "isActive = TRUE"}
-            </Text>
           </View>
         </View>
       </View>
@@ -241,8 +227,6 @@ const mapDispatchToProps = (
 ) => ({
   setActive: (isActive: boolean, index: number) =>
     dispatch(executionActions.setActive(isActive, index)),
-  setCardTime: (time: number, index: number) =>
-    dispatch(executionActions.setCardTime(time, index)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardDescription);

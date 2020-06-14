@@ -14,11 +14,12 @@ const initialState: CarouselType = {
 };
 
 export default function execution(prevState = initialState, action: any) {
-  let data;
   switch (action.type) {
     case "ADD_CARD":
+      const cards = prevState.data;
+      cards.unshift(action.cards[0]);
       return {
-        data: action.cards,
+        data: cards,
         selectedCard: action.cards[0],
         selectedCardIndex: 0,
       };
@@ -33,10 +34,14 @@ export default function execution(prevState = initialState, action: any) {
 
       console.log("DATA", dataTime);
 
-      return {
+      const result = {
         ...prevState,
         data: dataTime,
+        selectedCard: dataTime[prevState.selectedCardIndex],
       };
+
+      console.info("jajaja ==> ", result);
+      return result;
     case "REMOVE_CARD":
       const nextCard = prevState.data.length > 0 && action.index === 0 ? 1 : 0;
       return {
@@ -62,7 +67,7 @@ export default function execution(prevState = initialState, action: any) {
         selectedCardIndex: action.index,
       };
     case "SET_CARD_EXECUTION_STATE":
-      data = prevState.data.map((item, index) => {
+      const dataExecutionState = prevState.data.map((item, index) => {
         if (index !== action.index) {
           return item;
         }
@@ -73,8 +78,8 @@ export default function execution(prevState = initialState, action: any) {
       });
 
       return {
-        data,
-        selectedCard: data[action.index],
+        data: dataExecutionState,
+        selectedCard: dataExecutionState[action.index],
         selectedCardIndex: action.index,
       };
     case "SET_SELECTED_CARD":

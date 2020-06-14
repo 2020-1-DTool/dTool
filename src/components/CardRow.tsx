@@ -37,17 +37,14 @@ const CardRow: React.FC<ScreenProps> = ({
     toggleCard(item, index);
   };
 
-  const getExecutionState = (state: ExecutionStatus) => {
-    switch (state) {
-      case ExecutionStatus.Uninitialized:
-        return "Não iniciado";
-      case ExecutionStatus.Initialized:
-        return "Cronometrando";
-      case ExecutionStatus.Paused:
-        return "Pausado";
-      default:
-        return "Inválido";
-    }
+  const getTime = (currentTime: number) => {
+    const min = (currentTime % 3600) / 60;
+    const hour = currentTime / 3600;
+    const sec = currentTime % 60;
+    const formatHour = Math.floor(hour).toString().padStart(2, "0");
+    const formatMin = Math.floor(min).toString().padStart(2, "0");
+    const formatSec = sec.toString().padStart(2, "0");
+    return `${formatHour}:${formatMin}:${formatSec}`;
   };
 
   return (
@@ -84,7 +81,7 @@ const CardRow: React.FC<ScreenProps> = ({
                       source={require("../assets/clock-carousel.png")}
                     />
                     <Text style={styles.normalText}>
-                      {getExecutionState(item.executionState)}
+                      {getTime(item.time ?? 0)}
                     </Text>
                   </View>
                 </TouchableOpacity>

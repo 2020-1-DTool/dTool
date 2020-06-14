@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import {
   Dimensions,
   SafeAreaView,
