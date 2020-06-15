@@ -11,6 +11,9 @@ export function addCard(cards: CardType[]) {
   };
 }
 
+/**
+ * Atualiza a cada 1 segundo todos os tempos dos cards que estão com atividade em execução.
+ */
 export function setAllTimes() {
   return {
     type: "UPDATE_ALL_TIMES",
