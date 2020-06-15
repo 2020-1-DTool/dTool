@@ -29,7 +29,7 @@ import {
  */
 export const createExecution = async (cardInfo: CardExecutionType) => {
   const startTime: Moment = moment();
-  const strStartTime: string = startTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ");
+  const strStartTime: string = startTime.format("YYYY-MM-DDTHH:mm:ssZZ");
   console.log(
     "timerFunction.createExecution: Criando execução - Horário atual: ",
     strStartTime
@@ -63,7 +63,7 @@ export const initializeExecution = async (index: number) => {
     execution.currentState === ExecutionStatus.Uninitialized
   ) {
     const startTime: Moment = moment();
-    const strTime: string = startTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ");
+    const strTime: string = startTime.format("YYYY-MM-DDTHH:mm:ssZZ");
     console.log(
       "timerFunction.initializeExecution: Inicializando execução - Horário atual: ",
       strTime
