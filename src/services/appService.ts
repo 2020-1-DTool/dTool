@@ -230,7 +230,10 @@ export const getReports = async (
   await authenticate();
 
   try {
-    return await api.get("/reports/simple", { data: { technology, role } });
+    const result = await api.get("/reports/simple", {
+      params: { technology, role },
+    });
+    return result.data;
   } catch (error) {
     if (error.response?.status === 404) {
       return [] as Reports[];

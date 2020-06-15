@@ -4,8 +4,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
-  ScrollView,
   ActivityIndicator,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -14,7 +12,6 @@ import { getSession, getPreferences } from "../services/localStorage";
 import { ButtonNavigation, Report } from "../components";
 import { getReports } from "../services/appService";
 import colors from "../utils/colors";
-import sizes from "../utils/sizes";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -38,15 +35,23 @@ const ReportsScreen: React.FC<ScreenProps> = ({ navigation }) => {
       }
 
       const reports = await getReports(technology as number, role as number);
-      console.info("got metrics", reports);
-      const metrics = reports.map((report) => {
-        return {
-          activity: report.activity,
-          minimumDuration: report.minimumDuration,
-          medianDuration: report.medianDuration,
-          maximumDuration: report.maximumDuration,
-        };
-      }) as Metrics[];
+      const metrics = reports
+        .filter((metric) => {
+          return (
+            metric.minimumDuration &&
+            metric.medianDuration &&
+            metric.maximumDuration
+          );
+        })
+        .map((report) => {
+          return {
+            activity: report.activity,
+            minimumDuration: report.minimumDuration,
+            medianDuration: report.medianDuration,
+            maximumDuration: report.maximumDuration,
+          };
+        }) as Metrics[];
+
       setData(metrics);
       setLoading(false);
     })();
@@ -85,7 +90,6 @@ const ReportsScreen: React.FC<ScreenProps> = ({ navigation }) => {
       {!loading && (data || []).length > 0 && (
         <>
           <Text style={styles.textSummary}>
-            {/* Veja abaixo as métricas calculadas a partir das cronometragens até o momento */}
             Abaixo, é possível verificar algumas das métricas que já estão sendo
             calculadas a partir das cronometragens efetuadas até o momento.
           </Text>
@@ -93,22 +97,23 @@ const ReportsScreen: React.FC<ScreenProps> = ({ navigation }) => {
           <View style={styles.graph}>
             <Report
               title={data ? data[index].activity : ""}
-              metrics={
-                data
-                  ? data[index]
-                  : {
-                      activity: "",
-                      minimumDuration: 1,
-                      medianDuration: 2,
-                      maximumDuration: 3,
-                    }
-              }
+              metrics={data[index]}
             />
           </View>
-          <View style={styles.navigation}>
-            <ButtonNavigation type="back" onPress={handlePressPrevious} />
-            <ButtonNavigation type="forward" onPress={handlePressNext} />
-          </View>
+          {data.length > 1 && (
+            <View style={styles.navigation}>
+              <ButtonNavigation
+                type="back"
+                onPress={handlePressPrevious}
+                disabled={index === 0}
+              />
+              <ButtonNavigation
+                type="forward"
+                onPress={handlePressNext}
+                disabled={index === data.length - 1}
+              />
+            </View>
+          )}
         </>
       )}
     </SafeAreaView>

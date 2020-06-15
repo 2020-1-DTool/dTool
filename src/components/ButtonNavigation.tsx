@@ -5,7 +5,6 @@ import {
   TouchableOpacityProps,
   StyleSheet,
   View,
-  TouchableHighlight,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import colors from "../utils/colors";
@@ -13,23 +12,34 @@ import sizes from "../utils/sizes";
 
 export interface Props extends TouchableOpacityProps {
   type: "forward" | "back";
+  disabled?: boolean;
 }
 
-const ButtonNavigation: React.FC<Props> = ({ type, ...props }) => {
+const ButtonNavigation: React.FC<Props> = ({ type, disabled, ...props }) => {
   return (
-    <TouchableOpacity style={styles.container} {...props}>
+    <TouchableOpacity style={styles.container} disabled={disabled} {...props}>
       <View style={styles.content}>
         {type === "forward" && (
           <>
-            <Text style={styles.text}>Próximo</Text>
-            <Icon style={styles.icon} name="ios-arrow-forward" />
+            <Text style={[styles.text, disabled && styles.textDisabled]}>
+              Próximo
+            </Text>
+            <Icon
+              style={[styles.icon, disabled && styles.iconDisabled]}
+              name="ios-arrow-forward"
+            />
           </>
         )}
 
         {type === "back" && (
           <>
-            <Icon style={styles.icon} name="ios-arrow-back" />
-            <Text style={styles.text}>Anterior</Text>
+            <Icon
+              style={[styles.icon, disabled && styles.iconDisabled]}
+              name="ios-arrow-back"
+            />
+            <Text style={[styles.text, disabled && styles.textDisabled]}>
+              Anterior
+            </Text>
           </>
         )}
       </View>
@@ -49,10 +59,16 @@ const styles = StyleSheet.create({
     fontSize: sizes.headline.h1,
     paddingHorizontal: 8,
   },
+  iconDisabled: {
+    color: colors.text.tertiary,
+  },
   text: {
     color: colors.text.primary,
     fontSize: sizes.buttonText.main,
     fontWeight: "500",
+  },
+  textDisabled: {
+    color: colors.text.tertiary,
   },
 });
 
