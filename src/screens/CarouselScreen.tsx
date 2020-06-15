@@ -113,7 +113,6 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         };
 
       newCard = {
-        isActive: false,
         patient,
         activity,
         role: roleName,
