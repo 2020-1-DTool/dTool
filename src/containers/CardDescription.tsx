@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Text, View, StyleSheet, Image } from "react-native";
 import { connect } from "react-redux";
 
-import { useNavigation } from "@react-navigation/native";
 import { Card } from "react-native-elements";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
-import { ButtonExecutions, ButtonPrimary } from "../components";
+import { ButtonExecutions } from "../components";
 import { Card as CardType, ExecutionStatus } from "../services/types";
 
 export interface ScreenProps {
@@ -23,8 +22,6 @@ const CardDescription: React.FC<ScreenProps> = ({
   onPress2,
   onPress3,
 }) => {
-  const [time, setTime] = useState(0);
-  const [isActive, setIsActive] = useState(false);
   let button1 = "";
   let button2 = "";
   let button3 = "";
@@ -57,42 +54,16 @@ const CardDescription: React.FC<ScreenProps> = ({
       break;
   }
 
-  useEffect(() => {
-    let interval: any = null;
-    if (isActive) {
-      interval = setInterval(() => {
-        setTime(() => time + 1);
-      }, 1000);
-    } else if (!isActive && time !== 0) {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [isActive, time]);
-
-  const toggle = () => {
-    setIsActive(!isActive);
-  };
-
-  const navigation = useNavigation();
-
   const getTime = () => {
-    const min = (time % 3600) / 60;
-    const hour = time / 3600;
-    const sec = time % 60;
+    let currentTime = data?.time || 0;
+
+    const min = (currentTime % 3600) / 60;
+    const hour = currentTime / 3600;
+    const sec = currentTime % 60;
     const formatHour = Math.floor(hour).toString().padStart(2, "0");
     const formatMin = Math.floor(min).toString().padStart(2, "0");
     const formatSec = sec.toString().padStart(2, "0");
     return `${formatHour}:${formatMin}:${formatSec}`;
-  };
-
-  const handlePress1 = () => {
-    toggle();
-    onPress1();
-  };
-
-  const handlePress2 = () => {
-    if (!isActive) toggle();
-    onPress2();
   };
 
   return (
@@ -130,21 +101,15 @@ const CardDescription: React.FC<ScreenProps> = ({
       </View>
       <View style={styles.buttonsWrap}>
         <View style={styles.buttonsCardDescription}>
-          <ButtonPrimary
-            title="EmptyScreen"
-            onPress={() => navigation.navigate("EmptyScreen")}
-          />
-        </View>
-        <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={handlePress1}
+            onPress={onPress1}
             action={button1}
             text={buttonText1}
           />
         </View>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={handlePress2}
+            onPress={onPress2}
             action={button2}
             text={buttonText2}
           />
@@ -213,7 +178,11 @@ let styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state: { execution: { selectedCard: CardType } }) => ({
+const mapStateToProps = (state: {
+  execution: {
+    selectedCard: CardType;
+  };
+}) => ({
   data: state.execution.selectedCard,
 });
 

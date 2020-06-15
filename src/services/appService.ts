@@ -2,6 +2,7 @@ import { getUniqueId } from "react-native-device-info";
 import axios from "axios";
 import RNFS from "react-native-fs";
 import Share from "react-native-share";
+import moment from "moment";
 import {
   clear,
   getPreferences,
@@ -170,7 +171,7 @@ const uploadExecutions = async (): Promise<void> => {
     return {
       activityId: execution.activity,
       roleId: execution.role,
-      timestamp: execution.date,
+      timestamp: moment(execution.date).toISOString(true),
       duration: execution.duration,
     };
   });
@@ -196,6 +197,7 @@ const uploadExecutions = async (): Promise<void> => {
     throw new Error("network");
   }
 };
+
 /**
  * Faz o download do arquivo Excel da tecnologia atual para o celular.
  *

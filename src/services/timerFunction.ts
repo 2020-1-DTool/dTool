@@ -13,6 +13,7 @@ import {
   FinishedExecution,
   CardExecutionType,
 } from "./types";
+import { syncExecutions } from "./appService";
 
 /**
  * Coordena o a manipulação de execuções.
@@ -29,7 +30,7 @@ import {
  */
 export const createExecution = async (cardInfo: CardExecutionType) => {
   const startTime: Moment = moment();
-  const strStartTime: string = startTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ");
+  const strStartTime: string = startTime.format("YYYY-MM-DDTHH:mm:ssZZ");
   console.log(
     "timerFunction.createExecution: Criando execução - Horário atual: ",
     strStartTime
@@ -63,7 +64,7 @@ export const initializeExecution = async (index: number) => {
     execution.currentState === ExecutionStatus.Uninitialized
   ) {
     const startTime: Moment = moment();
-    const strTime: string = startTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ");
+    const strTime: string = startTime.format("YYYY-MM-DDTHH:mm:ssZZ");
     console.log(
       "timerFunction.initializeExecution: Inicializando execução - Horário atual: ",
       strTime
@@ -78,7 +79,6 @@ export const initializeExecution = async (index: number) => {
     await setOngoingExecution(execution, index);
     isInitialized = true;
   } else {
-    console.warn("Execução já iniciada");
     isInitialized = false;
   }
   return isInitialized;
@@ -166,7 +166,15 @@ export const finishExecution = async (index: number) => {
       duration: execution.elapsedTime,
     };
 
-    return addFinishedExecution(newFinishedExecution);
+    await addFinishedExecution(newFinishedExecution);
+
+    try {
+      await syncExecutions();
+    } catch (error) {
+      // no-op
+    }
+
+    return true;
   }
   console.error("Execução nunca foi iniciada.");
   await removeOngoingExecution(index);
@@ -192,11 +200,6 @@ export const updateAllTimers = async () => {
 
       execution = addElapsedTime(exec);
       setOngoingExecution(execution, i);
-
-      // TODO: remover após a integração, só para teste
-      console.warn(
-        `✅ Index atualizado ${execution.elapsedTime} - index: ${i}`
-      );
     }
     return hasOngoingExecution;
   });

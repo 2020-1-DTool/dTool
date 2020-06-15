@@ -69,7 +69,6 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 
   const handleBack = async () => {
     if (pendingExecs) {
-      console.log("Tentando enviar agora...");
       try {
         await syncExecutions();
         setPendingExecs(false);

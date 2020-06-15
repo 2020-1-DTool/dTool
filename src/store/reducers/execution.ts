@@ -5,7 +5,7 @@
  * que participam da execução de atividades.
  */
 
-import { Card as CardType } from "src/services/types";
+import { CarouselType, ExecutionStatus } from "../../services/types";
 
 const initialState: CarouselType = {
   selectedCard: undefined,
@@ -13,20 +13,31 @@ const initialState: CarouselType = {
   data: [],
 };
 
-export type CarouselType = {
-  data: CardType[];
-  selectedCard: CardType | undefined;
-  selectedCardIndex: number;
-};
-
 export default function execution(prevState = initialState, action: any) {
   switch (action.type) {
     case "ADD_CARD":
+      const cards = prevState.data;
+      cards.unshift(action.cards[0]);
       return {
-        data: action.cards,
+        data: cards,
         selectedCard: action.cards[0],
         selectedCardIndex: 0,
       };
+    case "UPDATE_ALL_TIMES":
+      const dataTime = prevState.data.map((item) => {
+        if (item.executionState === ExecutionStatus.Initialized) {
+          return { ...item, time: (item?.time || 0) + 1 };
+        }
+        return item;
+      });
+
+      const result = {
+        ...prevState,
+        data: dataTime,
+        selectedCard: dataTime[prevState.selectedCardIndex],
+      };
+
+      return result;
     case "REMOVE_CARD":
       const nextCard = prevState.data.length > 0 && action.index === 0 ? 1 : 0;
       return {
@@ -35,7 +46,7 @@ export default function execution(prevState = initialState, action: any) {
         selectedCardIndex: 0,
       };
     case "SET_CARD_EXECUTION_STATE":
-      const data = prevState.data.map((item, index) => {
+      const dataExecutionState = prevState.data.map((item, index) => {
         if (index !== action.index) {
           return item;
         }
@@ -46,8 +57,8 @@ export default function execution(prevState = initialState, action: any) {
       });
 
       return {
-        data,
-        selectedCard: data[action.index],
+        data: dataExecutionState,
+        selectedCard: dataExecutionState[action.index],
         selectedCardIndex: action.index,
       };
     case "SET_SELECTED_CARD":
@@ -55,6 +66,19 @@ export default function execution(prevState = initialState, action: any) {
         ...prevState,
         selectedCard: action.card,
         selectedCardIndex: action.index,
+      };
+    case "UPDATE_FROM_APPSTATE":
+      const dataTimeFromAppState = prevState.data.map((item) => {
+        if (item.executionState === ExecutionStatus.Initialized) {
+          return { ...item, time: (item?.time || 0) + action.seconds };
+        }
+        return item;
+      });
+
+      return {
+        ...prevState,
+        data: dataTimeFromAppState,
+        selectedCard: dataTimeFromAppState[prevState.selectedCardIndex],
       };
     default:
       break;
