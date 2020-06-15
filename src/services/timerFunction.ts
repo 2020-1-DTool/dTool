@@ -13,6 +13,7 @@ import {
   FinishedExecution,
   CardExecutionType,
 } from "./types";
+import { syncExecutions } from "./appService";
 
 /**
  * Coordena o a manipulação de execuções.
@@ -166,7 +167,15 @@ export const finishExecution = async (index: number) => {
       duration: execution.elapsedTime,
     };
 
-    return addFinishedExecution(newFinishedExecution);
+    await addFinishedExecution(newFinishedExecution);
+
+    try {
+      await syncExecutions();
+    } catch (error) {
+      // no-op
+    }
+
+    return true;
   }
   console.error("Execução nunca foi iniciada.");
   await removeOngoingExecution(index);
