@@ -11,3 +11,4 @@ export { default as ListPatient } from "./ListPatient";
 export { default as ListTechnology } from "./admin/ListTechnology";
 export { default as SelectPatient } from "./SelectPatient";
 export { default as StartScreen } from "./StartScreen";
+export { default as AboutScreen } from "./AboutScreen";

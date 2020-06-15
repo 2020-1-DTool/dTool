@@ -14,6 +14,7 @@ import { HeaderButton, HeaderSearch } from "./components";
 import {
   AddPatient,
   AddTechnology,
+  AboutScreen,
   CarouselScreen,
   ChooseActivity,
   ChooseRole,
@@ -215,6 +216,13 @@ const App = () => (
               ),
               ...baseHeaderStyle,
             })}
+          />
+          <Stack.Screen
+            name="AboutScreen"
+            component={AboutScreen}
+            options={{
+              ...baseHeaderStyle,
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>
