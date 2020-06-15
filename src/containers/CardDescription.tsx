@@ -3,20 +3,17 @@ import React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { connect } from "react-redux";
 
-import { useNavigation } from "@react-navigation/native";
 import { Card } from "react-native-elements";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
-import { ButtonExecutions, ButtonPrimary } from "../components";
+import { ButtonExecutions } from "../components";
 import { Card as CardType, ExecutionStatus } from "../services/types";
 
 export interface ScreenProps {
   data?: CardType;
-  onPress1: (time: number) => void;
-  onPress2: (time: number) => void;
+  onPress1: () => void;
+  onPress2: () => void;
   onPress3?: () => void;
-  setCardTime: (time: number, index: number) => void;
-  selectedCardIndex: number;
 }
 
 const CardDescription: React.FC<ScreenProps> = ({
@@ -24,7 +21,6 @@ const CardDescription: React.FC<ScreenProps> = ({
   onPress1,
   onPress2,
   onPress3,
-  selectedCardIndex,
 }) => {
   let button1 = "";
   let button2 = "";
@@ -58,8 +54,6 @@ const CardDescription: React.FC<ScreenProps> = ({
       break;
   }
 
-  const navigation = useNavigation();
-
   const getTime = () => {
     let currentTime = data?.time || 0;
 
@@ -70,16 +64,6 @@ const CardDescription: React.FC<ScreenProps> = ({
     const formatMin = Math.floor(min).toString().padStart(2, "0");
     const formatSec = sec.toString().padStart(2, "0");
     return `${formatHour}:${formatMin}:${formatSec}`;
-  };
-
-  const handlePress1 = () => {
-    let currentTime = data?.time || 0;
-    onPress1(currentTime);
-  };
-
-  const handlePress2 = () => {
-    let currentTime = data?.time || 0;
-    onPress2(currentTime);
   };
 
   return (
@@ -118,14 +102,14 @@ const CardDescription: React.FC<ScreenProps> = ({
       <View style={styles.buttonsWrap}>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={() => handlePress1()}
+            onPress={onPress1}
             action={button1}
             text={buttonText1}
           />
         </View>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
-            onPress={() => handlePress2()}
+            onPress={onPress2}
             action={button2}
             text={buttonText2}
           />
@@ -197,11 +181,9 @@ let styles = StyleSheet.create({
 const mapStateToProps = (state: {
   execution: {
     selectedCard: CardType;
-    selectedCardIndex: number;
   };
 }) => ({
   data: state.execution.selectedCard,
-  selectedCardIndex: state.execution.selectedCardIndex,
 });
 
 export default connect(mapStateToProps)(CardDescription);
