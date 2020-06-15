@@ -28,8 +28,6 @@ const ListPatient: React.FC<ScreenProps> = ({ navigation }) => {
         patientData = JSON.parse(patientData);
         if (Array.isArray(patientData)) setData(patientData);
       }
-
-      console.log(patientData);
     }
     getStorage();
   }, []);

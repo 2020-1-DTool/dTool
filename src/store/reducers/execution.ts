@@ -26,13 +26,10 @@ export default function execution(prevState = initialState, action: any) {
     case "UPDATE_ALL_TIMES":
       const dataTime = prevState.data.map((item) => {
         if (item.executionState === ExecutionStatus.Initialized) {
-          console.log("time", (item?.time || 0) + 1);
           return { ...item, time: (item?.time || 0) + 1 };
         }
         return item;
       });
-
-      console.log("DATA", dataTime);
 
       const result = {
         ...prevState,
@@ -40,7 +37,6 @@ export default function execution(prevState = initialState, action: any) {
         selectedCard: dataTime[prevState.selectedCardIndex],
       };
 
-      console.info("jajaja ==> ", result);
       return result;
     case "REMOVE_CARD":
       const nextCard = prevState.data.length > 0 && action.index === 0 ? 1 : 0;
@@ -48,23 +44,6 @@ export default function execution(prevState = initialState, action: any) {
         data: prevState.data.filter((item, index) => index !== action.index),
         selectedCard: prevState.data[nextCard],
         selectedCardIndex: 0,
-      };
-    case "SET_ACTIVE":
-      const dataActive = prevState.data.map((item, index) => {
-        if (index !== action.index) {
-          return item;
-        }
-        console.log("isActive: atual - novo", item.isActive, action.isActive);
-        return {
-          ...item,
-          isActive: action.isActive,
-        };
-      });
-
-      return {
-        data: dataActive,
-        selectedCard: dataActive[action.index],
-        selectedCardIndex: action.index,
       };
     case "SET_CARD_EXECUTION_STATE":
       const dataExecutionState = prevState.data.map((item, index) => {
@@ -95,8 +74,6 @@ export default function execution(prevState = initialState, action: any) {
         }
         return item;
       });
-
-      console.log("DATA TIME FROM APPSTATE", dataTimeFromAppState);
 
       return {
         ...prevState,

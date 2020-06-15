@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import { Card } from "react-native-elements";
 
 import * as executionActions from "../store/actions/execution";
-import { Card as CardType, ExecutionStatus } from "../services/types";
+import { Card as CardType } from "../services/types";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 
@@ -27,13 +27,7 @@ const CardRow: React.FC<ScreenProps> = ({
   selectedCardIndex,
   toggleCard,
 }) => {
-  const setBorder = (index: number) => {
-    console.log(`Previous sected card ${selectedCardIndex}`);
-    console.log(`Current selected card ${index}`);
-  };
-
   const handlePress = (item: CardType, index: number) => {
-    setBorder(index);
     toggleCard(item, index);
   };
 

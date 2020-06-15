@@ -29,19 +29,6 @@ export function removeCard(index: number) {
 }
 
 /**
- * Seta o estado do cronômetro do card
- * @param isActive Se `true`, o cronômetro deve contar, caso contrário não está em contagem (pausado ou não inicializado)
- * @param index Índice do card que o estado será alterado
- */
-export function setActive(isActive: boolean, index: number) {
-  return {
-    type: "SET_ACTIVE",
-    isActive,
-    index,
-  };
-}
-
-/**
  * Seta o estado de execução do card, a partir do índice informado
  * @param newExecState Novo estado de execução do card
  * @param index Índice do card a ser alterado

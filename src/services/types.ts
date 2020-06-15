@@ -17,7 +17,6 @@ export interface Auth {
 }
 
 export type Card = {
-  isActive?: boolean;
   patient?: Patient;
   activity?: string;
   role?: string;

@@ -9,21 +9,17 @@ import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 import { ButtonExecutions, ButtonPrimary } from "../components";
 import { Card as CardType, ExecutionStatus } from "../services/types";
-import * as executionActions from "../store/actions/execution";
 
 export interface ScreenProps {
-  isActive?: boolean;
   data?: CardType;
   onPress1: (time: number) => void;
   onPress2: (time: number) => void;
   onPress3?: () => void;
   setCardTime: (time: number, index: number) => void;
   selectedCardIndex: number;
-  setActive: (isActive: boolean, index: number) => void;
 }
 
 const CardDescription: React.FC<ScreenProps> = ({
-  isActive,
   data,
   onPress1,
   onPress2,
@@ -66,7 +62,7 @@ const CardDescription: React.FC<ScreenProps> = ({
 
   const getTime = () => {
     let currentTime = data?.time || 0;
-    // console.log("DATA TIME", data?.time);
+
     const min = (currentTime % 3600) / 60;
     const hour = currentTime / 3600;
     const sec = currentTime % 60;
@@ -206,26 +202,12 @@ let styles = StyleSheet.create({
 
 const mapStateToProps = (state: {
   execution: {
-    isActive: boolean;
     selectedCard: CardType;
     selectedCardIndex: number;
   };
 }) => ({
   data: state.execution.selectedCard,
   selectedCardIndex: state.execution.selectedCardIndex,
-  isActive: state.execution.selectedCard?.isActive,
 });
 
-const mapDispatchToProps = (
-  dispatch: (arg0: {
-    type: string;
-    isActive?: boolean;
-    index?: number;
-    time?: number;
-  }) => any
-) => ({
-  setActive: (isActive: boolean, index: number) =>
-    dispatch(executionActions.setActive(isActive, index)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CardDescription);
+export default connect(mapStateToProps)(CardDescription);

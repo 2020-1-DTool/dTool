@@ -79,7 +79,6 @@ export const initializeExecution = async (index: number) => {
     await setOngoingExecution(execution, index);
     isInitialized = true;
   } else {
-    console.warn("Execução já iniciada");
     isInitialized = false;
   }
   return isInitialized;

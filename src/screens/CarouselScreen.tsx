@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import {
   AppState,
   Dimensions,
@@ -65,17 +65,8 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   const activityId = route?.params?.activityId;
   const patientId = route?.params?.patientId;
 
-  // TODO: atualizar cronômetro visual ao voltar para o app
-  // TODO: conferir se as funções de timerFunctions estão incrementando os segundos corretamente
   const handleAppstateChange = async () => {
-    // console.info("🎉🎉🎉🎉🎉", AppState.currentState);
-    // console.info("pauseTimestamp", pauseTimestamp);
-
     if (AppState.currentState === "active") {
-      console.warn(
-        `Voltou ao app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
-      );
-
       // atualiza todos os tempos de execuções que estão em andamento
       updateAllTimers();
 
@@ -84,18 +75,11 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         moment.duration(moment().diff(pauseTimestamp)).asSeconds()
       );
 
-      console.info("🎯🎯🎯🎯🎯", diffTime);
       updateFromAppState(diffTime);
 
       await localStorage.setPauseTimestampAppState("");
     } else if (AppState.currentState === "background") {
-      console.warn(
-        `Saiu do app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
-      );
-
       await localStorage.setPauseTimestampAppState(new Date().toISOString());
-      // console.info("🎹🎹🎹🎹🎹", pauseTimestamp);
-      // setPauseTimestamp(moment());
     }
   };
 
@@ -167,7 +151,6 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   }, []);
 
   useEffect(() => {
-    console.warn("socorro");
     const interval = setInterval(setAllTimes, 1000);
     return () => {
       clearInterval(interval);
@@ -207,12 +190,9 @@ const CarouselScreen: React.FC<ScreenProps> = ({
         await pauseExecution(selectedCardIndex);
         await updateCardExecutionState(ExecutionStatus.Paused);
         setCardExecutionState(ExecutionStatus.Paused, selectedCardIndex);
-        // setCardTime(time, selectedCardIndex);
-        console.warn("SELECTED CARD INDEX", selectedCardIndex);
         break;
       case ExecutionStatus.Paused:
         await finishExecution(selectedCardIndex);
-        // setCardTime(time, selectedCardIndex);
         await removeCardActions();
         break;
       default:
@@ -228,7 +208,6 @@ const CarouselScreen: React.FC<ScreenProps> = ({
       await initializeExecution(selectedCardIndex);
       await updateCardExecutionState(ExecutionStatus.Initialized);
       setCardExecutionState(ExecutionStatus.Initialized, selectedCardIndex);
-      // setCardTime(time, selectedCardIndex);
     }
   };
 
