@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   AppState,
   Dimensions,
@@ -40,6 +40,7 @@ export interface ScreenProps {
   selectedCardIndex: number;
   setCardExecutionState: (newCardExec: ExecutionStatus, index: number) => void;
   setAllTimes: () => void;
+  updateFromAppState: (seconds: number) => void;
   route?: {
     params: {
       patientId: string;
@@ -57,6 +58,7 @@ const CarouselScreen: React.FC<ScreenProps> = ({
   setCardExecutionState,
   selectedCardIndex,
   setAllTimes,
+  updateFromAppState,
   route,
 }) => {
   const activity = route?.params?.activityName;
@@ -65,18 +67,36 @@ const CarouselScreen: React.FC<ScreenProps> = ({
 
   // TODO: atualizar cronômetro visual ao voltar para o app
   // TODO: conferir se as funções de timerFunctions estão incrementando os segundos corretamente
-  const handleAppstateChange = () => {
+  const handleAppstateChange = async () => {
+    // console.info("🎉🎉🎉🎉🎉", AppState.currentState);
+    // console.info("pauseTimestamp", pauseTimestamp);
+
     if (AppState.currentState === "active") {
       console.warn(
         `Voltou ao app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
-      ); // TODO: remover após integração, apenas para teste
+      );
 
       // atualiza todos os tempos de execuções que estão em andamento
       updateAllTimers();
-    } else if (AppState.currentState === "background")
+
+      const pauseTimestamp = await localStorage.getPauseTimestampAppState();
+      const diffTime = Math.round(
+        moment.duration(moment().diff(pauseTimestamp)).asSeconds()
+      );
+
+      console.info("🎯🎯🎯🎯🎯", diffTime);
+      updateFromAppState(diffTime);
+
+      await localStorage.setPauseTimestampAppState("");
+    } else if (AppState.currentState === "background") {
       console.warn(
         `Saiu do app no tempo: ${moment().format("YYYY-MM-DDTHH:mm:ss[Z]ZZ")}`
-      ); // TODO: remover após integração, apenas para teste
+      );
+
+      await localStorage.setPauseTimestampAppState(new Date().toISOString());
+      // console.info("🎹🎹🎹🎹🎹", pauseTimestamp);
+      // setPauseTimestamp(moment());
+    }
   };
 
   useEffect(() => {
@@ -254,6 +274,7 @@ const mapDispatchToProps = (
     cards?: CardType[];
     newExecState?: ExecutionStatus;
     index?: number;
+    seconds: number;
   }) => any
 ) => ({
   addCard: (items: CardType[]) => dispatch(executionActions.addCard(items)),
@@ -261,6 +282,8 @@ const mapDispatchToProps = (
   setCardExecutionState: (newExecState: ExecutionStatus, index: number) =>
     dispatch(executionActions.setCardExecutionState(newExecState, index)),
   setAllTimes: () => dispatch(executionActions.setAllTimes()),
+  updateFromAppState: (seconds: number) =>
+    dispatch(executionActions.updateFromAppState(seconds)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CarouselScreen);

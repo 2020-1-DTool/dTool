@@ -69,3 +69,14 @@ export function toggleCard(card: CardType, index: number) {
     index,
   };
 }
+
+/**
+ * Atualiza os tempos de todos os cards depois que o app volta do background.
+ * @param seconds Segundos que o app ficou em background.
+ */
+export function updateFromAppState(seconds: number) {
+  return {
+    type: "UPDATE_FROM_APPSTATE",
+    seconds,
+  };
+}

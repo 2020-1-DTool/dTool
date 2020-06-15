@@ -11,6 +11,8 @@ import {
   removeObjectItemV2,
   setObject,
   setObjectItem,
+  setItem,
+  getItem,
 } from "./asyncStorageAdapter";
 import {
   Auth,
@@ -197,6 +199,12 @@ export const removeOngoingExecution = (index: number) =>
 /** Remove tecnologia da lista salva localmente a partir de seu índice no array */
 export const removeTechnology = (index: number) =>
   removeObjectItem("@technology", index);
+
+export const setPauseTimestampAppState = (timestamp: string | null) =>
+  setItem("@pauseTimestampAppState", timestamp);
+
+export const getPauseTimestampAppState = () =>
+  getItem("@pauseTimestampAppState");
 
 /**
  * Salva a tecnologia sendo utilizada pelo usuário no app.

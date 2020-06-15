@@ -88,6 +88,21 @@ export default function execution(prevState = initialState, action: any) {
         selectedCard: action.card,
         selectedCardIndex: action.index,
       };
+    case "UPDATE_FROM_APPSTATE":
+      const dataTimeFromAppState = prevState.data.map((item) => {
+        if (item.executionState === ExecutionStatus.Initialized) {
+          return { ...item, time: (item?.time || 0) + action.seconds };
+        }
+        return item;
+      });
+
+      console.log("DATA TIME FROM APPSTATE", dataTimeFromAppState);
+
+      return {
+        ...prevState,
+        data: dataTimeFromAppState,
+        selectedCard: dataTimeFromAppState[prevState.selectedCardIndex],
+      };
     default:
       break;
   }

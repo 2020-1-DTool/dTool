@@ -131,7 +131,6 @@ const CardDescription: React.FC<ScreenProps> = ({
             onPress={() => handlePress1()}
             action={button1}
             text={buttonText1}
-            disabled={data?.executionState === ExecutionStatus.Paused} // tirar isso depois
           />
         </View>
         <View style={styles.buttonsCardDescription}>
