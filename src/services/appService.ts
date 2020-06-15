@@ -208,7 +208,8 @@ const authenticate = async () => {
 
   try {
     const result = await api.post("/auth", { code });
-    axios.defaults.headers.commons.Authorization = `Bearer ${result.data.accessToken}`;
+    axios.defaults.headers.common.Authorization = `Bearer ${result.data.accessToken}`;
+    api.defaults.headers.common.Authorization = `Bearer ${result.data.accessToken}`;
     await saveData(result.data);
   } catch (error) {
     if (error.response?.status === 404) {
@@ -223,41 +224,16 @@ const authenticate = async () => {
  * Faz a requisição ao backend pelos dados para popular os gráficos da tela de Relatórios do App
  */
 export const getReports = async (
-  technologyID: number,
-  roleID: number
+  technology: number,
+  role: number
 ): Promise<Reports[]> => {
+  await authenticate();
+
   try {
-    return await api.post("/simple", { technologyID, roleID });
+    return await api.get("/reports/simple", { data: { technology, role } });
   } catch (error) {
-    if (error.message === "auth") {
-      await authenticate();
-      return api.post("/simple", { technologyID, roleID });
-    }
     if (error.response?.status === 404) {
-      console.log("NAO TINHA METRICAS PRA CALCULAR");
-      const reports = [
-        {
-          activityID: 1,
-          activity: "Cirurgia",
-          roleID: 1,
-          role: "Medico",
-          minimumDuration: 2,
-          medianDuration: 5.666666666666667,
-          maximumDuration: 8,
-          lastUpdate: "2020-06-10T22:45:00.062Z",
-        },
-        {
-          activityID: 2,
-          activity: "RaioX",
-          roleID: 2,
-          role: "Medico",
-          minimumDuration: 3.3333333333333335,
-          medianDuration: 4.166666666666667,
-          maximumDuration: 5,
-          lastUpdate: "2020-06-10T22:45:00.053Z",
-        },
-      ] as Reports[];
-      return reports;
+      return [] as Reports[];
     }
     // other errors should be handled by callers; rethrow
     throw error;
