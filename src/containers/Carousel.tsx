@@ -1,20 +1,15 @@
 import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
+
 import { CardRow } from "../components";
-import { Card } from "../services/types";
 import colors from "../utils/colors";
 
-export type Props = {
-  data: Card[] | undefined;
-  onPress: (card: Card, index: number) => void;
-};
-
-const Carousel: React.FC<Props> = ({ data, onPress }) => {
+const Carousel = () => {
   return (
     <View style={styles.carouselStyle}>
       <ScrollView>
         <View>
-          <CardRow data={data} onPress={onPress} />
+          <CardRow />
         </View>
       </ScrollView>
     </View>

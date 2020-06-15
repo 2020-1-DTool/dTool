@@ -1,5 +1,8 @@
 import { getUniqueId } from "react-native-device-info";
 import axios from "axios";
+import RNFS from "react-native-fs";
+import Share from "react-native-share";
+import moment from "moment";
 import {
   clear,
   getPreferences,
@@ -168,7 +171,7 @@ const uploadExecutions = async (): Promise<void> => {
     return {
       activityId: execution.activity,
       roleId: execution.role,
-      timestamp: execution.date,
+      timestamp: moment(execution.date).toISOString(true),
       duration: execution.duration,
     };
   });
@@ -188,6 +191,48 @@ const uploadExecutions = async (): Promise<void> => {
     // invalid token
     if (error.response?.status === 401) {
       throw new Error("auth");
+    }
+
+    // network error
+    throw new Error("network");
+  }
+};
+
+/**
+ * Faz o download do arquivo Excel da tecnologia atual para o celular.
+ *
+ * Erros lançados:
+ * - `techID`: ID inválido;
+ * - `network`: erro de rede.
+ */
+export const downloadReport = async (): Promise<void> => {
+  await authenticate();
+
+  try {
+    const { code, token } = await getAuth();
+    const url = `${api.defaults.baseURL}/reports/complete`;
+    const filename = `Relatório dTool - ${code}.xlsx`;
+    const localFile = `${RNFS.DocumentDirectoryPath}/${filename}`;
+
+    const { promise } = RNFS.downloadFile({
+      fromUrl: url,
+      toFile: localFile,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    await promise;
+
+    await Share.open({
+      url: `file://${localFile}`,
+      title: `Salvar relatório do hospital`,
+      failOnCancel: false,
+    });
+
+    await RNFS.unlink(localFile);
+  } catch (error) {
+    // invalid ID
+    if (error.response?.status === 400) {
+      throw new Error("techID");
     }
 
     // network error

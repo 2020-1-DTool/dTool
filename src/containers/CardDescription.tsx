@@ -1,23 +1,22 @@
 import React from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
 
-import { useNavigation } from "@react-navigation/native";
+import { Text, View, StyleSheet, Image } from "react-native";
+import { connect } from "react-redux";
+
 import { Card } from "react-native-elements";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
-import { ButtonExecutions, ButtonPrimary } from "../components";
-import { Card as CardType } from "../services/types";
+import { ButtonExecutions } from "../components";
+import { Card as CardType, ExecutionStatus } from "../services/types";
 
 export interface ScreenProps {
   data?: CardType;
-  state: "uninitialized" | "initialized" | "finished";
   onPress1: () => void;
   onPress2: () => void;
   onPress3?: () => void;
 }
 
 const CardDescription: React.FC<ScreenProps> = ({
-  state,
   data,
   onPress1,
   onPress2,
@@ -30,20 +29,20 @@ const CardDescription: React.FC<ScreenProps> = ({
   let buttonText2 = "";
   let buttonText3 = "";
 
-  switch (state) {
-    case "uninitialized":
+  switch (data?.executionState) {
+    case ExecutionStatus.Uninitialized:
       button1 = "start";
       button2 = "cancel";
       buttonText1 = "INICIAR";
       buttonText2 = "REMOVER";
       break;
-    case "initialized":
+    case ExecutionStatus.Initialized:
       button1 = "stop";
       button2 = "cancel";
       buttonText1 = "PARAR";
       buttonText2 = "CANCELAR";
       break;
-    case "finished":
+    case ExecutionStatus.Paused:
       button1 = "finish";
       button2 = "restart";
       button3 = "cancel";
@@ -55,7 +54,17 @@ const CardDescription: React.FC<ScreenProps> = ({
       break;
   }
 
-  const navigation = useNavigation();
+  const getTime = () => {
+    let currentTime = data?.time || 0;
+
+    const min = (currentTime % 3600) / 60;
+    const hour = currentTime / 3600;
+    const sec = currentTime % 60;
+    const formatHour = Math.floor(hour).toString().padStart(2, "0");
+    const formatMin = Math.floor(min).toString().padStart(2, "0");
+    const formatSec = sec.toString().padStart(2, "0");
+    return `${formatHour}:${formatMin}:${formatSec}`;
+  };
 
   return (
     <Card containerStyle={styles.cardStyle}>
@@ -69,17 +78,17 @@ const CardDescription: React.FC<ScreenProps> = ({
               style={styles.imagePadding}
               source={require("../assets/profile-carousel.png")}
             />
-            <Text style={styles.normalText}>{data?.patient.name}</Text>
+            <Text style={styles.normalText}>{data?.patient?.name}</Text>
             <Text
               style={styles.patientSubtitle}
-            >{` ${data?.patient.id} | ${data?.patient.sex}`}</Text>
+            >{` ${data?.patient?.id} | ${data?.patient?.sex}`}</Text>
           </View>
           <View style={styles.cardInfo}>
             <Image
               style={styles.imagePadding}
               source={require("../assets/clock-carousel.png")}
             />
-            <Text style={styles.normalText}>{data?.time}</Text>
+            <Text style={styles.normalText}>{getTime()}</Text>
           </View>
           <View style={styles.cardInfo}>
             <Image
@@ -91,12 +100,6 @@ const CardDescription: React.FC<ScreenProps> = ({
         </View>
       </View>
       <View style={styles.buttonsWrap}>
-        <View style={styles.buttonsCardDescription}>
-          <ButtonPrimary
-            title="EmptyScreen"
-            onPress={() => navigation.navigate("EmptyScreen")}
-          />
-        </View>
         <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
             onPress={onPress1}
@@ -175,4 +178,12 @@ let styles = StyleSheet.create({
   },
 });
 
-export default CardDescription;
+const mapStateToProps = (state: {
+  execution: {
+    selectedCard: CardType;
+  };
+}) => ({
+  data: state.execution.selectedCard,
+});
+
+export default connect(mapStateToProps)(CardDescription);

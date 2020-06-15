@@ -17,17 +17,24 @@ export interface Auth {
 }
 
 export type Card = {
-  patient: Patient;
-  activity: string;
+  patient?: Patient;
+  activity?: string;
   role?: string;
   technology?: string;
-  time: string;
+  time?: number;
+  executionState: ExecutionStatus;
 };
 
 export type CardExecutionType = {
-  idPatient: string;
-  role: number;
-  activity: number;
+  idPatient?: string;
+  role?: number;
+  activity?: number;
+};
+
+export type CarouselType = {
+  data: Card[];
+  selectedCard: Card | undefined;
+  selectedCardIndex: number;
 };
 
 export type Doc = {

@@ -23,13 +23,11 @@ const ListPatient: React.FC<ScreenProps> = ({ navigation }) => {
 
   useEffect(() => {
     async function getStorage() {
-      let pacientData = await getItem("@patient");
-      if (pacientData) {
-        pacientData = JSON.parse(pacientData);
-        if (Array.isArray(pacientData)) setData(pacientData);
+      let patientData = await getItem("@patient");
+      if (patientData) {
+        patientData = JSON.parse(patientData);
+        if (Array.isArray(patientData)) setData(patientData);
       }
-
-      console.log(pacientData);
     }
     getStorage();
   }, []);

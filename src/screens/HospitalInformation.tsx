@@ -15,7 +15,7 @@ import * as localStorage from "../services/localStorage";
 import colors from "../utils/colors";
 import { WarningBox } from "../containers";
 import { ButtonPrimary, ButtonSecundary } from "../components";
-import { syncExecutions } from "../services/appService";
+import { downloadReport, syncExecutions } from "../services/appService";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
@@ -26,6 +26,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
   const [hospitalName, setHospitalName] = useState("Hospital não nomeado");
   const [permission, setPermission] = useState("");
   const [pendingExecs, setPendingExecs] = useState(false);
+  const [isLoadingReport, setIsLoadingReport] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -68,13 +69,11 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 
   const handleBack = async () => {
     if (pendingExecs) {
-      console.log("Tentando enviar agora...");
       try {
         await syncExecutions();
         setPendingExecs(false);
       } catch (error) {
         if (error.message === "network") {
-          console.log("Sem conexao com a internet, envio falhou!");
           await showMessage();
         } else {
           throw error;
@@ -105,7 +104,19 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
       } else {
         navigation.navigate("ChooseRole", { isForReports: true });
       }
-    } else "nothingyet"; // exportar relatorio xlsx
+    } else {
+      setIsLoadingReport(true);
+      try {
+        await downloadReport();
+      } catch (error) {
+        Alert.alert(
+          "Falha ao baixar relatório",
+          "Tente novamente mais tarde.",
+          [{ text: "OK", style: "default" }]
+        );
+      }
+      setIsLoadingReport(false);
+    }
   };
 
   return (
@@ -149,6 +160,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
             }
           >
             <ButtonSecundary
+              disabled={isLoadingReport}
               style={
                 pendingExecs === true
                   ? styles.variableButtonNoPad
