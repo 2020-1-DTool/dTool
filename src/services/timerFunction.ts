@@ -200,11 +200,6 @@ export const updateAllTimers = async () => {
 
       execution = addElapsedTime(exec);
       setOngoingExecution(execution, i);
-
-      // TODO: remover após a integração, só para teste
-      console.warn(
-        `✅ Index atualizado ${execution.elapsedTime} - index: ${i}`
-      );
     }
     return hasOngoingExecution;
   });

@@ -117,12 +117,6 @@ const CardDescription: React.FC<ScreenProps> = ({
       </View>
       <View style={styles.buttonsWrap}>
         <View style={styles.buttonsCardDescription}>
-          <ButtonPrimary
-            title="EmptyScreen"
-            onPress={() => navigation.navigate("EmptyScreen")}
-          />
-        </View>
-        <View style={styles.buttonsCardDescription}>
           <ButtonExecutions
             onPress={() => handlePress1()}
             action={button1}
