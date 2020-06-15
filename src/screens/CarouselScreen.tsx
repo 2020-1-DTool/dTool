@@ -249,10 +249,9 @@ const mapStateToProps = (state: {
 const mapDispatchToProps = (
   dispatch: (arg0: {
     type: string;
-    cards?: CardType[];
     newExecState?: ExecutionStatus;
     index?: number;
-    seconds: number;
+    seconds?: number;
   }) => any
 ) => ({
   addCard: (items: CardType[]) => dispatch(executionActions.addCard(items)),
