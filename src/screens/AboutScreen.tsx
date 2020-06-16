@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
   body: {
     minHeight: Dimensions.get("window").height,
     padding: 10,
-    backgroundColor: "rgb(254, 254, 254)",
   },
   textTopic: {
     alignItems: "flex-start",
