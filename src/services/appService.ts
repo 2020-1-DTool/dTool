@@ -2,6 +2,7 @@ import { getUniqueId } from "react-native-device-info";
 import axios from "axios";
 import RNFS from "react-native-fs";
 import Share from "react-native-share";
+import moment from "moment";
 import {
   clear,
   getPreferences,
@@ -13,7 +14,7 @@ import {
   resetFinishedExecutions,
 } from "./localStorage";
 import api from "./API";
-import { Permission } from "./types";
+import { Permission, Reports } from "./types";
 
 /**
  * Coordena operações complexas da aplicação (principalmente aquelas relacionadas
@@ -91,7 +92,7 @@ const firstScreenAfterAppStartup = async (): Promise<Screen> => {
   const hasTechnology = technology !== null && technology !== undefined;
   const cards = await getCards();
 
-  if (cards) return "execution";
+  if (Array.isArray(cards) && cards.length) return "execution";
   if (hasTechnology) return "home";
 
   return "technology";
@@ -170,7 +171,7 @@ const uploadExecutions = async (): Promise<void> => {
     return {
       activityId: execution.activity,
       roleId: execution.role,
-      timestamp: execution.date,
+      timestamp: moment(execution.date).toISOString(true),
       duration: execution.duration,
     };
   });
@@ -196,6 +197,7 @@ const uploadExecutions = async (): Promise<void> => {
     throw new Error("network");
   }
 };
+
 /**
  * Faz o download do arquivo Excel da tecnologia atual para o celular.
  *
@@ -260,5 +262,28 @@ const authenticate = async () => {
     }
 
     throw new Error("network");
+  }
+};
+
+/*
+ * Faz a requisição ao backend pelos dados para popular os gráficos da tela de Relatórios do App
+ */
+export const getReports = async (
+  technology: number,
+  role: number
+): Promise<Reports[]> => {
+  await authenticate();
+
+  try {
+    const result = await api.get("/reports/simple", {
+      params: { technology, role },
+    });
+    return result.data;
+  } catch (error) {
+    if (error.response?.status === 404) {
+      return [] as Reports[];
+    }
+    // other errors should be handled by callers; rethrow
+    throw error;
   }
 };

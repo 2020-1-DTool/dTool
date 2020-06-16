@@ -21,7 +21,7 @@ export type Card = {
   activity?: string;
   role?: string;
   technology?: string;
-  time: string;
+  time?: number;
   executionState: ExecutionStatus;
 };
 
@@ -29,6 +29,12 @@ export type CardExecutionType = {
   idPatient?: string;
   role?: number;
   activity?: number;
+};
+
+export type CarouselType = {
+  data: Card[];
+  selectedCard: Card | undefined;
+  selectedCardIndex: number;
 };
 
 export type Doc = {
@@ -103,4 +109,22 @@ export interface Technology {
   id: number;
   name: string;
   activities: Activity[];
+}
+
+export interface Reports {
+  activityID: number;
+  activity: string;
+  roleID: number;
+  role: string;
+  minimumDuration: number;
+  medianDuration: number;
+  maximumDuration: number;
+  lastUpdate: string;
+}
+
+export interface Metrics {
+  activity: string;
+  minimumDuration: number;
+  medianDuration: number;
+  maximumDuration: number;
 }

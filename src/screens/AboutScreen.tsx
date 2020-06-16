@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Dimensions,
+  ScrollView,
   SafeAreaView,
   StyleSheet,
   View,
@@ -17,46 +18,48 @@ export interface ScreenProps {
 
 const AboutScreen: React.FC<ScreenProps> = () => {
   return (
-    <SafeAreaView>
-      <View style={styles.body}>
-        <View style={styles.mainView}>
-          <Text style={styles.text}>
-            Projeto desenvolvido por alunos da Agência Experimental de
-            Engenharia de Software (AGES), da PUCRS, em parceria com os
-            idealizadores Ana Paula e Ricardo do Instituto de Avaliação de
-            Tecnologia em Saúde (IATS).
-          </Text>
+    <ScrollView>
+      <SafeAreaView>
+        <View style={styles.body}>
+          <View style={styles.mainView}>
+            <Text style={styles.text}>
+              Projeto desenvolvido por alunos da Agência Experimental de
+              Engenharia de Software (AGES), da PUCRS, em parceria com os
+              idealizadores Ana Paula e Ricardo do Instituto de Avaliação de
+              Tecnologia em Saúde (IATS).
+            </Text>
+          </View>
+          <View style={styles.mainView}>
+            <Text style={styles.textTopic}>Alunos:</Text>
+            <Text style={styles.text}>
+              Alex Brustolin Teixeira, Bianca Camargo, Bruno Marcelino, Camila
+              Rocha, Eduardo André Soares, Felipe Silveira, Gabriel Gioscia
+              Velloso, Igor Sgorla Brehm, Jessica Manoel, João Brentano, Lucas
+              Castro, Marlon Furtado, Micael Fischmann, Rafael Araujo e Vinicius
+              Branco.
+            </Text>
+          </View>
+          <View style={styles.mainView}>
+            <Text style={styles.textTopic}>Stakeholders:</Text>
+            <Text style={styles.text}>
+              Ana Paula Beck da Silva Etges e Ricardo Bertoglio Cardoso.
+            </Text>
+          </View>
+          <View style={(styles.mainView, styles.inlineTitle)}>
+            <Text style={styles.textTopic}>Professor Orientador:</Text>
+            <Text style={styles.text}> Daniel Callegari</Text>
+          </View>
+          <View style={(styles.mainView, styles.inlineTitle)}>
+            <Text style={styles.textTopic}>Semestre:</Text>
+            <Text style={styles.text}> 2020/1</Text>
+          </View>
+          <View style={styles.image}>
+            <Image source={require("../assets/logo-pucrs.png")} />
+            <Image source={require("../assets/logo-ages.png")} />
+          </View>
         </View>
-        <View style={styles.mainView}>
-          <Text style={styles.textTopic}>Alunos:</Text>
-          <Text style={styles.text}>
-            Alex Brustolin Teixeira, Bianca Camargo, Bruno Marcelino, Camila
-            Rocha, Eduardo André Soares, Felipe Silveira, Gabriel Gioscia
-            Velloso, Igor Sgorla Brehm, Jessica Manoel, João Brentano, Lucas
-            Castro, Marlon Furtado, Micael Fischmann, Rafael Araujo e Vinicius
-            Branco.
-          </Text>
-        </View>
-        <View style={styles.mainView}>
-          <Text style={styles.textTopic}>Stakeholders:</Text>
-          <Text style={styles.text}>
-            Ana Paula Beck da Silva Etges e Ricardo Bertoglio Cardoso.
-          </Text>
-        </View>
-        <View style={(styles.mainView, styles.inlineTitle)}>
-          <Text style={styles.textTopic}>Professor Orientador:</Text>
-          <Text style={styles.text}> Daniel Callegari</Text>
-        </View>
-        <View style={(styles.mainView, styles.inlineTitle)}>
-          <Text style={styles.textTopic}>Semestre:</Text>
-          <Text style={styles.text}> 2020/1</Text>
-        </View>
-        <View style={styles.image}>
-          <Image source={require("../assets/logo-pucrs.png")} />
-          <Image source={require("../assets/logo-ages.png")} />
-        </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -65,31 +68,31 @@ const styles = StyleSheet.create({
     minHeight: Dimensions.get("window").height,
     padding: 10,
   },
-  textTopic: {
-    alignItems: "flex-start",
-
-    fontSize: sizes.inputText.textField,
-    color: colors.text.primary,
-    fontWeight: "bold",
-  },
-  text: {
-    alignItems: "flex-start",
-    fontSize: 18,
-    color: colors.text.primary,
-    textAlign: "justify",
-  },
   image: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     justifyContent: "center",
+  },
+  inlineTitle: {
+    alignItems: "baseline",
+    flexDirection: "row",
+    marginVertical: 10,
   },
   mainView: {
     marginVertical: 10,
     textAlign: "left",
   },
-  inlineTitle: {
-    marginVertical: 10,
-    flexDirection: "row",
+  text: {
+    alignItems: "flex-start",
+    color: colors.text.primary,
+    fontSize: 18,
+    textAlign: "justify",
+  },
+  textTopic: {
+    alignItems: "flex-start",
+    color: colors.text.primary,
+    fontSize: sizes.inputText.textField,
+    fontWeight: "bold",
   },
 });
 

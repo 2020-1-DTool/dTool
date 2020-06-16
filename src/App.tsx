@@ -26,10 +26,10 @@ import {
   SelectPatient,
   ListPatient,
   ListTechnology,
+  ReportsScreen,
 } from "./screens";
 import colors from "./utils/colors";
 import sizes from "./utils/sizes";
-import EmptyScreen from "./screens/EmptyScreen"; // TODO eventualmente remover
 import * as localStorage from "./services/localStorage";
 
 YellowBox.ignoreWarnings(["AsyncStorage has been extracted"]);
@@ -78,13 +78,6 @@ const App = () => (
             options={{
               ...baseHeaderStyle,
               headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="EmptyScreen"
-            component={EmptyScreen}
-            options={{
-              ...baseHeaderStyle,
             }}
           />
           <Stack.Screen
@@ -222,7 +215,16 @@ const App = () => (
             component={AboutScreen}
             options={{
               ...baseHeaderStyle,
+              title: "Sobre o DTool",
             }}
+          />
+          <Stack.Screen
+            name="ReportsScreen"
+            component={ReportsScreen}
+            options={() => ({
+              title: "Relatórios",
+              ...baseHeaderStyle,
+            })}
           />
         </Stack.Navigator>
       </NavigationContainer>

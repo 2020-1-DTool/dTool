@@ -69,13 +69,11 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 
   const handleBack = async () => {
     if (pendingExecs) {
-      console.log("Tentando enviar agora...");
       try {
         await syncExecutions();
         setPendingExecs(false);
       } catch (error) {
         if (error.message === "network") {
-          console.log("Sem conexao com a internet, envio falhou!");
           await showMessage();
         } else {
           throw error;
@@ -100,7 +98,12 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 
   const secondaryButtonAction = async () => {
     if (permission === "time-tracking") {
-      console.log("Ir para tela de gráficos.");
+      const { role } = await localStorage.getPreferences();
+      if (role) {
+        navigation.navigate("ReportsScreen");
+      } else {
+        navigation.navigate("ChooseRole", { isForReports: true });
+      }
     } else {
       setIsLoadingReport(true);
       try {
@@ -173,7 +176,7 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
           </View>
           <View style={styles.aboutButton}>
             <ButtonPrimary
-              title={"Sobre o App"}
+              title="Sobre o App"
               onPress={() => navigation.navigate("AboutScreen")}
             />
           </View>
@@ -202,6 +205,13 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  aboutButton: {
+    alignContent: "center",
+    justifyContent: "center",
+    paddingBottom: 10,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+  },
   fadedButton: {
     alignContent: "center",
     alignItems: "center",
@@ -238,13 +248,6 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 16,
     paddingTop: 40,
-  },
-  aboutButton: {
-    alignContent: "center",
-    justifyContent: "center",
-    paddingBottom: 10,
-    paddingHorizontal: 16,
-    paddingTop: 10,
   },
   main: {
     backgroundColor: colors.basic.background,

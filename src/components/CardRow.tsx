@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import { Card } from "react-native-elements";
 
 import * as executionActions from "../store/actions/execution";
-import { Card as CardType, ExecutionStatus } from "../services/types";
+import { Card as CardType } from "../services/types";
 import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 
@@ -27,27 +27,18 @@ const CardRow: React.FC<ScreenProps> = ({
   selectedCardIndex,
   toggleCard,
 }) => {
-  const setBorder = (index: number) => {
-    console.log(`Previous sected card ${selectedCardIndex}`);
-    console.log(`Current selected card ${index}`);
-  };
-
   const handlePress = (item: CardType, index: number) => {
-    setBorder(index);
     toggleCard(item, index);
   };
 
-  const getExecutionState = (state: ExecutionStatus) => {
-    switch (state) {
-      case ExecutionStatus.Uninitialized:
-        return "Não iniciado";
-      case ExecutionStatus.Initialized:
-        return "Cronometrando";
-      case ExecutionStatus.Paused:
-        return "Pausado";
-      default:
-        return "Inválido";
-    }
+  const getTime = (currentTime: number) => {
+    const min = (currentTime % 3600) / 60;
+    const hour = currentTime / 3600;
+    const sec = currentTime % 60;
+    const formatHour = Math.floor(hour).toString().padStart(2, "0");
+    const formatMin = Math.floor(min).toString().padStart(2, "0");
+    const formatSec = sec.toString().padStart(2, "0");
+    return `${formatHour}:${formatMin}:${formatSec}`;
   };
 
   return (
@@ -84,7 +75,7 @@ const CardRow: React.FC<ScreenProps> = ({
                       source={require("../assets/clock-carousel.png")}
                     />
                     <Text style={styles.normalText}>
-                      {getExecutionState(item.executionState)}
+                      {getTime(item.time ?? 0)}
                     </Text>
                   </View>
                 </TouchableOpacity>
