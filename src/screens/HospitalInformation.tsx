@@ -174,6 +174,12 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
               onPress={secondaryButtonAction}
             />
           </View>
+          <View style={styles.aboutButton}>
+            <ButtonPrimary
+              title="Sobre o App"
+              onPress={() => navigation.navigate("AboutScreen")}
+            />
+          </View>
           {pendingExecs && <WarningBox handleBack={handleBack} />}
           <View>
             <TouchableOpacity
@@ -199,6 +205,13 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  aboutButton: {
+    alignContent: "center",
+    justifyContent: "center",
+    paddingBottom: 10,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+  },
   fadedButton: {
     alignContent: "center",
     alignItems: "center",
