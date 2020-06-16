@@ -93,12 +93,12 @@ const CarouselScreen: React.FC<ScreenProps> = ({
 
   useLayoutEffect(() => {
     (async () => {
-      const sessionCardResponse = await localStorage.getSession();
-      const preferencesCardResponse = await localStorage.getPreferences();
-      const { roleName, role } =
-        sessionCardResponse! || preferencesCardResponse!;
+      const { roleName, role, technology } = {
+        ...(await localStorage.getSession()),
+        ...(await localStorage.getPreferences()),
+      };
 
-      const currentTech = sessionCardResponse?.technology?.toString();
+      const currentTech = technology?.toString();
 
       let strComplete = await localStorage.getCards();
       let complete: CardType[] | undefined;

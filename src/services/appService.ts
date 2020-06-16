@@ -92,7 +92,7 @@ const firstScreenAfterAppStartup = async (): Promise<Screen> => {
   const hasTechnology = technology !== null && technology !== undefined;
   const cards = await getCards();
 
-  if (cards) return "execution";
+  if (Array.isArray(cards) && cards.length) return "execution";
   if (hasTechnology) return "home";
 
   return "technology";
