@@ -74,7 +74,6 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
         setPendingExecs(false);
       } catch (error) {
         if (error.message === "network") {
-          console.log("Sem conexao com a internet, envio falhou!");
           await showMessage();
         } else {
           throw error;
@@ -99,7 +98,12 @@ const HospitalInformation: React.FC<ScreenProps> = ({ navigation }) => {
 
   const secondaryButtonAction = async () => {
     if (permission === "time-tracking") {
-      console.log("Ir para tela de gráficos.");
+      const { role } = await localStorage.getPreferences();
+      if (role) {
+        navigation.navigate("ReportsScreen");
+      } else {
+        navigation.navigate("ChooseRole", { isForReports: true });
+      }
     } else {
       setIsLoadingReport(true);
       try {

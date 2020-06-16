@@ -14,7 +14,7 @@ import {
   resetFinishedExecutions,
 } from "./localStorage";
 import api from "./API";
-import { Permission } from "./types";
+import { Permission, Reports } from "./types";
 
 /**
  * Coordena operações complexas da aplicação (principalmente aquelas relacionadas
@@ -262,5 +262,28 @@ const authenticate = async () => {
     }
 
     throw new Error("network");
+  }
+};
+
+/*
+ * Faz a requisição ao backend pelos dados para popular os gráficos da tela de Relatórios do App
+ */
+export const getReports = async (
+  technology: number,
+  role: number
+): Promise<Reports[]> => {
+  await authenticate();
+
+  try {
+    const result = await api.get("/reports/simple", {
+      params: { technology, role },
+    });
+    return result.data;
+  } catch (error) {
+    if (error.response?.status === 404) {
+      return [] as Reports[];
+    }
+    // other errors should be handled by callers; rethrow
+    throw error;
   }
 };

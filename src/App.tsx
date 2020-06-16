@@ -25,6 +25,7 @@ import {
   SelectPatient,
   ListPatient,
   ListTechnology,
+  ReportsScreen,
 } from "./screens";
 import colors from "./utils/colors";
 import sizes from "./utils/sizes";
@@ -205,6 +206,14 @@ const App = () => (
                   onPress={() => addNewProcedure(navigation)}
                 />
               ),
+              ...baseHeaderStyle,
+            })}
+          />
+          <Stack.Screen
+            name="ReportsScreen"
+            component={ReportsScreen}
+            options={() => ({
+              title: "Relatórios",
               ...baseHeaderStyle,
             })}
           />
