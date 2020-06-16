@@ -1,7 +1,7 @@
 import React from "react";
 import {
   Dimensions,
-  ScrollView,
+  SafeAreaView,
   StyleSheet,
   View,
   Text,
@@ -17,7 +17,7 @@ export interface ScreenProps {
 
 const AboutScreen: React.FC<ScreenProps> = () => {
   return (
-    <ScrollView>
+    <SafeAreaView>
       <View style={styles.body}>
         <View style={styles.mainView}>
           <Text style={styles.text}>
@@ -56,7 +56,7 @@ const AboutScreen: React.FC<ScreenProps> = () => {
           <Image source={require("../assets/logo-ages.png")} />
         </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
   body: {
     minHeight: Dimensions.get("window").height,
     padding: 10,
+    backgroundColor: "rgb(254, 254, 254)",
   },
   textTopic: {
     alignItems: "flex-start",
@@ -74,8 +75,9 @@ const styles = StyleSheet.create({
   },
   text: {
     alignItems: "flex-start",
-    fontSize: sizes.inputText.textField,
+    fontSize: 18,
     color: colors.text.primary,
+    textAlign: "justify",
   },
   image: {
     flexDirection: "row",
