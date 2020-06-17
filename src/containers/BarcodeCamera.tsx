@@ -5,7 +5,7 @@ import colors from "../utils/colors";
 import sizes from "../utils/sizes";
 
 export interface ContainerProps {
-  children?: ReactElement;
+  children?: ReactElement[];
   onChange: (barcode: any) => void;
 }
 
@@ -56,6 +56,7 @@ const BarcodeCamera: React.FC<ContainerProps> = ({ children, onChange }) => {
               ]}
             />
           </View>
+          {children}
           {children}
         </>
       </RNCamera>

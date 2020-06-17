@@ -180,14 +180,8 @@ const App = () => (
           <Stack.Screen
             name="SelectPatient"
             component={SelectPatient}
-            options={({ navigation }) => ({
+            options={() => ({
               title: "Paciente",
-              headerRight: () => (
-                <HeaderButton
-                  iconName="ios-list"
-                  onPress={() => navigation.navigate("ListPatient")}
-                />
-              ),
               ...baseHeaderStyle,
             })}
           />
