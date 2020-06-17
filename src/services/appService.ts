@@ -1,7 +1,7 @@
 import { getUniqueId } from "react-native-device-info";
 import { PermissionsAndroid, YellowBox } from "react-native";
 import axios from "axios";
-import RNFetchBlob from "react-native-fetch-blob";
+import RNFetchBlob from "rn-fetch-blob";
 import moment from "moment";
 import {
   clear,
@@ -228,6 +228,7 @@ export const downloadReport = async (): Promise<void> => {
     RNFetchBlob.config({
       addAndroidDownloads: {
         useDownloadManager: true, // required
+        notification: true,
         path: `file://${localFile}`,
         mime:
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
