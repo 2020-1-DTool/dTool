@@ -1,6 +1,7 @@
 export { default as BasicList } from "./BasicList";
 export { default as ButtonDelete } from "./ButtonDelete";
 export { default as ButtonExecutions } from "./ButtonExecutions";
+export { default as ButtonPatientList } from "./ButtonPatientList";
 export { default as ButtonPlus } from "./ButtonPlus";
 export { default as ButtonPrimary } from "./ButtonPrimary";
 export { default as ButtonSecundary } from "./ButtonSecundary";

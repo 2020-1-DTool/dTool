@@ -3,7 +3,7 @@ import { View, Dimensions, StyleSheet, SafeAreaView } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BarcodeCamera } from "../containers";
 import colors from "../utils/colors";
-import { ButtonPlus } from "../components";
+import { ButtonPlus, ButtonPatientList } from "../components";
 import { getPatient } from "../services/localStorage";
 
 export interface ScreenProps {
@@ -23,6 +23,7 @@ const SelectPatient: React.FC<ScreenProps> = ({ navigation }) => (
   <SafeAreaView>
     <View style={styles.body}>
       <BarcodeCamera onChange={(barcode) => handleChange(barcode, navigation)}>
+        <ButtonPatientList onPress={() => navigation.navigate("ListPatient")} />
         <ButtonPlus onPress={() => navigation.navigate("AddPatient")} />
       </BarcodeCamera>
     </View>
