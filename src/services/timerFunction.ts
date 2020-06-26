@@ -164,6 +164,7 @@ export const finishExecution = async (index: number) => {
       role: execution.role,
       date: execution.startTime,
       duration: execution.elapsedTime,
+      endDate: moment().format("YYYY-MM-DDTHH:mm:ssZZ"),
     };
 
     await addFinishedExecution(newFinishedExecution);
