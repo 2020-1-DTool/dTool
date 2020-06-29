@@ -174,6 +174,7 @@ const uploadExecutions = async (): Promise<void> => {
       activityId: execution.activity,
       roleId: execution.role,
       timestamp: moment(execution.date).toISOString(true),
+      endDate: moment(execution.endDate).toISOString(true),
       duration: execution.duration,
     };
   });

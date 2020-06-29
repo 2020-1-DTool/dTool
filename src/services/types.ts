@@ -55,6 +55,7 @@ export type FinishedExecution = {
   role: number;
   date: string; // ISO8601
   duration: number;
+  endDate: string;
 };
 
 export interface LocalData {
