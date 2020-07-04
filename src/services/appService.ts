@@ -1,7 +1,7 @@
 import { getUniqueId } from "react-native-device-info";
+import { PermissionsAndroid, YellowBox } from "react-native";
 import axios from "axios";
-import RNFS from "react-native-fs";
-import Share from "react-native-share";
+import RNFetchBlob from "rn-fetch-blob";
 import moment from "moment";
 import {
   clear,
@@ -15,6 +15,8 @@ import {
 } from "./localStorage";
 import api from "./API";
 import { Permission, Reports } from "./types";
+
+YellowBox.ignoreWarnings(["Require cycle"]);
 
 /**
  * Coordena operações complexas da aplicação (principalmente aquelas relacionadas
@@ -172,6 +174,7 @@ const uploadExecutions = async (): Promise<void> => {
       activityId: execution.activity,
       roleId: execution.role,
       timestamp: moment(execution.date).toISOString(true),
+      endDate: moment(execution.endDate).toISOString(true),
       duration: execution.duration,
     };
   });
@@ -206,29 +209,43 @@ const uploadExecutions = async (): Promise<void> => {
  * - `network`: erro de rede.
  */
 export const downloadReport = async (): Promise<void> => {
+  try {
+    await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+    ]);
+  } catch (err) {
+    console.warn(err);
+  }
+
   await authenticate();
 
   try {
     const { code, token } = await getAuth();
     const url = `${api.defaults.baseURL}/reports/complete`;
     const filename = `Relatório dTool - ${code}.xlsx`;
-    const localFile = `${RNFS.DocumentDirectoryPath}/${filename}`;
+    const localFile = `${RNFetchBlob.fs.dirs.DownloadDir}/${filename}`;
 
-    const { promise } = RNFS.downloadFile({
-      fromUrl: url,
-      toFile: localFile,
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    await promise;
-
-    await Share.open({
-      url: `file://${localFile}`,
-      title: `Salvar relatório do hospital`,
-      failOnCancel: false,
-    });
-
-    await RNFS.unlink(localFile);
+    RNFetchBlob.config({
+      addAndroidDownloads: {
+        useDownloadManager: true, // required
+        notification: true,
+        path: `file://${localFile}`,
+        mime:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        description: "Relatório DTool.",
+      },
+    })
+      .fetch("GET", url, {
+        Authorization: `Bearer ${token}`,
+      })
+      .then((res) => {
+        // when response status code is 200
+        console.log("The file saved to ", res.path());
+      })
+      .catch((_errorMessage) => {
+        console.log(_errorMessage);
+      });
   } catch (error) {
     // invalid ID
     if (error.response?.status === 400) {

@@ -36,6 +36,8 @@ target 'dTool' do
 
   pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
+  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
+
   target 'dToolTests' do
     inherit! :search_paths
     # Pods for testing
