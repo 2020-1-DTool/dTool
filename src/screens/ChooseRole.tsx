@@ -15,6 +15,7 @@ import { RememberOption } from "../containers";
 
 export interface ScreenProps {
   navigation: StackNavigationProp<any, any>;
+  route?: { params?: { isForReports: boolean } };
 }
 
 interface Role {
@@ -22,8 +23,9 @@ interface Role {
   name: string;
 }
 
-const ChooseRole: React.FC<ScreenProps> = ({ navigation }) => {
+const ChooseRole: React.FC<ScreenProps> = ({ navigation, route }) => {
   const [roles, setRoles] = useState([] as Role[]);
+  const isForReports = route?.params?.isForReports;
 
   useEffect(() => {
     (async () => {
@@ -39,7 +41,11 @@ const ChooseRole: React.FC<ScreenProps> = ({ navigation }) => {
 
   const handleListPress = async (index: number) => {
     await localStorage.saveRole(roles[index].id, roles[index].name, isChecked);
-    navigation.navigate("SelectPatient");
+    if (isForReports) {
+      navigation.navigate("ReportsScreen");
+    } else {
+      navigation.navigate("SelectPatient");
+    }
   };
 
   return (

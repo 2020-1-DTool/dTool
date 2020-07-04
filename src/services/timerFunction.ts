@@ -13,6 +13,7 @@ import {
   FinishedExecution,
   CardExecutionType,
 } from "./types";
+import { syncExecutions } from "./appService";
 
 /**
  * Coordena o a manipulação de execuções.
@@ -29,7 +30,7 @@ import {
  */
 export const createExecution = async (cardInfo: CardExecutionType) => {
   const startTime: Moment = moment();
-  const strStartTime: string = startTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ");
+  const strStartTime: string = startTime.format("YYYY-MM-DDTHH:mm:ssZZ");
   console.log(
     "timerFunction.createExecution: Criando execução - Horário atual: ",
     strStartTime
@@ -63,7 +64,7 @@ export const initializeExecution = async (index: number) => {
     execution.currentState === ExecutionStatus.Uninitialized
   ) {
     const startTime: Moment = moment();
-    const strTime: string = startTime.format("YYYY-MM-DDTHH:mm:ss[Z]ZZ");
+    const strTime: string = startTime.format("YYYY-MM-DDTHH:mm:ssZZ");
     console.log(
       "timerFunction.initializeExecution: Inicializando execução - Horário atual: ",
       strTime
@@ -78,7 +79,6 @@ export const initializeExecution = async (index: number) => {
     await setOngoingExecution(execution, index);
     isInitialized = true;
   } else {
-    console.warn("Execução já iniciada");
     isInitialized = false;
   }
   return isInitialized;
@@ -134,7 +134,9 @@ export const cancelExecution = async (index: number) => {
   const confirmed = await showExecutionAlert("remove");
   if (confirmed) {
     await removeOngoingExecution(index);
+    return true;
   }
+  return false;
 };
 
 /** Função responsável por finalisar uma execução, removendo-a da lista de
@@ -164,35 +166,45 @@ export const finishExecution = async (index: number) => {
       duration: execution.elapsedTime,
     };
 
-    return addFinishedExecution(newFinishedExecution);
+    await addFinishedExecution(newFinishedExecution);
+
+    try {
+      await syncExecutions();
+    } catch (error) {
+      // no-op
+    }
+
+    return true;
   }
   console.error("Execução nunca foi iniciada.");
   await removeOngoingExecution(index);
   return false;
 };
 
-/** Função responsável por atualizar contagem de toda a lista de execuções correntes.
- * Retorna false se não há execuções para serem atualizadas e true se há
+/** Função responsável por atualizar contagem de toda a lista de execuções em andamento.
+ *  Retorna `false` se não há execuções em andamento e `true` se há.
  */
-export const updateAll = async () => {
-  const strArray = await getOngoingExecutions();
-  if (!strArray || strArray.length === 0) {
+export const updateAllTimers = async () => {
+  let hasOngoingExecution = false;
+  let execution: OngoingExecution;
+
+  const executions: OngoingExecution[] = await getOngoingExecutions();
+  if (!executions || executions.length === 0) {
     console.warn("Não há execuções.");
-    return false;
+    return hasOngoingExecution;
   }
 
-  const arExecutions: OngoingExecution[] = strArray;
-  let execution: OngoingExecution;
-  let isOneRunning = false;
-  for (let i = 0; i < arExecutions.length; i++) {
-    execution = arExecutions[i];
-    if (execution.currentState === ExecutionStatus.Initialized) {
-      execution = addElapsedTime(execution);
-      isOneRunning = true;
+  executions.map((exec, i) => {
+    if (exec.currentState === ExecutionStatus.Initialized) {
+      hasOngoingExecution = true;
+
+      execution = addElapsedTime(exec);
       setOngoingExecution(execution, i);
     }
-  }
-  return isOneRunning;
+    return hasOngoingExecution;
+  });
+
+  return hasOngoingExecution;
 };
 
 /** Recebe tempo em segundos e devolve string formatada corretamente.
@@ -242,6 +254,7 @@ const addElapsedTime = (execution: OngoingExecution) => {
     newElapsedTime
   );
   execution.elapsedTime = newElapsedTime;
+  execution.latestStartTime = pauseTime;
   return execution;
 };
 

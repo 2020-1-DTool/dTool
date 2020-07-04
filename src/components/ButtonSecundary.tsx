@@ -20,8 +20,11 @@ const ButtonSecundary: React.FC<Props> = ({ disabled, title, ...props }) => {
       {...props}
       activeOpacity={0.8}
       style={[styles.base, buttonStyle]}
+      disabled={disabled}
     >
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, disabled && styles.textDisabled]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -39,12 +42,16 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     backgroundColor: colors.basic.background,
+    borderColor: colors.basic.separator,
   },
   text: {
     alignSelf: "center",
     color: colors.theme.primary,
     fontSize: sizes.buttonText.main,
     fontWeight: "600",
+  },
+  textDisabled: {
+    color: colors.text.tertiary,
   },
 });
 
